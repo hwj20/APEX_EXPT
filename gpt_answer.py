@@ -4,7 +4,7 @@ import os
 from openai import OpenAI
 
 # 读取物理题
-file_path = "physics_questions.json"
+file_path = "dataset/physics_questions.json"
 with open(file_path, "r") as f:
     physics_questions = json.load(f)
 
