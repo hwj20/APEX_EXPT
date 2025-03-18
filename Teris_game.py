@@ -1,3 +1,5 @@
+import json
+
 import pygame
 import random
 from experiments.teris_game_agent import *
@@ -92,18 +94,22 @@ class Tetris:
         self.score += lines_cleared * 100  # 每行 +100 分
         self.board = [[0] * COLUMNS for _ in range(lines_cleared)] + new_board  # 重新填充棋盘
 
-    def step(self, action):
-        """执行玩家或 LLM 的操作"""
-        if action == "left":
-            self.move(-1, 0)
-        elif action == "right":
-            self.move(1, 0)
-        elif action == "rotate":
-            self.rotate()
-        elif action == "down":
-            while not self.has_landed():
-                self.piece_y += 1  # 直接到底
-            self.place_piece()  # 落地后固定
+    def step(self, action_json):
+        """解析 LLM 代理的 JSON 并执行动作"""
+        action_data = json.loads(action_json)  # 解析 JSON 格式的指令
+        action = action_data.get("move", "down")
+        times = action_data.get("times", 1)  # 默认执行 1 次
+
+        for _ in range(times):
+            if action == "left":
+                self.move(-1, 0)
+            elif action == "right":
+                self.move(1, 0)
+            elif action == "rotate":
+                self.rotate()
+            elif action == "down":
+                while not self.has_landed():
+                    self.piece_y += 1  # 直接到底
 
     def gravity(self):
         """控制方块自动下落"""
@@ -115,24 +121,71 @@ class Tetris:
                 self.move(0, 1)
             self.gravity_counter = 0
 
+    def extract_active_rows(self, board):
+        """去除全零行，仅返回堆积部分"""
+        return [row for row in board if any(row)]
+
     def pgd_evaluate(self):
-        """测试四种操作后的棋盘和得分情况（不影响当前游戏状态）"""
+        """模拟多种操作的最终状态，包括落地位置、消行信息、最高堆积高度，仅返回堆积区域"""
         scores = {}
-        for action in ["left", "right", "rotate", "down"]:
+        actions = []
+        for k in range(1, COLUMNS):  # 从左移1格到最大，再从右移1格到最大
+            if self.piece_x - k >= 0:
+                actions.append(("left", k))
+            if self.piece_x + k < COLUMNS:
+                actions.append(("right", k))
+        for r in range(3):  # 最多旋转3次
+            actions.append(("rotate", r + 1))
+        actions.append(("down", 1))  # 直接下落
+
+        for action, times in actions:
             temp_game = Tetris()
-            temp_game.board = [row[:] for row in self.board]
-            temp_game.current_piece = [row[:] for row in self.current_piece]
+            temp_game.board = [row[:] for row in self.board]  # 复制棋盘
+            temp_game.current_piece = [row[:] for row in self.current_piece]  # 复制方块形状
             temp_game.piece_x = self.piece_x
             temp_game.piece_y = self.piece_y
             temp_game.score = self.score
-            temp_game.step(action)
-            scores[action] = (temp_game.score, temp_game.board)  # 返回得分和棋盘状态
+
+            # 执行移动/旋转操作
+            for _ in range(times):
+                temp_game.step(json.dumps({"move": action, "times": 1}))
+
+            # 让方块掉落到底
+            while not temp_game.has_landed():
+                temp_game.piece_y += 1
+            temp_game.place_piece()
+            cleared_lines = temp_game.clear_lines()
+            final_board = temp_game.board
+
+            # 计算最高堆积点
+            # highest_stack = ROWS - max(y for y, row in enumerate(final_board) if any(row)) if any(final_board) else 0
+
+            # 仅返回堆积部分
+            active_rows = self.extract_active_rows(final_board)
+            highest_stack = len(active_rows)
+
+            scores[(action, times)] = {
+                "score": temp_game.score,
+                # "cleared_lines": cleared_lines,
+                # "final_board": final_board,
+                "highest_stack": highest_stack,
+                "active_rows": active_rows
+            }
         return scores
 
     def get_state(self):
-        """返回当前棋盘和方块位置"""
+        """返回当前棋盘和方块位置，方块标记为 2"""
+        board_with_piece = [row[:] for row in self.board]  # 复制棋盘
+        for y, row in enumerate(self.current_piece):
+            for x, cell in enumerate(row):
+                if cell:
+                    board_y = self.piece_y + y
+                    board_x = self.piece_x + x
+                    if 0 <= board_y < ROWS and 0 <= board_x < COLUMNS:
+                        board_with_piece[board_y][board_x] = 2  # 标记当前活动方块
+
         return {
-            "board": self.board,
+            "board": board_with_piece,
             "piece": self.current_piece,
             "piece_x": self.piece_x,
             "piece_y": self.piece_y
@@ -153,7 +206,7 @@ class Tetris:
             for x, cell in enumerate(row):
                 if cell:
                     pygame.draw.rect(screen, WHITE, (
-                    (self.piece_x + x) * BLOCK_SIZE, (self.piece_y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
+                        (self.piece_x + x) * BLOCK_SIZE, (self.piece_y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
 
         # 显示分数
         font = pygame.font.Font(None, 36)
@@ -194,6 +247,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 tetris = Tetris()
 ag = LLM_Agent()
+method = "PGD"
 
 while tetris.running:
     screen.fill(BLACK)
@@ -204,11 +258,16 @@ while tetris.running:
     # 获取 LLM 的决策
     state = tetris.get_state()
     if state != tetris.previous_state:  # 只有当状态发生变化时才去咨询 LLM
-        action = ag.decide_move(state)
+        action_json = ''
+        if method == 'PGD':
+            pgd_results = tetris.pgd_evaluate()
+            action_json = ag.decide_move_pgd(state, pgd_results)
+        if method == 'LLM':
+            action_json = ag.decide_move(state)
         tetris.previous_state = state  # 更新之前的状态
         print(state)
-        print(action)
-        tetris.step(action)
+        print(action_json)
+        tetris.step(action_json)
 
     tetris.gravity()
     tetris.render(screen)
