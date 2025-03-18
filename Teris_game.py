@@ -244,7 +244,23 @@ class Tetris:
 #     clock.tick(1)  # 控制游戏速度
 #
 # pygame.quit()
+results = {
+    "PGD": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
+    "VLM+PGD": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
+    "VLM": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
+    "GPT-4o": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
+    "GPT-4o Mini": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
+}
 
+for model in results.keys():
+    for i in range(5):  # 每个模型跑 5 盘
+        max_height = run_tetris(model)["max_stack_height"]
+        rounds = run_tetris(model)["rounds_survived"]
+        lines = run_tetris(model)["lines_cleared"]
+
+        results[model]["max_stack_height"].append(max_height)
+        results[model]["rounds_survived"].append(rounds)
+        results[model]["lines_cleared"].append(lines)
 # 运行游戏
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()

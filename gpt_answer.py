@@ -39,7 +39,7 @@ def ask_gpt4(questions, max_questions=5):
                 api_key=api_key,
             )
             completion = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": "You are a physics expert."},
                     {"role": "user", "content": prompt}],
