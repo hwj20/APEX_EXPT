@@ -214,7 +214,10 @@ class Tetris:
         screen.blit(score_text, (10, 10))
 
         pygame.display.flip()
-
+    def capture_game_screen(self,screen):
+        """截取当前游戏画面，转换成 VLM 可读格式"""
+        pygame.image.save(screen, "screenshot.png")  # 存为 PNG
+        return "screenshot.png"  # 返回文件路径
 
 # 运行游戏
 # screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -255,22 +258,35 @@ while tetris.running:
         if event.type == pygame.QUIT:
             tetris.running = False
 
-    # 获取 LLM 的决策
+    # 获取决策方式
     state = tetris.get_state()
-    if state != tetris.previous_state:  # 只有当状态发生变化时才去咨询 LLM
+    if state != tetris.previous_state and tetris.piece_y>1:  # 只有当状态发生变化时才去咨询决策模块
+        tetris.render(screen)
         action_json = ''
         if method == 'PGD':
             pgd_results = tetris.pgd_evaluate()
             action_json = ag.decide_move_pgd(state, pgd_results)
-        if method == 'LLM':
+        elif method == 'LLM':
             action_json = ag.decide_move(state)
+        elif method == 'VLM':
+            image_path = tetris.capture_game_screen(screen)
+            action_json = ag.vlm_decide_move(image_path)
+        elif method == 'VLM_PGD':
+            pgd_results = tetris.pgd_evaluate()
+            image_path = tetris.capture_game_screen(screen)
+            action_json = ag.vlm_decide_move_pgd(image_path,pgd_results)
+
         tetris.previous_state = state  # 更新之前的状态
         print(state)
         print(action_json)
+        if action_json is None:
+            action_json = '{"move":"down","times":1}'
+
         tetris.step(action_json)
 
     tetris.gravity()
     tetris.render(screen)
     clock.tick(1)  # 控制游戏速度
+
 
 pygame.quit()
