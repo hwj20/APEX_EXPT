@@ -1,12 +1,6 @@
 import json
-
 import pygame
 import random
-from experiments.teris_game_agent import *
-import openai  # 假设我们用 OpenAI API 作为 LLM
-
-# 初始化 Pygame
-pygame.init()
 
 # 游戏窗口大小
 WIDTH, HEIGHT = 300, 600
@@ -33,6 +27,7 @@ SHAPES = [
 
 class Tetris:
     def __init__(self):
+        random.seed(42)
         self.board = [[0] * COLUMNS for _ in range(ROWS)]  # 10x20 的棋盘
         self.current_piece = self.new_piece()  # 当前活动方块
         self.piece_x = COLUMNS // 2 - len(self.current_piece[0]) // 2
@@ -219,90 +214,3 @@ class Tetris:
         pygame.image.save(screen, "screenshot.png")  # 存为 PNG
         return "screenshot.png"  # 返回文件路径
 
-# 运行游戏
-# screen = pygame.display.set_mode((WIDTH, HEIGHT))
-# clock = pygame.time.Clock()
-# tetris = Tetris()
-#
-# while tetris.running:
-#     screen.fill(BLACK)
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             tetris.running = False
-#         elif event.type == pygame.KEYDOWN:
-#             if event.key == pygame.K_LEFT:
-#                 tetris.step("left")
-#             elif event.key == pygame.K_RIGHT:
-#                 tetris.step("right")
-#             elif event.key == pygame.K_UP:
-#                 tetris.step("rotate")
-#             elif event.key == pygame.K_DOWN:
-#                 tetris.step("down")
-#
-#     tetris.gravity()
-#     tetris.render(screen)
-#     clock.tick(1)  # 控制游戏速度
-#
-# pygame.quit()
-results = {
-    "PGD": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "VLM+PGD": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "VLM": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "GPT-4o": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "GPT-4o Mini": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-}
-
-for model in results.keys():
-    for i in range(5):  # 每个模型跑 5 盘
-        max_height = run_tetris(model)["max_stack_height"]
-        rounds = run_tetris(model)["rounds_survived"]
-        lines = run_tetris(model)["lines_cleared"]
-
-        results[model]["max_stack_height"].append(max_height)
-        results[model]["rounds_survived"].append(rounds)
-        results[model]["lines_cleared"].append(lines)
-# 运行游戏
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
-tetris = Tetris()
-ag = LLM_Agent()
-method = "PGD"
-
-while tetris.running:
-    screen.fill(BLACK)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            tetris.running = False
-
-    # 获取决策方式
-    state = tetris.get_state()
-    if state != tetris.previous_state and tetris.piece_y>1:  # 只有当状态发生变化时才去咨询决策模块
-        tetris.render(screen)
-        action_json = ''
-        if method == 'PGD':
-            pgd_results = tetris.pgd_evaluate()
-            action_json = ag.decide_move_pgd(state, pgd_results)
-        elif method == 'LLM':
-            action_json = ag.decide_move(state)
-        elif method == 'VLM':
-            image_path = tetris.capture_game_screen(screen)
-            action_json = ag.vlm_decide_move(image_path)
-        elif method == 'VLM_PGD':
-            pgd_results = tetris.pgd_evaluate()
-            image_path = tetris.capture_game_screen(screen)
-            action_json = ag.vlm_decide_move_pgd(image_path,pgd_results)
-
-        tetris.previous_state = state  # 更新之前的状态
-        print(state)
-        print(action_json)
-        if action_json is None:
-            action_json = '{"move":"down","times":1}'
-
-        tetris.step(action_json)
-
-    tetris.gravity()
-    tetris.render(screen)
-    clock.tick(1)  # 控制游戏速度
-
-
-pygame.quit()

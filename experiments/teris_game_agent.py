@@ -57,7 +57,7 @@ class LLM_Agent:
             return f"API error: {e}"
 
     # baseline
-    def decide_move(self, state):
+    def decide_move(self, state,model):
         """调用 LLM 进行决策"""
         prompt = f"""
         You are playing Tetris. Your goal is to maximize the score by:
@@ -85,7 +85,7 @@ class LLM_Agent:
                 api_key=api_key,
             )
             completion = client.chat.completions.create(
-                model=self.model,
+                model=model,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {
