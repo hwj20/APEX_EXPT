@@ -8,6 +8,7 @@ file_path = "dataset/physics_questions.json"
 with open(file_path, "r") as f:
     physics_questions = json.load(f)
 
+
 api_key = os.getenv("OPENAI_API_KEY")
 
 # GPT-4 API 调用函数（模拟批量考试）
@@ -16,6 +17,7 @@ def ask_gpt4(result_path, questions, max_questions=200):
         with open(result_path, "r") as f:
             try:
                 existing_results = json.load(f)
+                # existing_results = [q for q in existing_results if q["question"]["type"] != "3D Circular Motion"]
             except json.JSONDecodeError:
                 existing_results = []
     else:
@@ -30,6 +32,7 @@ def ask_gpt4(result_path, questions, max_questions=200):
 
     for q in selected_questions:
         if q["question"] in existing_question_texts:
+            results.append(q)
             print(f"Skipping already processed question: {q['question']}")
             continue  # 如果已经解过这道题，跳过
         prompt = f"""
@@ -74,6 +77,28 @@ def ask_gpt4(result_path, questions, max_questions=200):
     return results
 
 
-gpt4_results_path = "gpt4_physics_results.json"
+gpt4_results_path = "gpt4_physics_results_final.json"
 gpt4_results = ask_gpt4(gpt4_results_path,physics_questions, max_questions=200)
 
+# if os.path.exists(gpt4_results_path):
+#     with open(gpt4_results_path, "r") as f:
+#         try:
+#             existing_results = json.load(f)
+#             existing_results = existing_results[25:]
+#         except json.JSONDecodeError:
+#             existing_results = []
+# else:
+#     existing_results = []
+# with open("gpt4_physics_results.json") as f:
+#     to_merge = json.load(f)
+#     to_merge = [q for q in to_merge if q["question"]["type"] != "3D Circular Motion"]
+# existing_question_texts = {r["question"]["question"] for r in existing_results}
+# results = existing_results
+# for q in to_merge:
+#     if q["question"]["question"] not in existing_question_texts:
+#         results.append(q)
+#         continue  # 如果已经解过这道题，跳过
+#
+# print(len(results))
+# with open(gpt4_results_path, "w") as f:
+#     json.dump(results, f, indent=4)
