@@ -28,28 +28,38 @@ What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after {t} secon
             "displacement_x": "", "displacement_y": "", "displacement_z": ""
         }
     }
-def generate_3d_circular_motion():
-    """ 生成 3D 圆周运动问题 """
 
-    # 圆周半径 m
-    r = round(random.uniform(0.5, 5), 2)
-    # 线速度 (vx, vy, vz) m/s
-    v = np.array([round(random.uniform(1, 10), 2) for _ in range(3)])
-    # 角速度 rad/s
-    omega = round(np.linalg.norm(v) / r, 2)
-    # 旋转平面
-    rotation_plane = random.choice(["xy-plane", "xz-plane", "yz-plane"])
+
+def generate_3d_circular_motion():
+    """ 生成更合理的 3D 圆周运动问题（基于标量速度 & 明确平面） """
+    r = round(random.uniform(0.5, 5), 2)  # 半径
+    v = round(random.uniform(1, 10), 2)   # 标量速度
+    omega = round(v / r, 2)               # 角速度
+    t = round(random.uniform(1, 10), 2)   # 时间
+    plane = random.choice(["xy-plane", "xz-plane", "yz-plane"])
 
     return {
         "type": "3D Circular Motion",
         "question": f"""
-An object moves in a circular path of radius {r} meters at a speed of {v.tolist()} m/s in the {rotation_plane}.
-Calculate its angular velocity (ω) and centripetal acceleration (ax, ay, az).
-""",
-        "parameters": {"r": r, "v": v.tolist(), "omega": omega, "rotation_plane": rotation_plane},
+        Object  (Circular Motion)  
+           - Radius: {r} meters  
+           - Speed: {v} m/s  
+           - Angular velocity: {omega} rad/s  
+           - Time: {t} s  
+           - Rotating in the {plane}  
+           - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).
+        """,
+        "parameters": {
+            "r": r,
+            "v": v,
+            "omega": omega,
+            "t": t,
+            "rotation_plane": plane
+        },
         "answer_json": {
-            "angular_velocity": "",
-            "centripetal_acceleration_x": "", "centripetal_acceleration_y": "", "centripetal_acceleration_z": ""
+            "x_B": "",
+            "y_B": "",
+            "z_B": ""
         }
     }
 
@@ -94,7 +104,8 @@ def generate_3d_multi_object_motion():
     rotation_axis = random.choice(["xy-plane", "xz-plane", "yz-plane"])  # 选择旋转平面
 
     # 抛物运动物体 C（3D 抛出）
-    v_C = np.array([round(random.uniform(5, 30), 2), round(random.uniform(5, 30), 2), round(random.uniform(5, 30), 2)])  # 初速度 (vx, vy, vz) m/s
+    v_C = np.array([round(random.uniform(5, 30), 2), round(random.uniform(5, 30), 2),
+                    round(random.uniform(5, 30), 2)])  # 初速度 (vx, vy, vz) m/s
     theta_C = round(random.uniform(15, 75), 2)  # 发射角度（相对地面）
     t_C = round(random.uniform(1, 10), 2)  # 时间 s
 
@@ -135,7 +146,6 @@ Three objects move in different types of motion in 3D space:
     }
 
 
-
 # 生成碰撞问题（弹性碰撞）
 def generate_collision_problem():
     """ 生成 3D 碰撞问题，判断是否碰撞 & 计算碰撞后轨迹 """
@@ -152,7 +162,6 @@ def generate_collision_problem():
     v1 = np.array([round(random.uniform(-10, 10), 2) for _ in range(3)])
     v2 = np.array([round(random.uniform(-10, 10), 2) for _ in range(3)])
 
-
     return {
         "type": "3D Collision",
         "question": (
@@ -163,11 +172,10 @@ def generate_collision_problem():
         "parameters": {"m1": m1, "m2": m2, "p1": p1.tolist(), "p2": p2.tolist(), "v1": v1.tolist(), "v2": v2.tolist()},
         "answer_json": {
             "will_collide": "true or false",
-            "velocity_1": {"vel_1_x":"","vel_1_y":"","vel_1_z":""},
+            "velocity_1": {"vel_1_x": "", "vel_1_y": "", "vel_1_z": ""},
             "velocity_2": {"vel_2_x": "", "vel_2_y": "", "vel_2_z": ""}
         }
     }
-
 
 
 # 重新生成包含 50 道碰撞题的完整物理题集
@@ -196,4 +204,23 @@ def save_full_questions_to_json():
 
 
 # 运行并保存完整文件
-save_full_questions_to_json()
+# save_full_questions_to_json()
+
+def revise_circular_json():
+    file_path = "physics_questions.json"
+
+    with open(file_path, "r") as f:
+        questions = json.load(f)
+    ques = []
+    for q in questions:
+        if q["type"] == "3D Circular Motion":
+            q = generate_3d_circular_motion()
+        ques.append(q)
+
+    # Save revised version
+    revised_path = "physics_questions.json"
+    with open(revised_path, "w") as f:
+        json.dump(ques, f, indent=2)
+
+
+revise_circular_json()
