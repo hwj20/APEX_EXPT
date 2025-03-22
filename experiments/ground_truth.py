@@ -46,6 +46,7 @@ def solve_3d_circular_motion(p):
         "z_B": z
     }
 
+
 def solve_3d_projectile_motion(p):
     v0 = np.array(p["v0"])
     g = 9.81
@@ -109,37 +110,62 @@ def solve_3d_multi_object_motion(params):
 
 def solve_3d_collision(params):
     m1, m2 = params["m1"], params["m2"]
-    p1, p2 = np.array(params["p1"]), np.array(params["p2"])
-    v1, v2 = np.array(params["v1"]), np.array(params["v2"])
-    rel_pos = p2 - p1
-    rel_vel = v2 - v1
-    will_collide = np.dot(rel_pos, rel_vel) < 0
+    p1 = np.array(params["p1"], dtype=np.float64)
+    p2 = np.array(params["p2"], dtype=np.float64)
+    v1 = np.array(params["v1"], dtype=np.float64)
+    v2 = np.array(params["v2"], dtype=np.float64)
+    r = params.get("r", 0.5)
+    will_col = params['will_col']
 
-    if will_collide:
-        n = (p1 - p2) / np.linalg.norm(p1 - p2)
-        v1_proj = np.dot(v1, n)
-        v2_proj = np.dot(v2, n)
-        v1_new = v1 - v1_proj * n + ((m1 - m2) * v1_proj + 2 * m2 * v2_proj) / (m1 + m2) * n
-        v2_new = v2 - v2_proj * n + ((m2 - m1) * v2_proj + 2 * m1 * v1_proj) / (m1 + m2) * n
-        return {
-            "will_collide": "true",
-            "velocity_1": {
-                "vel_1_x": round(v1_new[0], 2),
-                "vel_1_y": round(v1_new[1], 2),
-                "vel_1_z": round(v1_new[2], 2),
-            },
-            "velocity_2": {
-                "vel_2_x": round(v2_new[0], 2),
-                "vel_2_y": round(v2_new[1], 2),
-                "vel_2_z": round(v2_new[2], 2),
-            }
-        }
+    d = p1 - p2
+    v = v1 - v2
+
+    a = np.dot(v, v)
+    b = 2 * np.dot(d, v)
+    c = np.dot(d, d) - (2 * r) ** 2
+
+    discriminant = b ** 2 - 4 * a * c
+
+    if discriminant < 0 or a == 0:
+        # 无解 or 静止无相对运动
+        will_collide = False
     else:
+        sqrt_disc = np.sqrt(discriminant)
+        t1 = (-b - sqrt_disc) / (2 * a)
+        t2 = (-b + sqrt_disc) / (2 * a)
+        will_collide = (t1 >= 0 or t2 >= 0)
+    if will_col:
+        pass
+
+    if not will_collide:
         return {
             "will_collide": "false",
             "velocity_1": {"vel_1_x": "", "vel_1_y": "", "vel_1_z": ""},
             "velocity_2": {"vel_2_x": "", "vel_2_y": "", "vel_2_z": ""}
         }
+
+    # 弹性碰撞处理
+    n = (p1 - p2)
+    n /= np.linalg.norm(n)
+    v1_proj = np.dot(v1, n)
+    v2_proj = np.dot(v2, n)
+
+    v1_new = v1 - v1_proj * n + ((m1 - m2) * v1_proj + 2 * m2 * v2_proj) / (m1 + m2) * n
+    v2_new = v2 - v2_proj * n + ((m2 - m1) * v2_proj + 2 * m1 * v1_proj) / (m1 + m2) * n
+
+    return {
+        "will_collide": "true",
+        "velocity_1": {
+            "vel_1_x": round(v1_new[0], 2),
+            "vel_1_y": round(v1_new[1], 2),
+            "vel_1_z": round(v1_new[2], 2),
+        },
+        "velocity_2": {
+            "vel_2_x": round(v2_new[0], 2),
+            "vel_2_y": round(v2_new[1], 2),
+            "vel_2_z": round(v2_new[2], 2),
+        }
+    }
 
 
 # Load questions and calculate answers
@@ -164,4 +190,3 @@ for q in questions:
 output_path = "../dataset/physics_ground_truth.json"
 with open(output_path, "w") as f:
     json.dump(questions, f, indent=2)
-

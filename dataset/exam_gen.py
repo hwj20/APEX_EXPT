@@ -75,9 +75,9 @@ def generate_3d_projectile_motion():
     return {
         "type": "3D Projectile Motion",
         "question": f"""
-A projectile is launched from (0,0,0) with an initial velocity of {v0.tolist()} m/s at an angle of {angle} degrees.
-Calculate its flight time, maximum height (h), and range (dx, dy, dz).
-""",
+            A projectile is launched from (0,0,0) with an initial velocity of {v0.tolist()} m/s at an angle of {angle} degrees.
+            Calculate its flight time, maximum height (h), and range (dx, dy, dz).
+            """,
         "parameters": {"v0": v0.tolist(), "angle": angle},
         "answer_json": {
             "flight_time": "",
@@ -112,27 +112,27 @@ def generate_3d_multi_object_motion():
     return {
         "type": "3D Multi-Object Motion",
         "question": f"""
-Three objects move in different types of motion in 3D space:
-1. Object A (Linear Motion)  
-   - Initial velocity: {v_A.tolist()} m/s  
-   - Acceleration: {a_A.tolist()} m/s²  
-   - Time: {t_A} s  
-   - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).
+            Three objects move in different types of motion in 3D space:
+            1. Object A (Linear Motion)  
+               - Initial velocity: {v_A.tolist()} m/s  
+               - Acceleration: {a_A.tolist()} m/s²  
+               - Time: {t_A} s  
+               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).
 
-2. Object B (Circular Motion)  
-   - Radius: {r_B} meters  
-   - Speed: {v_B} m/s  
-   - Angular velocity: {omega_B} rad/s  
-   - Time: {t_B} s  
-   - Rotating in the {rotation_axis}  
-   - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).
+            2. Object B (Circular Motion)  
+               - Radius: {r_B} meters  
+               - Speed: {v_B} m/s  
+               - Angular velocity: {omega_B} rad/s  
+               - Time: {t_B} s  
+               - Rotating in the {rotation_axis}  
+               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).
 
-3. Object C (Projectile Motion)  
-   - Initial speed: {v_C.tolist()} m/s  
-   - Launch angle: {theta_C} degrees  
-   - Time: {t_C} s  
-   - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0).
-""",
+            3. Object C (Projectile Motion)  
+               - Initial speed: {v_C.tolist()} m/s  
+               - Launch angle: {theta_C} degrees  
+               - Time: {t_C} s  
+               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0).
+            """,
         "parameters": {
             "object_A": {"v0": v_A.tolist(), "a": a_A.tolist(), "t": t_A},
             "object_B": {"r": r_B, "v": v_B, "omega": omega_B, "t": t_B, "rotation_plane": rotation_axis},
@@ -146,36 +146,65 @@ Three objects move in different types of motion in 3D space:
     }
 
 
-# 生成碰撞问题（弹性碰撞）
-def generate_collision_problem():
-    """ 生成 3D 碰撞问题，判断是否碰撞 & 计算碰撞后轨迹 """
-
+def generate_collision_problem(bias_ratio=0.5):
+    """
+    生成更合理的 3D 碰撞问题，bias_ratio 决定撞击题目的比例。
+    """
     # 质量（kg）
     m1 = round(random.uniform(1, 10), 2)
     m2 = round(random.uniform(1, 10), 2)
+    r = 0.5  # 半径
 
-    # 初始位置 (x, y, z)
-    p1 = np.array([round(random.uniform(-5, 5), 2) for _ in range(3)])
-    p2 = np.array([round(random.uniform(-5, 5), 2) for _ in range(3)])
+    will_collide = random.random() < bias_ratio
 
-    # 初速度 (vx, vy, vz)
-    v1 = np.array([round(random.uniform(-10, 10), 2) for _ in range(3)])
-    v2 = np.array([round(random.uniform(-10, 10), 2) for _ in range(3)])
+    if will_collide:
+        # 生成一对即将相撞的物体（位置相距不远，速度相对靠近）
+        center = np.array([random.uniform(-2, 2) for _ in range(3)])
+        offset = np.array([random.uniform(1.5, 3) for _ in range(3)])
+        p1 = center - offset / 2
+        p2 = center + offset / 2
+
+        # 相对速度向彼此靠近
+        v_direction = p1 - p2
+        v_direction = v_direction / np.linalg.norm(v_direction)
+        speed1 = random.uniform(2, 6)
+        speed2 = random.uniform(2, 6)
+
+        v1 = -v_direction * speed1
+        v2 = v_direction * speed2
+
+    else:
+        # 自由飞行，不会撞
+        p1 = np.array([random.uniform(-5, 0) for _ in range(3)])
+        p2 = np.array([random.uniform(0, 5) for _ in range(3)])
+
+        # 平行方向或彼此远离
+        direction = np.array([random.uniform(0.5, 1.5) for _ in range(3)])
+        v1 = direction * random.uniform(2, 5)
+        v2 = direction * random.uniform(2, 5)
 
     return {
         "type": "3D Collision",
         "question": (
-            f"Two objects with masses {m1} kg and {m2} kg are located at positions {p1} and {p2}, "
-            f"moving with velocities {v1} m/s and {v2} m/s. Assuming an elastic collision, will they collide? "
-            f"If they collide, what are their final velocities?"
+            f"Two objects with masses {m1} kg and {m2} kg are located at positions {p1.tolist()} and {p2.tolist()}, "
+            f"the radius of both spheres is {r}. "
+            f"They are moving with velocities {v1.tolist()} m/s and {v2.tolist()} m/s. "
+            f"Assuming an elastic collision, will they collide? If they collide, what are their final velocities?"
         ),
-        "parameters": {"m1": m1, "m2": m2, "p1": p1.tolist(), "p2": p2.tolist(), "v1": v1.tolist(), "v2": v2.tolist()},
+        "parameters": {
+            "m1": m1, "m2": m2,
+            "p1": p1.tolist(), "p2": p2.tolist(),
+            "v1": v1.tolist(), "v2": v2.tolist(),
+            "r": r,
+            "will_col":will_collide
+        },
         "answer_json": {
             "will_collide": "true or false",
             "velocity_1": {"vel_1_x": "", "vel_1_y": "", "vel_1_z": ""},
             "velocity_2": {"vel_2_x": "", "vel_2_y": "", "vel_2_z": ""}
         }
     }
+
 
 
 # 重新生成包含 50 道碰撞题的完整物理题集
@@ -206,15 +235,15 @@ def save_full_questions_to_json():
 # 运行并保存完整文件
 # save_full_questions_to_json()
 
-def revise_circular_json():
+def revise_json():
     file_path = "physics_questions.json"
 
     with open(file_path, "r") as f:
         questions = json.load(f)
     ques = []
     for q in questions:
-        if q["type"] == "3D Circular Motion":
-            q = generate_3d_circular_motion()
+        if q["type"] == "3D Collision":
+            q = generate_collision_problem()
         ques.append(q)
 
     # Save revised version
@@ -223,4 +252,4 @@ def revise_circular_json():
         json.dump(ques, f, indent=2)
 
 
-revise_circular_json()
+revise_json()
