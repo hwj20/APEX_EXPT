@@ -8,7 +8,7 @@ import pandas as pd
 
 # Re-uploaded file paths
 ground_truth_path = "../dataset/physics_ground_truth.json"
-predicted_path = "../dataset/gpt4_mini_physics_results_final_APEX.json"
+predicted_path = "../dataset/gpt4_physics_results_final_APEX.json"
 
 # Tolerance threshold
 tolerance = 0.05
@@ -85,6 +85,9 @@ for question_text, ans1 in gt_index.items():
     else:
         for key in ans1:
             try:
+                # this is a fault in ground truth, then delete comparsion on  this variable
+                if key == 'range_z':
+                    continue
                 if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
                     for subkey in ans1[key]:
                         if isinstance(ans1[key][subkey], str):
@@ -95,12 +98,12 @@ for question_text, ans1 in gt_index.items():
                             v2 = safe_eval(ans2[key][subkey])
                         else:
                             v2 = ans2[key][subkey]
-                        if isinstance(v1,bool):
+                        if isinstance(v1, bool):
                             if v1 != v2:
                                 matched = False
                                 break
                             continue
-                        if abs(v1 - v2) > tolerance:
+                        if abs(v1 - v2) > abs(tolerance * v1):
                             matched = False
                             break
                 else:
@@ -113,12 +116,12 @@ for question_text, ans1 in gt_index.items():
                         v2 = safe_eval(ans2[key])
                     else:
                         v2 = ans2[key]
-                    if isinstance(v1,bool):
+                    if isinstance(v1, bool):
                         if v1 != v2:
                             matched = False
                             break
                         continue
-                    if abs(v1 - v2) > tolerance:
+                    if abs(v1 - v2) > abs(tolerance * v1):
                         matched = False
                         break
             except:
