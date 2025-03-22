@@ -115,7 +115,6 @@ def solve_3d_collision(params):
     v1 = np.array(params["v1"], dtype=np.float64)
     v2 = np.array(params["v2"], dtype=np.float64)
     r = params.get("r", 0.5)
-    will_col = params['will_col']
 
     d = p1 - p2
     v = v1 - v2
@@ -134,8 +133,7 @@ def solve_3d_collision(params):
         t1 = (-b - sqrt_disc) / (2 * a)
         t2 = (-b + sqrt_disc) / (2 * a)
         will_collide = (t1 >= 0 or t2 >= 0)
-    if will_col:
-        pass
+
 
     if not will_collide:
         return {

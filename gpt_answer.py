@@ -17,7 +17,7 @@ def ask_gpt4(result_path, questions, max_questions=200):
         with open(result_path, "r") as f:
             try:
                 existing_results = json.load(f)
-                # existing_results = [q for q in existing_results if q["question"]["type"] != "3D Circular Motion"]
+                existing_results = [q for q in existing_results if q["question"]["type"] != "3D Collision"]
             except json.JSONDecodeError:
                 existing_results = []
     else:
@@ -25,14 +25,15 @@ def ask_gpt4(result_path, questions, max_questions=200):
 
     # 计算已完成的题目数量
     existing_question_texts = {r["question"]["question"] for r in existing_results}
-    results = []
+    # results = []
 
     # 限制测试题目数量，避免消耗过多计算资源
     selected_questions = questions[:max_questions]
 
     for q in selected_questions:
         if q["question"] in existing_question_texts:
-            results.append(q)
+            with open(result_path, "w") as f:
+                json.dump(existing_results, f, indent=4)
             print(f"Skipping already processed question: {q['question']}")
             continue  # 如果已经解过这道题，跳过
         prompt = f"""
@@ -65,16 +66,16 @@ def ask_gpt4(result_path, questions, max_questions=200):
             print(gpt_answer)
             # 追加结果
             result_entry = {"question": q, "gpt4_response": gpt_answer}
-            results.append(result_entry)
+            existing_results.append(result_entry)
 
             # 立即保存到文件，防止 API 崩溃导致数据丢失
             with open(result_path, "w") as f:
-                json.dump(results, f, indent=4)
+                json.dump(existing_results, f, indent=4)
 
         except Exception as e:
-            results.append({"question": q, "gpt4_response": {"error": str(e)}})
+            existing_results.append({"question": q, "gpt4_response": {"error": str(e)}})
 
-    return results
+    return existing_results
 
 
 gpt4_results_path = "gpt4_physics_results_final.json"

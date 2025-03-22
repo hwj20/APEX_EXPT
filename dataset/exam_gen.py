@@ -196,7 +196,7 @@ def generate_collision_problem(bias_ratio=0.5):
             "p1": p1.tolist(), "p2": p2.tolist(),
             "v1": v1.tolist(), "v2": v2.tolist(),
             "r": r,
-            "will_col":will_collide
+            # "will_col":will_collide
         },
         "answer_json": {
             "will_collide": "true or false",
