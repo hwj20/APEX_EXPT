@@ -253,11 +253,8 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.001):
         }
 
 
-
-with open("../dataset/physics_questions.json", "r") as f:
-    questions = json.load(f)
-
-for q in questions:
+def solve_problem(question):
+    q = question
     t = q["type"]
     p = q["parameters"]
     if t == "3D Linear Motion":
@@ -271,61 +268,80 @@ for q in questions:
     elif t == "3D Collision":
         q["answer_json"] = simulate_3d_collision(**p)
 
-# Save output
-output_path = "../dataset/physics_answer_sim.json"
-with open(output_path, "w") as f:
-    json.dump(questions, f, indent=2)
+    return q["answer_json"]
 
 
-def compare_answers_with_tolerance(tol=0.05):
-    with open("../dataset/physics_ground_truth.json", "r") as f1:
-        questions = json.load(f1)
+if __name__ == "__main__":
+    with open("../dataset/physics_questions.json", "r") as f:
+        questions = json.load(f)
 
-    with open("../dataset/physics_answer_sim.json", "r") as f2:
-        answers = json.load(f2)
+    for q in questions:
+        t = q["type"]
+        p = q["parameters"]
+        if t == "3D Linear Motion":
+            q["answer_json"] = simulate_3d_linear_motion(**p)
+        elif t == "3D Circular Motion":
+            q["answer_json"] = simulate_3d_circular_motion(p)
+        elif t == "3D Projectile Motion":
+            q["answer_json"] = simulate_3d_projectile_motion(**p)
+        elif t == "3D Multi-Object Motion":
+            q["answer_json"] = simulate_3d_multi_object_motion(p)
+        elif t == "3D Collision":
+            q["answer_json"] = simulate_3d_collision(**p)
+    # Save output
+    output_path = "../dataset/physics_answer_sim.json"
+    with open(output_path, "w") as f:
+        json.dump(questions, f, indent=2)
 
-    assert len(questions) == len(answers), "两个文件长度不一致！"
 
-    for i in range(len(questions)):
-        q = questions[i]
-        sim = answers[i]
+    def compare_answers_with_tolerance(tol=0.05):
+        with open("../dataset/physics_ground_truth.json", "r") as f1:
+            questions = json.load(f1)
 
-        ans1 = q.get("answer_json", {})
-        ans2 = sim.get("answer_json", {})
+        with open("../dataset/physics_answer_sim.json", "r") as f2:
+            answers = json.load(f2)
 
-        # 如果结构不一样直接报错
-        if set(ans1.keys()) != set(ans2.keys()):
-            print(f"\n❗️[Mismatch Keys @ Question {i}]")
-            print("Keys in ground_truth:", ans1.keys())
-            print("Keys in simulation:", ans2.keys())
-            continue
+        assert len(questions) == len(answers), "两个文件长度不一致！"
 
-        diff = {}
-        for key in ans1:
-            try:
-                if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
-                    # 递归比较子字典
-                    for _key in ans1[key]:
-                        v1 = float(ans1[key][_key])
-                        v2 = float(ans2[key][_key])
+        for i in range(len(questions)):
+            q = questions[i]
+            sim = answers[i]
+
+            ans1 = q.get("answer_json", {})
+            ans2 = sim.get("answer_json", {})
+
+            # 如果结构不一样直接报错
+            if set(ans1.keys()) != set(ans2.keys()):
+                print(f"\n❗️[Mismatch Keys @ Question {i}]")
+                print("Keys in ground_truth:", ans1.keys())
+                print("Keys in simulation:", ans2.keys())
+                continue
+
+            diff = {}
+            for key in ans1:
+                try:
+                    if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
+                        # 递归比较子字典
+                        for _key in ans1[key]:
+                            v1 = float(ans1[key][_key])
+                            v2 = float(ans2[key][_key])
+                            if abs(v1 - v2) > tol:
+                                diff[key] = (v1, v2)
+                    else:
+                        v1 = float(ans1[key])
+                        v2 = float(ans2[key])
                         if abs(v1 - v2) > tol:
                             diff[key] = (v1, v2)
-                else:
-                    v1 = float(ans1[key])
-                    v2 = float(ans2[key])
-                    if abs(v1 - v2) > tol:
-                        diff[key] = (v1, v2)
-            except:
-                # 比较字符串或无法转为 float 的项
-                if ans1[key] != ans2.get(key):
-                    diff[key] = (ans1[key], ans2.get(key))
+                except:
+                    # 比较字符串或无法转为 float 的项
+                    if ans1[key] != ans2.get(key):
+                        diff[key] = (ans1[key], ans2.get(key))
 
-        if diff:
-            print(f"\n❗️[Mismatch @ Question {i}] Type: {q.get('type', 'Unknown')}")
-            print("Question:\n", q.get("question", "No text"))
-            print("Differences (beyond ±{:.3f}):".format(tol))
-            for k, (v1, v2) in diff.items():
-                print(f" - {k}: {v1} vs {v2}")
+            if diff:
+                print(f"\n❗️[Mismatch @ Question {i}] Type: {q.get('type', 'Unknown')}")
+                print("Question:\n", q.get("question", "No text"))
+                print("Differences (beyond ±{:.3f}):".format(tol))
+                for k, (v1, v2) in diff.items():
+                    print(f" - {k}: {v1} vs {v2}")
 
-
-compare_answers_with_tolerance(tol=0.05)
+    compare_answers_with_tolerance(tol=0.05)
