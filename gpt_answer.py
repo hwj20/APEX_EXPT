@@ -38,6 +38,7 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
             print(f"Skipping already processed question: {q['question']}")
             continue
 
+        # this step will change "answer_json" in q but we will only count the answer_json responded by LLM
         ref = solve_problem(q)
 
         prompt = f"""
@@ -153,7 +154,7 @@ def ask_gpt4(result_path, questions, max_questions=200):
 
 # gpt4_results_path = "gpt4_physics_results_final.json"
 # gpt4_results = ask_gpt4(gpt4_results_path, physics_questions, max_questions=200)
-gpt4_results_path = "gpt4_mini_physics_results_final_APEX.json"
+gpt4_results_path = "dataset/gpt4_mini_physics_results_final_APEX.json"
 gpt4_results = ask_gpt4_with_perception(gpt4_results_path, physics_questions, max_questions=200)
 
 # if os.path.exists(gpt4_results_path):
