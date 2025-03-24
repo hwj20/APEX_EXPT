@@ -1,4 +1,5 @@
 import json
+import re
 import pygame
 import random
 
@@ -25,9 +26,39 @@ SHAPES = [
 ]
 
 
+#testing
+# json_str = """
+# ```json
+# [
+#   {"move": "rotate", "times": 1},
+#   {"move": "left", "times": 1},
+#   {"move": "down", "times": 1}
+# ]
+# ```
+# """
+#
+
+def strip_markdown(text: str) -> str:
+    # 去除代码块标记 ```json ```python等
+    text = re.sub(r"```", "", text)
+    text =re.sub("json","",text)
+    # 去除标题 #
+    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
+    # 去除加粗/斜体 ** ** 或 __ __ 或 * *
+    text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
+    text = re.sub(r"(\*|_)(.*?)\1", r"\2", text)
+    # 去除行内代码 `
+    text = re.sub(r"`(.*?)`", r"\1", text)
+    # 去除列表项 - *
+    text = re.sub(r"^[-*+]\s+", "", text, flags=re.MULTILINE)
+    # 去除多余空行
+    text = re.sub(r"\n{2,}", "\n", text)
+    return text.strip()
+
+
 class Tetris:
-    def __init__(self):
-        random.seed(42)
+    def __init__(self, rng=None):
+        self.rng = rng or random.Random()  # 不会影响外部 random
         self.board = [[0] * COLUMNS for _ in range(ROWS)]  # 10x20 的棋盘
         self.current_piece = self.new_piece()  # 当前活动方块
         self.piece_x = COLUMNS // 2 - len(self.current_piece[0]) // 2
@@ -88,23 +119,29 @@ class Tetris:
         lines_cleared = ROWS - len(new_board)
         self.score += lines_cleared * 100  # 每行 +100 分
         self.board = [[0] * COLUMNS for _ in range(lines_cleared)] + new_board  # 重新填充棋盘
+        return lines_cleared
 
     def step(self, action_json):
         """解析 LLM 代理的 JSON 并执行动作"""
-        action_data = json.loads(action_json)  # 解析 JSON 格式的指令
-        action = action_data.get("move", "down")
-        times = action_data.get("times", 1)  # 默认执行 1 次
+        action_json = strip_markdown(action_json)
+        # print(action_json)
+        action_data_all = json.loads(action_json)  # 解析 JSON 格式的指令
+        if not isinstance(action_data_all, list):
+            action_data_all = [action_data_all]
+        for action_data in action_data_all:
+            action = action_data.get("move", "down")
+            times = action_data.get("times", 1)  # 默认执行 1 次
 
-        for _ in range(times):
-            if action == "left":
-                self.move(-1, 0)
-            elif action == "right":
-                self.move(1, 0)
-            elif action == "rotate":
-                self.rotate()
-            elif action == "down":
-                while not self.has_landed():
-                    self.piece_y += 1  # 直接到底
+            for _ in range(times):
+                if action == "left":
+                    self.move(-1, 0)
+                elif action == "right":
+                    self.move(1, 0)
+                elif action == "rotate":
+                    self.rotate()
+                elif action == "down":
+                    while not self.has_landed():
+                        self.piece_y += 1  # 直接到底
 
     def gravity(self):
         """控制方块自动下落"""
@@ -120,54 +157,149 @@ class Tetris:
         """去除全零行，仅返回堆积部分"""
         return [row for row in board if any(row)]
 
-    def pgd_evaluate(self):
-        """模拟多种操作的最终状态，包括落地位置、消行信息、最高堆积高度，仅返回堆积区域"""
-        scores = {}
-        actions = []
-        for k in range(1, COLUMNS):  # 从左移1格到最大，再从右移1格到最大
-            if self.piece_x - k >= 0:
-                actions.append(("left", k))
-            if self.piece_x + k < COLUMNS:
-                actions.append(("right", k))
-        for r in range(3):  # 最多旋转3次
-            actions.append(("rotate", r + 1))
-        actions.append(("down", 1))  # 直接下落
+    def apex_evaluate(self):
+        """Evaluate multiple placements of current piece with physics-based metrics."""
+        from copy import deepcopy
 
-        for action, times in actions:
-            temp_game = Tetris()
-            temp_game.board = [row[:] for row in self.board]  # 复制棋盘
-            temp_game.current_piece = [row[:] for row in self.current_piece]  # 复制方块形状
-            temp_game.piece_x = self.piece_x
-            temp_game.piece_y = self.piece_y
-            temp_game.score = self.score
+        def get_column_heights(board):
+            heights = [0] * COLUMNS
+            for x in range(COLUMNS):
+                for y in range(ROWS):
+                    if board[y][x]:
+                        heights[x] = ROWS - y
+                        break
+            return heights
 
-            # 执行移动/旋转操作
-            for _ in range(times):
-                temp_game.step(json.dumps({"move": action, "times": 1}))
+        def count_holes(board):
+            holes = 0
+            for col in zip(*board):
+                found_block = False
+                for cell in col:
+                    if cell:
+                        found_block = True
+                    elif found_block:
+                        holes += 1
+            return holes
 
-            # 让方块掉落到底
-            while not temp_game.has_landed():
-                temp_game.piece_y += 1
-            temp_game.place_piece()
-            cleared_lines = temp_game.clear_lines()
-            final_board = temp_game.board
+        def bumpiness(heights):
+            return sum(abs(heights[i] - heights[i + 1]) for i in range(len(heights) - 1))
 
-            # 计算最高堆积点
-            # highest_stack = ROWS - max(y for y, row in enumerate(final_board) if any(row)) if any(final_board) else 0
+        results = {}
 
-            # 仅返回堆积部分
-            active_rows = self.extract_active_rows(final_board)
-            highest_stack = len(active_rows)
+        for rotation_times in range(4):
+            for dx in range(-COLUMNS, COLUMNS):
+                # Deepcopy game state
+                temp_game = Tetris(rng=random.Random(999))
+                temp_game.board = deepcopy(self.board)
+                temp_game.current_piece = deepcopy(self.current_piece)
+                temp_game.piece_x = self.piece_x
+                temp_game.piece_y = self.piece_y
+                temp_game.score = self.score
 
-            scores[(action, times)] = {
-                "score": temp_game.score,
-                # "cleared_lines": cleared_lines,
-                # "final_board": final_board,
-                "highest_stack": highest_stack,
-                "active_rows": active_rows
-            }
-        return scores
+                # Try rotation
+                for _ in range(rotation_times):
+                    temp_game.step(json.dumps({"move": "rotate", "times": 1}))
 
+                # Try horizontal move
+                action = "right" if dx > 0 else "left"
+                for _ in range(abs(dx)):
+                    temp_game.step(json.dumps({"move": action, "times": 1}))
+
+                # Check if placement is valid
+                if not temp_game.valid_position():
+                    continue
+
+                # Drop piece
+                while not temp_game.has_landed():
+                    temp_game.piece_y += 1
+                temp_game.place_piece()
+
+                # Clear lines and compute post-state
+                cleared_lines = temp_game.clear_lines()
+                final_board = temp_game.board
+                heights = get_column_heights(final_board)
+                stack_height = max(heights)
+                hole_count = count_holes(final_board)
+                surface_bump = bumpiness(heights)
+
+                results[str([("rotate", rotation_times), ("move", dx)])] = {
+                    "cleared_lines": cleared_lines,
+                    "highest_stack": stack_height,
+                    "holes": hole_count,
+                    "bumpiness": surface_bump,
+                    "column_heights": heights,
+                }
+
+        return results
+
+    def valid_position(self, piece=None, offset_x=None, offset_y=None):
+        """Check whether the piece is in a valid position on the board."""
+        piece = piece if piece is not None else self.current_piece
+        x_offset = offset_x if offset_x is not None else self.piece_x
+        y_offset = offset_y if offset_y is not None else self.piece_y
+
+        for row_idx, row in enumerate(piece):
+            for col_idx, cell in enumerate(row):
+                if cell:
+                    board_x = x_offset + col_idx
+                    board_y = y_offset + row_idx
+                    # 越界检测
+                    if board_x < 0 or board_x >= COLUMNS or board_y < 0 or board_y >= ROWS:
+                        return False
+                    # 碰撞检测
+                    if self.board[board_y][board_x]:
+                        return False
+        return True
+
+    # def apex_evaluate(self):
+    #     """模拟多种操作的最终状态，包括落地位置、消行信息、最高堆积高度，仅返回堆积区域"""
+    #     scores = {}
+    #     for rotation_times in range(4):
+    #         for k in range(1, COLUMNS):  # 从左移1格到最大，再从右移1格到最大
+    #             temp_game = Tetris()
+    #             temp_game.board = [row[:] for row in self.board]  # 复制棋盘
+    #             temp_game.current_piece = [row[:] for row in self.current_piece]  # 复制方块形状
+    #             temp_game.piece_x = self.piece_x
+    #             temp_game.piece_y = self.piece_y
+    #             temp_game.score = self.score
+    #             for _ in range(rotation_times):
+    #                 temp_game.step(json.dumps({"move": 'rotate', "times": 1}))
+    #             action = None
+    #             if self.piece_x - k >= 0:
+    #                 action = 'left'
+    #             elif self.piece_x + k < COLUMNS:
+    #                 action = 'right'
+    #             else:
+    #                 continue
+    #
+    #
+    #             # 执行移动/旋转操作
+    #             for _ in range(k):
+    #                 temp_game.step(json.dumps({"move": action, "times": 1}))
+    #
+    #             # 让方块掉落到底
+    #             while not temp_game.has_landed():
+    #                 temp_game.piece_y += 1
+    #             temp_game.place_piece()
+    #             cleared_lines = temp_game.clear_lines()
+    #             final_board = temp_game.board
+    #
+    #             # 计算最高堆积点
+    #             # highest_stack = ROWS - max(y for y, row in enumerate(final_board) if any(row)) if any(final_board) else 0
+    #
+    #             # 仅返回堆积部分
+    #             active_rows = self.extract_active_rows(final_board)
+    #             highest_stack = len(active_rows)
+    #
+    #             scores[str([('rotate', rotation_times), (action, k)])] = {
+    #                 "score": temp_game.score,
+    #                 # "cleared_lines": cleared_lines,
+    #                 # "final_board": final_board,
+    #                 "highest_stack": highest_stack,
+    #                 # "active_rows": active_rows
+    #             }
+    #     return scores
+    #
     def get_state(self):
         """返回当前棋盘和方块位置，方块标记为 2"""
         board_with_piece = [row[:] for row in self.board]  # 复制棋盘
@@ -209,8 +341,8 @@ class Tetris:
         screen.blit(score_text, (10, 10))
 
         pygame.display.flip()
-    def capture_game_screen(self,screen):
+
+    def capture_game_screen(self, screen):
         """截取当前游戏画面，转换成 VLM 可读格式"""
         pygame.image.save(screen, "screenshot.png")  # 存为 PNG
         return "screenshot.png"  # 返回文件路径
-

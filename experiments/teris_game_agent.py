@@ -30,9 +30,17 @@ class LLM_Agent:
         - "rotate": Rotate the piece 90 degrees clockwise.
         - "down": Instantly drop the piece to the lowest possible position.(max times = 1)
         
-        Decide the best move sequence in JSON format:
-        {{"move": "left/right/rotate/down", "times": n}}
-        Return only a valid JSON object with no additional text or markdown symbol.
+        Decide the best move sequence in JSON format as a list of actions. Each action should include the move and how many times to perform it.
+
+        Example:
+        [
+          {{"move": "left", "times": 2}},
+          {{"move": "rotate", "times": 1}},
+          {{"move": "down", "times": 1}}
+        ]
+
+        Allowed moves are: "left", "right", "rotate", and "down".
+        Only return the JSON array without any explanation or markdown. No Markdown
         """
 
         system_prompt = "You are a Tetris AI agent."
@@ -74,9 +82,17 @@ class LLM_Agent:
         - "rotate": Rotate the piece 90 degrees clockwise.
         - "down": Instantly drop the piece to the lowest possible position.(max times = 1)
         
-        Decide the best move sequence in JSON format:
-        {{"move": "left/right/rotate/down", "times": n}}
-        Return only a valid JSON object with no additional text or markdown symbol.
+        Decide the best move sequence in JSON format as a list of actions. Each action should include the move and how many times to perform it.
+
+        Example:
+        [
+          {{"move": "left", "times": 2}},
+          {{"move": "rotate", "times": 1}},
+          {{"move": "down", "times": 1}}
+        ]
+
+        Allowed moves are: "left", "right", "rotate", and "down".
+        Only return the JSON array without any explanation or markdown. No Markdown
         """
 
         system_prompt = "You are a Tetris AI agent."
@@ -114,9 +130,18 @@ class LLM_Agent:
         - "rotate": Rotate the piece 90 degrees clockwise.
         - "down": Instantly drop the piece to the lowest possible position.(max times = 1)
 
-        Decide the best move sequence in JSON format:
-        {{"move": "left/right/rotate/down", "times": n}}
-        Return only a valid JSON object with no additional text or markdown symbol.
+        Decide the best move sequence in JSON format as a list of actions. Each action should include the move and how many times to perform it.
+
+        Example:
+        [
+          {{"move": "left", "times": 2}},
+          {{"move": "rotate", "times": 1}},
+          {{"move": "down", "times": 1}}
+        ]
+
+        Allowed moves are: "left", "right", "rotate", and "down". 
+        
+        Only return the JSON array without any explanation or markdown. No Markdown
 
         Here is the current board state:
         """
@@ -178,9 +203,15 @@ class LLM_Agent:
         - "rotate": Rotate the piece 90 degrees clockwise.
         - "down": Instantly drop the piece to the lowest possible position.(max times = 1)
 
-        Decide the best move sequence in JSON format:
-        {{"move": "left/right/rotate/down", "times": n}}
-        Return only a valid JSON object with no additional text or markdown symbol.
+        Example:
+        [
+          {{"move": "left", "times": 2}},
+          {{"move": "rotate", "times": 1}},
+          {{"move": "down", "times": 1}}
+        ]
+
+        Allowed moves are: "left", "right", "rotate", and "down".
+        Only return the JSON array without any explanation or markdown. No Markdown
 
         Here is the current board state:
         """

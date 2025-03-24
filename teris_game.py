@@ -1,3 +1,5 @@
+import random
+
 import pygame
 from experiments.teris_game_agent import *
 from experiments.utils.Tetris import *
@@ -12,16 +14,16 @@ results = {
 }
 
 
-def run_tetris(method, save_path="tetris_game_history.json"):
+def run_tetris(method, save_path="tetris_game_history_30_pgd.json"):
     # 运行游戏
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
-    tetris = Tetris()
+    tetris = Tetris(rng=random.Random(42))
     ag = LLM_Agent()
 
     game_history = []  # 存储游戏历史
     cnt = 0
-    MAX_EPOCH = 15
+    MAX_EPOCH = 30
 
     while tetris.running:
         if cnt < MAX_EPOCH:
@@ -42,7 +44,7 @@ def run_tetris(method, save_path="tetris_game_history.json"):
             # 选择不同 AI 方案
             action_json = ''
             if method == 'PGD':
-                pgd_results = tetris.pgd_evaluate()
+                pgd_results = tetris.apex_evaluate()
                 action_json = ag.decide_move_pgd(state, pgd_results)
             elif method == "gpt-4o" or method == "gpt-4o-mini":
                 action_json = ag.decide_move(state, method)
@@ -50,7 +52,7 @@ def run_tetris(method, save_path="tetris_game_history.json"):
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move(image_path)
             elif method == 'VLM_PGD':
-                pgd_results = tetris.pgd_evaluate()
+                pgd_results = tetris.apex_evaluate()
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move_pgd(image_path, pgd_results)
 
@@ -88,8 +90,8 @@ def run_tetris(method, save_path="tetris_game_history.json"):
 
     return
 
-
-run_tetris('gpt-4o-mini')
+if __name__ == "__main__":
+    run_tetris("PGD")
 
 
 # for model in results.keys():

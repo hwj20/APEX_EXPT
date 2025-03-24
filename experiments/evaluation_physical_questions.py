@@ -53,8 +53,10 @@ def safe_eval(expr):
             return 0
         expr = expr.replace("^", "**")  # 替换数学表达式中的 ^
 
-        if expr.lower() == 'true' or expr.lower() == 'false':
-            return bool(expr)
+        if expr.lower() == 'true':
+            return True
+        elif expr.lower() == 'false':
+            return False
         else:
             allowed_funcs = {
                 "sin": math.sin,
@@ -84,6 +86,7 @@ for question_text, ans1 in gt_index.items():
         matched = False
     else:
         for key in ans1:
+            skip_rest = False
             try:
                 # this is a fault in ground truth, then delete comparsion on  this variable
                 if key == 'range_z':
@@ -98,11 +101,6 @@ for question_text, ans1 in gt_index.items():
                             v2 = safe_eval(ans2[key][subkey])
                         else:
                             v2 = ans2[key][subkey]
-                        if isinstance(v1, bool):
-                            if v1 != v2:
-                                matched = False
-                                break
-                            continue
                         if abs(v1 - v2) > abs(tolerance * v1):
                             matched = False
                             break
@@ -111,14 +109,19 @@ for question_text, ans1 in gt_index.items():
                         v1 = safe_eval(ans1[key])
                     else:
                         v1 = ans1[key]
-
                     if isinstance(ans2[key], str):
                         v2 = safe_eval(ans2[key])
                     else:
                         v2 = ans2[key]
+
+                    # check will collide
                     if isinstance(v1, bool):
                         if v1 != v2:
                             matched = False
+                            break
+                        # v1 = v2
+                        if not v1:
+                            skip_rest = True
                             break
                         continue
                     if abs(v1 - v2) > abs(tolerance * v1):
@@ -126,13 +129,19 @@ for question_text, ans1 in gt_index.items():
                         break
             except:
                 if ans1[key] != ans2.get(key):
+                    print("error on keys")
                     print(ans1)
                     print(ans2)
                     matched = False
                     break
+            if skip_rest:
+                break
 
     if matched:
         results[task_type]["correct"] += 1
+    else:
+        print(ans1)
+        print(ans2)
 
 # Compile results into DataFrame
 result_data = []
