@@ -6,6 +6,7 @@ import cv2
 # ✅ 创建 MuJoCo 物理环境
 model = mujoco.MjModel.from_xml_string("""
 <mujoco>
+    <option gravity="0 0 0"/>
     <worldbody>
         <body name="robot" pos="0 0 0">
             <freejoint/>

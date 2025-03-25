@@ -11,18 +11,18 @@ class LLM_Agent:
     def __init__(self, model="gpt-4o"):
         self.model = model
 
-    # PGD
-    def decide_move_pgd(self, state, pgd_results):
+    # APEX
+    def decide_move_APEX(self, state, APEX_results):
         prompt = f"""
         You are playing Tetris. Your goal is to maximize the score by:
         - Clearing as many lines as possible.
         - Keeping the board as flat as possible.
         - Avoiding unnecessary stacking.
 
-        Here is the current board state(0-blank,1-landed piece,2-current piece):
+        Here is the current board state(0-blank,,1-current piece, 2-landed piece):
         {state}
         
-        Here are physical engine analysis:{pgd_results}
+        Here are physical engine analysis:{APEX_results}
 
         Available moves:
         - "left": Move the piece left by one column.
@@ -73,7 +73,7 @@ class LLM_Agent:
         - Keeping the board as flat as possible.
         - Avoiding unnecessary stacking.
 
-        Here is the current board state(0-blank,1-landed piece,2-current piece):
+        Here is the current board state(0-blank,,1-current piece, 2-landed piece):
         {state}
 
         Available moves:
@@ -115,14 +115,14 @@ class LLM_Agent:
             return generated_answer
         except Exception as e:
             return f"API error: {e}"
-    def vlm_decide_move_pgd(self, image_path,pgd_results):
+    def vlm_decide_move_APEX(self, image_path,APEX_results):
         prompt = f"""
         You are playing Tetris. Your goal is to maximize the score by:
         - Clearing as many lines as possible.
         - Keeping the board as flat as possible.
         - Avoiding unnecessary stacking.
         
-        Here are physical engine analysis:{pgd_results}
+        Here are physical engine analysis:{APEX_results}
 
         Available moves:
         - "left": Move the piece left by one column.
