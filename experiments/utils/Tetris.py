@@ -72,6 +72,44 @@ class Tetris:
         self.score = 0  # 计分系统！
         self.gravity_counter = 0  # 控制重力
         self.previous_state = None
+    def final_evaluation(self):
+        """Evaluate final score, max height, holes, bumps, and height change per move"""
+        def get_column_heights(board):
+            heights = [0] * COLUMNS
+            for x in range(COLUMNS):
+                for y in range(ROWS):
+                    if board[y][x]:
+                        heights[x] = ROWS - y
+                        break
+            return heights
+
+        def count_holes(board):
+            holes = 0
+            for col in zip(*board):
+                found_block = False
+                for cell in col:
+                    if cell:
+                        found_block = True
+                    elif found_block:
+                        holes += 1
+            return holes
+
+        def bumpiness(heights):
+            return sum(abs(heights[i] - heights[i + 1]) for i in range(len(heights) - 1))
+
+        heights = get_column_heights(self.board)
+        max_stack_height = max(heights)
+        hole_count = count_holes(self.board)
+        bump = bumpiness(heights)
+        height_delta = max_stack_height / max(1, self.gravity_counter)
+
+        return {
+            "final_score": self.score,
+            "max_stack_height": max_stack_height,
+            "holes": hole_count,
+            "bumps": bump,
+            "height_delta_per_move": round(height_delta, 2)
+        }
 
     def new_piece(self):
         """生成一个新方块"""

@@ -1,29 +1,62 @@
-import random
-
-import pygame
-from experiments.teris_game_agent import *
+from experiments.utils.teris_game_agent import *
 from experiments.utils.Tetris import *
 
-pygame.init()
 results = {
-    "APEX": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "VLM+APEX": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "VLM": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "gpt-4o": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "gpt-4o-mini": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []},
-    "o3-mini": {"max_stack_height": [], "rounds_survived": [], "lines_cleared": []}
+    "gpt-4o-mini": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
+    "APEX": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
+    # "VLM_APEX": {
+    #     "final_score": [],
+    #     "max_stack_height": [],
+    #     "holes": [],
+    #     "bumps": [],
+    #     "height_delta_per_move": []
+    # },
+    # "VLM": {
+    #     "final_score": [],
+    #     "max_stack_height": [],
+    #     "holes": [],
+    #     "bumps": [],
+    #     "height_delta_per_move": []
+    # },
+    # "gpt-4o": {
+    #     "final_score": [],
+    #     "max_stack_height": [],
+    #     "holes": [],
+    #     "bumps": [],
+    #     "height_delta_per_move": []
+    # },
+
+    # "o3-mini": {
+    #     "final_score": [],
+    #     "max_stack_height": [],
+    #     "holes": [],
+    #     "bumps": [],
+    #     "height_delta_per_move": []
+    # }
 }
 
 
-def run_tetris(method, save_path="tetris_game_history_", save_type=".json"):
-    save_path = save_path + method + save_type
-    # 运行游戏
+
+def run_tetris(method, save_path="tetris_game_history_", save_type=".json", rng=random.Random(42)):
+    pygame.init()
+    # save_path = save_path + method + save_type
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
-    tetris = Tetris(rng=random.Random(42))
+    tetris = Tetris(rng=rng)
     ag = LLM_Agent(model="gpt-4o")
-
-    game_history = []  # 存储游戏历史
+    game_history = []
     cnt = 0
     MAX_EPOCH = 30
 
@@ -37,19 +70,15 @@ def run_tetris(method, save_path="tetris_game_history_", save_type=".json"):
             if event.type == pygame.QUIT:
                 tetris.running = False
 
-        # 获取当前游戏状态
         state = tetris.get_state()
 
-        if state != tetris.previous_state and tetris.piece_y > 1:  # 只有状态变化时才执行
+        if state != tetris.previous_state and tetris.piece_y > 1:
             tetris.render(screen)
-
-            # 选择不同 AI 方案
             action_json = ''
             if method == 'APEX':
                 APEX_results = tetris.apex_evaluate()
-                print(APEX_results)
                 action_json = ag.decide_move_APEX(state, APEX_results)
-            elif method == "gpt-4o" or method == "gpt-4o-mini" or method == "o3-mini":
+            elif method in ["gpt-4o", "gpt-4o-mini", "o3-mini"]:
                 action_json = ag.decide_move(state, method)
             elif method == 'VLM':
                 image_path = tetris.capture_game_screen(screen)
@@ -59,11 +88,9 @@ def run_tetris(method, save_path="tetris_game_history_", save_type=".json"):
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move_APEX(image_path, APEX_results)
 
-            # 确保 AI 不会返回 None
             if action_json is None:
                 action_json = '{"move":"down","times":1}'
 
-            # 记录当前状态
             game_history.append({
                 "board": state["board"],
                 "piece": state["piece"],
@@ -73,46 +100,43 @@ def run_tetris(method, save_path="tetris_game_history_", save_type=".json"):
                 "score": state["score"]
             })
 
-            tetris.previous_state = state  # 更新之前的状态
-            print(state)
-            print(action_json)
-
-            # 执行 AI 选择的操作
+            tetris.previous_state = state
             tetris.step(action_json)
 
-        # 处理重力
         tetris.gravity()
         tetris.render(screen)
-        clock.tick(1)  # 控制游戏速度
+        clock.tick(1)
 
     pygame.quit()
 
-    # 游戏结束，保存所有历史状态
     with open(save_path, "w") as f:
         json.dump(game_history, f, indent=4)
     print(f"游戏历史已保存到 {save_path}")
 
-    return
+    return tetris.final_evaluation()
 
 
 if __name__ == "__main__":
-    run_tetris("APEX")
-    # run_tetris("VLM+APEX")
-    # run_tetris("VLM")
-    # run_tetris("gpt-4o-mini")
-    # run_tetris("o3-mini")
+    # run_tetris("gpt-4o", rng=random.Random(42))
+    # run_tetris("APEX", rng=random.Random(42))
+    # run_tetris("VLM_APEX", rng=random.Random(42))
+    # run_tetris("VLM", rng=random.Random(42))
+    # run_tetris("gpt-4o-mini", rng=random.Random(42))
+    # run_tetris("o3-mini", rng=random.Random(42))
 
-# for model in results.keys():
-#     for i in range(5):  # 每个模型跑 5 盘
-#         save_path = model + "_tetris_game_history.json"
-#         run_tetris(model, save_path)
-# max_height = run_tetris(model)["max_stack_height"]
-# rounds = run_tetris(model)["rounds_survived"]
-# lines = run_tetris(model)["lines_cleared"]
-#
-# results[model]["max_stack_height"].append(max_height)
-# results[model]["rounds_survived"].append(rounds)
-# results[model]["lines_cleared"].append(lines)
+    for model in results.keys():
+        for i in range(5):  # 每个模型跑 5 盘
+            save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
+            result = run_tetris(model, save_path, rng=random.Random(42 + i))
+
+            results[model]["final_score"].append(result["final_score"])
+            results[model]["max_stack_height"].append(result["max_stack_height"])
+            results[model]["holes"].append(result["holes"])
+            results[model]["bumps"].append(result["bumps"])
+            results[model]["height_delta_per_move"].append(result["height_delta_per_move"])
+            # 实时保存结果以防中断
+            with open("results/tetris/tetris_eval_results.json", "w") as f:
+                json.dump(results, f, indent=2)
 
 
 def if_you_want_to_play_game():
