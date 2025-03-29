@@ -25,6 +25,40 @@ def strip_markdown(text: str) -> str:
     text = re.sub(r"\n{2,}", "\n", text)
     return text.strip()
 
+simple_xml = """
+<mujoco> 
+    <option gravity="0 0 0" integrator="RK4" timestep="0.01" />
+    
+    <visual>
+        <map znear="0.01"/>
+    </visual>
+
+    <asset>
+        <!-- 添加网格纹理 -->
+        <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.8 0.8 0.8" rgb2="1 1 1"/>
+        <material name="grid_mat" texture="grid" texrepeat="10 10" reflectance="0.2"/>
+    </asset>
+
+    <worldbody>
+    <camera name="top" pos="0 0 5" xyaxes="1 0 0 0 1 0"/>
+        <!-- 添加地板（平面 + 网格材质） -->
+        <geom name="floor" type="plane" size="5 5 0.1" material="grid_mat" rgba="1 1 1 1"/>
+
+        <body name="robot" pos="0 0 0.1">
+            <freejoint/>
+            <geom type="sphere" size="0.1" rgba="0 1 0 1"/>
+        </body>
+        <body name="cat1" pos="1 1 0.1">
+            <freejoint/>
+            <geom type="sphere" size="0.1" rgba="1 0 0 1"/>
+        </body>
+        <body name="cat2" pos="-1 -1 0.1">
+            <freejoint/>
+            <geom type="sphere" size="0.1" rgba="1 0 0 1"/>
+        </body>
+    </worldbody>
+</mujoco>
+"""
 
 Simple_xml = """
 <mujoco>
@@ -48,6 +82,7 @@ Simple_xml = """
 
 Medium_Hard_xml = """
 <mujoco>
+<option gravity="0 0 0"/>
 <worldbody>
     <!-- Robot -->
     <body name="robot" pos="0 0 0">
@@ -112,7 +147,7 @@ def run_exp(difficulty):
     if difficulty == 'Simple':
         cat_speed = 3.0
         # ✅ 创建 MuJoCo 物理环境
-        model = mujoco.MjModel.from_xml_string(Simple_xml)
+        model = mujoco.MjModel.from_xml_string(simple_xml)
     elif difficulty == "Medium":
         cat_speed = 3.0
         # ✅ 创建 MuJoCo 物理环境
@@ -213,6 +248,6 @@ def run_exp(difficulty):
     print(f"turing_cat_llm_{difficulty}.mp4")
 
 
-# run_exp("Simple")
-run_exp("Medium")
+run_exp("Simple")
+# run_exp("Medium")
 # run_exp("hard")
