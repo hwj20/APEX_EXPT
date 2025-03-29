@@ -8,7 +8,7 @@ from collections import defaultdict
 with open("../dataset/physics_ground_truth.json", "r") as f1:
     ground_truth_data = json.load(f1)
 
-with open("./gpt4_physics_results_final_APEX.json", "r") as f2:
+with open("./gpt4_physics_results_final.json", "r") as f2:
     prediction_data = json.load(f2)
 
 # Tolerance threshold
@@ -80,7 +80,7 @@ for question_text, ans1 in gt_index.items():
             for subkey in ans1[key]:
                 val = ans2[key].get(subkey)
                 if isinstance(val, str) and ("+" in val or "*" in val):
-                    print(ans2[key])
+                    # print(ans2[key])
                     results[task_type]["numeric_total"] += 1
                 v1 = safe_eval(ans1[key][subkey]) if isinstance(ans1[key][subkey], str) else ans1[key][subkey]
                 v2 = safe_eval(ans2[key].get(subkey)) if isinstance(ans2[key].get(subkey), str) else ans2[key].get(subkey)
@@ -101,7 +101,7 @@ for question_text, ans1 in gt_index.items():
 
             val = ans2.get(key)
             if isinstance(val, str) and ("+" in val or "*" in val):
-                print(ans2[key])
+                # print(ans2[key])
                 results[task_type]["numeric_total"] += 1
 
             if isinstance(v1, bool):
@@ -118,6 +118,9 @@ for question_text, ans1 in gt_index.items():
 
     if matched:
         results[task_type]["correct"] += 1
+    else:
+        print(ans1)
+        print(ans2)
 
 # Compile DataFrame
 result_data = []

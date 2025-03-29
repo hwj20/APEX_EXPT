@@ -17,7 +17,7 @@ def generate_tetris_action_diff_grid(method, history_file="tetris_game_history_3
 
     image_list = []
 
-    for step in game_history[:15]:  # 每步生成2张图 → 最多拼30张
+    for step in game_history:  # 每步生成2张图 → 最多拼30张
         # Step Before
         screen.fill(BLACK)
         tetris = Tetris(generate_new_piece=False)
@@ -51,7 +51,7 @@ def generate_tetris_action_diff_grid(method, history_file="tetris_game_history_3
 
     # 拼图：5列 × 6行（前后图像交错排）
     cols = 6
-    rows = 5  # 15 steps × 2 = 30 图像
+    rows = 3  # 15 steps × 2 = 30 图像
     thumb_width = WIDTH
     thumb_height = HEIGHT
     grid_image = Image.new("RGB", (cols * thumb_width, rows * thumb_height))
@@ -132,10 +132,10 @@ def replay_tetris(history_file="tetris_game_history_30_mini.json"):
 
 
 if __name__ == "__main__":
-    method = "APEX"
-    save_path = "tetris_game_history_"
+    method = "VLM"
+    save_path = "./visual_demo/demo_"
     save_type = ".json"
-    save_path = save_path+method+save_type
+    save_path = save_path+method+str(30)+save_type
     generate_tetris_action_diff_grid(method,save_path)
     # generate_tetris_summary_grid(method,save_path)
     # replay_tetris()

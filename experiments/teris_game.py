@@ -16,49 +16,50 @@ results = {
         "bumps": [],
         "height_delta_per_move": []
     },
-    # "VLM_APEX": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # },
-    # "VLM": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # },
-    # "gpt-4o": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # },
+    "VLM_APEX": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
+    "VLM": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
+    "gpt-4o": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
 
-    # "o3-mini": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # }
+    "o3-mini": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    }
 }
 
 
 
-def run_tetris(method, save_path="tetris_game_history_", save_type=".json", rng=random.Random(42)):
+def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(42), auto_gen_path=False):
     pygame.init()
-    # save_path = save_path + method + save_type
+    MAX_EPOCH = 30
+    if auto_gen_path:
+        save_path = save_path+method+str(MAX_EPOCH) + save_type
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     tetris = Tetris(rng=rng)
     ag = LLM_Agent(model="gpt-4o")
     game_history = []
     cnt = 0
-    MAX_EPOCH = 30
 
     while tetris.running:
         if cnt < MAX_EPOCH:
@@ -117,26 +118,26 @@ def run_tetris(method, save_path="tetris_game_history_", save_type=".json", rng=
 
 
 if __name__ == "__main__":
-    # run_tetris("gpt-4o", rng=random.Random(42))
-    # run_tetris("APEX", rng=random.Random(42))
-    # run_tetris("VLM_APEX", rng=random.Random(42))
-    # run_tetris("VLM", rng=random.Random(42))
-    # run_tetris("gpt-4o-mini", rng=random.Random(42))
-    # run_tetris("o3-mini", rng=random.Random(42))
-
-    for model in results.keys():
-        for i in range(5):  # 每个模型跑 5 盘
-            save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
-            result = run_tetris(model, save_path, rng=random.Random(42 + i))
-
-            results[model]["final_score"].append(result["final_score"])
-            results[model]["max_stack_height"].append(result["max_stack_height"])
-            results[model]["holes"].append(result["holes"])
-            results[model]["bumps"].append(result["bumps"])
-            results[model]["height_delta_per_move"].append(result["height_delta_per_move"])
-            # 实时保存结果以防中断
-            with open("results/tetris/tetris_eval_results.json", "w") as f:
-                json.dump(results, f, indent=2)
+    # run_tetris("APEX", rng=random.Random(42),auto_gen_path=True)
+    # run_tetris("gpt-4o", rng=random.Random(42),auto_gen_path=True)
+    # run_tetris("VLM_APEX", rng=random.Random(42),auto_gen_path=True)
+    # run_tetris("VLM", rng=random.Random(42),auto_gen_path=True)
+    run_tetris("gpt-4o-mini", rng=random.Random(42),auto_gen_path=True)
+    # run_tetris("o3-mini", rng=random.Random(42),auto_gen_path=True)
+    #
+    # for model in results.keys():
+    #     for i in range(5):  # 每个模型跑 5 盘
+    #         save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
+    #         result = run_tetris(model, save_path, rng=random.Random(42 + i))
+    #
+    #         results[model]["final_score"].append(result["final_score"])
+    #         results[model]["max_stack_height"].append(result["max_stack_height"])
+    #         results[model]["holes"].append(result["holes"])
+    #         results[model]["bumps"].append(result["bumps"])
+    #         results[model]["height_delta_per_move"].append(result["height_delta_per_move"])
+    #         # 实时保存结果以防中断
+    #         with open("../results/tetris/tetris_eval_results.json", "w") as f:
+    #             json.dump(results, f, indent=2)
 
 
 def if_you_want_to_play_game():
