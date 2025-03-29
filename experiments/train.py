@@ -12,15 +12,27 @@ HIDDEN_DIM = 64
 NUM_HEADS = 4
 EDGE_FEAT_DIM = 3
 NODE_FEAT_DIM = 7
-EPOCHS = 20
-LR = 1e-3
+EPOCHS = 50
+LR = 1e-4
 SEED = 2025
 MODEL_SAVE_PATH = "diffgraphormer_physics.pt"
 DATA_PATH = "graphormer_physics_risk.json"
 
+def focal_loss(pred, target, alpha=0.25, gamma=2.0, eps=1e-6):
+    """
+    Binary focal loss.
+    pred: [batch_size] predicted probabilities (after sigmoid)
+    target: [batch_size] ground truth (0 or 1)
+    """
+    pred = pred.clamp(min=eps, max=1. - eps)
+    pt = pred * target + (1 - pred) * (1 - target)
+    w = alpha * target + (1 - alpha) * (1 - target)
+    loss = -w * (1 - pt) ** gamma * pt.log()
+    return loss.mean()
+
 # === 设备选择 ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+print(device)
 # === 数据加载 ===
 def load_dataset(path):
     with open(path, 'r') as f:
@@ -55,7 +67,8 @@ def train(model, loader, optimizer):
         optimizer.zero_grad()
         pred = model(data.x_t, data.x_t_dt, data.edge_index)
         # pred = model(data.x_t, data.x_t_dt, data.edge_index, data.edge_attr_t, data.edge_attr_t_dt)
-        loss = F.binary_cross_entropy(pred, data.edge_label)
+        loss = F.binary_cross_entropy(pred,data.edge_label)
+        # loss = focal_loss(pred, data.edge_label, alpha=0.25, gamma=2.0)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
@@ -70,6 +83,7 @@ def evaluate(model, loader):
         data = data.to(device)
         pred = model(data.x_t, data.x_t_dt, data.edge_index)
         pred_label = (pred > 0.5).float()
+        # print(pred_label)
         correct += (pred_label == data.edge_label).sum().item()
         total += len(pred)
     return correct / total if total > 0 else 0
