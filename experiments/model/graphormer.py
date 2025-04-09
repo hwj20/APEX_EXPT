@@ -16,7 +16,7 @@ class DiffGraphormer(nn.Module):
         self.dropout = nn.Dropout(dropout)
         self.edge_classifier = nn.Linear(hidden_dim, 1)
 
-    def forward(self, x_t, x_t_dt, edge_index):
+    def forward(self, x_t, x_t_dt, edge_index, dt):
         """
         x_t: [num_nodes, 7] 包含是否主节点 (1维), pos_t (3维), velocity_unit (3维)
         x_t_dt: [num_nodes, 7] 其实我们只用 pos_t_dt 来计算速度大小
@@ -28,7 +28,7 @@ class DiffGraphormer(nn.Module):
 
         pos_t = x_t[:, 1:4]         # 当前帧位置
         pos_t_dt = x_t_dt[:, 1:4]   # 下一帧位置
-        vel_t = F.normalize(pos_t_dt - pos_t, dim=-1)  # 单位速度方向向量
+        vel_t = F.normalize(pos_t_dt - pos_t, dim=-1) /dt # 单位速度方向向量
 
         master_pos = pos_t[master_idx].unsqueeze(0)         # shape: [1, 3]
         master_vel = vel_t[master_idx].unsqueeze(0)         # shape: [1, 3]
@@ -54,6 +54,32 @@ class DiffGraphormer(nn.Module):
         edge_repr = x_trans[edge_index[0]] + x_trans[edge_index[1]]  # [num_edges, hidden_dim]
         edge_pred = torch.sigmoid(self.edge_classifier(edge_repr))   # [num_edges, 1]
         return edge_pred.view(-1)
+
+
+def focal_loss(logits, targets, alpha=0.25, gamma=2.0, reduction='mean'):
+    """
+    logits: 预测的 raw logits, shape [batch_size]
+    targets: ground truth, shape [batch_size], 取值为 0 或 1
+    alpha: 正例权重
+    gamma: 难易样本调节因子
+    reduction: 'mean' or 'sum'
+    """
+    # 将 logits 转为概率
+    probs = torch.sigmoid(logits)
+    probs = torch.clamp(probs, 1e-6, 1. - 1e-6)
+
+    pt = probs * targets + (1 - probs) * (1 - targets)  # pt = p_t
+    w = alpha * targets + (1 - alpha) * (1 - targets)   # 正负样本权重
+
+    loss = -w * (1 - pt) ** gamma * torch.log(pt)
+
+    if reduction == 'mean':
+        return loss.mean()
+    elif reduction == 'sum':
+        return loss.sum()
+    else:
+        return loss
+
 if __name__ == "__main__":
     torch.manual_seed(42)
 
@@ -61,6 +87,7 @@ if __name__ == "__main__":
     num_edges = 5
     node_feat_dim = 7
     edge_feat_dim = 3
+    dt = 0.01
 
     x_t = torch.randn((num_nodes, node_feat_dim))
     x_t_dt = torch.randn((num_nodes, node_feat_dim))
@@ -70,5 +97,5 @@ if __name__ == "__main__":
     edge_index = torch.tensor([[0]*num_edges, [1, 2, 3, 4, 5]], dtype=torch.long)
 
     model = DiffGraphormer()
-    preds = model(x_t, x_t_dt, edge_index)
+    preds = model(x_t, x_t_dt, edge_index,dt)
     print("⚡ Predicted danger scores:", preds)
