@@ -167,7 +167,7 @@ def solve_3d_collision(params):
 
 
 # Load questions and calculate answers
-with open("../dataset/physics_questions.json", "r") as f:
+with open("physics_questions.json", "r") as f:
     questions = json.load(f)
 
 for q in questions:
@@ -185,6 +185,6 @@ for q in questions:
         q["answer_json"] = solve_3d_collision(p)
 
 # Save output
-output_path = "../dataset/physics_ground_truth.json"
+output_path = "physics_ground_truth.json"
 with open(output_path, "w") as f:
     json.dump(questions, f, indent=2)

@@ -2,7 +2,7 @@ import json
 import os
 
 from openai import OpenAI
-from  experiments.mujoco_perception import solve_problem
+from experiments.utils.mujoco_perception import solve_problem
 
 # 读取物理题
 file_path = "dataset/physics_questions.json"

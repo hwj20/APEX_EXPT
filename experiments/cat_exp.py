@@ -1,29 +1,13 @@
 import json
-import re
 
 import mujoco
 import mujoco.viewer
 import numpy as np
 import cv2
-from experiments.cat_game_agent import LLM_Agent
-
-
-def strip_markdown(text: str) -> str:
-    # 去除代码块标记 ```json ```python等
-    text = re.sub(r"```", "", text)
-    text = re.sub("json", "", text)
-    # 去除标题 #
-    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
-    # 去除加粗/斜体 ** ** 或 __ __ 或 * *
-    text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
-    text = re.sub(r"(\*|_)(.*?)\1", r"\2", text)
-    # 去除行内代码 `
-    text = re.sub(r"`(.*?)`", r"\1", text)
-    # 去除列表项 - *
-    text = re.sub(r"^[-*+]\s+", "", text, flags=re.MULTILINE)
-    # 去除多余空行
-    text = re.sub(r"\n{2,}", "\n", text)
-    return text.strip()
+from experiments.utils.cat_game_agent import LLM_Agent
+from experiments.utils.APEX import APEX
+from model.graphormer import DiffGraphormer
+import torch
 
 simple_xml = """
 <mujoco> 
@@ -132,7 +116,7 @@ def get_all_body_states(model, data):
     states = []
     for i in range(model.nbody):
         name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-        if name:  # 有名字才记录
+        if name:
             pos = data.xpos[i].copy()
             vel = data.cvel[i, :6].copy()
             states.append({
@@ -143,101 +127,132 @@ def get_all_body_states(model, data):
     return states
 
 
-def run_exp(difficulty):
+def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
+    physical_model = None
+    agent = LLM_Agent(model=model)
+
+    def add_action(move):
+        nonlocal current_action,frames_left,action_index
+        action_sequence.append(move)
+        if frames_left <= 0 and action_index + 1 < len(action_sequence):
+            action_index += 1
+            current_action = action_sequence[action_index]
+            frames_left = int(current_action["duration"] * fps)
+
     if difficulty == 'Simple':
         cat_speed = 3.0
-        # ✅ 创建 MuJoCo 物理环境
-        model = mujoco.MjModel.from_xml_string(simple_xml)
+        physical_model = mujoco.MjModel.from_xml_string(simple_xml)
     elif difficulty == "Medium":
         cat_speed = 3.0
-        # ✅ 创建 MuJoCo 物理环境
-        model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
+        physical_model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
     elif difficulty == "Hard":
         cat_speed = 5.0
-        # ✅ 创建 MuJoCo 物理环境
-        model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
+        physical_model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
 
-    # ✅ 视频设置
+    # video setting
     fps = 30
     width, height = 640, 480
     video_writer = cv2.VideoWriter(f"turing_cat_llm_{difficulty}.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps,
                                    (width, height))
 
-    agent = LLM_Agent(model='gpt-4o-mini')
-    # ✅ 初始速度设置
+    # Initialize cats and env
     cats = [
         {"id": 1, "vx": 3, "vy": 2},
         {"id": 2, "vx": -2, "vy": 4}
     ]
-    data = mujoco.MjData(model)
-    renderer = mujoco.Renderer(model)
-    # ✅ 模拟循环
-    current_action = None
-    frames_left = 0
-    action_index = 0
-    action_sequence = []
-    dt = 1.0 / fps  # 每帧时长（单位：秒）
-
+    data = mujoco.MjData(physical_model)
+    renderer = mujoco.Renderer(physical_model)
     for cat in cats:
-        cid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "cat" + str(cat['id']))
+        cid = mujoco.mj_name2id(physical_model, mujoco.mjtObj.mjOBJ_BODY, "cat" + str(cat['id']))
         cid -= 1
         data.qvel[cid * 6] += cat["vx"]
         data.qvel[cid * 6 + 1] += cat["vy"]
 
-    # ✅ 模拟循环 10 s
-    for step in range(300):
+    # Begin Simulation
+    current_action = None
+    frames_left = 0
+    action_index = 0
+    action_sequence = []
+    dt = 1.0 / fps  # unit: seconds
 
-        # 提取当前状态
-        robot_state = get_body_state(model, data, "robot")
-        cat1_state = get_body_state(model, data, "cat1")
-        cat2_state = get_body_state(model, data, "cat2")
-        print(cat1_state)
-        print(cat2_state)
-        # ✅ 每帧调整猫猫速度：让它们朝机器人冲
+    # Initialize Model
+    apex = None
+    if method == 'APEX':
+        danger_model = DiffGraphormer(
+            in_feats=7,  # 输入维度要一致
+            edge_feat_dim=3,
+            hidden_dim=32,  # 你训练时的 hidden size
+            num_heads=4,
+            dropout=0.3
+        )
+        danger_model.load_state_dict(torch.load('./model/diffgraphormer_physics.pt', map_location='cpu'))
+        danger_model.eval()  # 推理模式（关闭dropout）
+        apex = APEX(graphormer_model=danger_model, physics_simulator="mujoco", llm_agent=agent, dt=dt)
+
+    snapshot_t, snapshot_dt = None, None
+
+    # Simulation: 10s
+    for step in range(300):
+        # Current State
+        robot_state = get_body_state(physical_model, data, "robot")
+        cat1_state = get_body_state(physical_model, data, "cat1")
+        cat2_state = get_body_state(physical_model, data, "cat2")
+
+        # Turn cats towards the Agent
         for i in [1, 2]:  # cat1 和 cat2
             cat_name = f"cat{i}"
-            cat_state = get_body_state(model, data, cat_name)
+            cat_state = get_body_state(physical_model, data, cat_name)
             vx, vy = move_cat_towards_robot(cat_state["position"][:2], robot_state["position"][:2],
-                                            speed=cat_speed)  # 你可以调一下这个速度
-            cat_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, cat_name)
-            cat_dof_start = model.body_dofadr[cat_body_id]  # 每个 body 的自由度起始索引
+                                            speed=cat_speed)
+            cat_body_id = mujoco.mj_name2id(physical_model, mujoco.mjtObj.mjOBJ_BODY, cat_name)
+            cat_dof_start = physical_model.body_dofadr[cat_body_id]
             data.qvel[cat_dof_start] = vx
             data.qvel[cat_dof_start + 1] = vy
 
-        # 每隔一段时间请求新的动作序列（或首次）
-        # if frames_left <= 0:
-        #     action_index = 0
-        #     response = agent.decide_move(get_all_body_states(model, data))
-        #     response = strip_markdown(response)
-        #     try:
-        #         action_sequence = json.loads(response)
-        #         print(action_sequence)
-        #     except:
-        #         action_sequence = []
-        #
-        #     if action_sequence:
-        #         current_action = action_sequence[action_index]
-        #         frames_left = int(current_action["duration"] * fps)  # convert duration to frame count
+        # Collision Check
+        cat_distance_1 = np.linalg.norm(
+            np.array(robot_state["position"][:2]) - np.array(cat1_state["position"][:2]))
+        cat_distance_2 = np.linalg.norm(
+            np.array(robot_state["position"][:2]) - np.array(cat2_state["position"][:2]))
 
-        # 执行当前动作（持续一段时间）
-        if current_action and frames_left > 0:
-            ax, ay = current_action["acceleration"]
-            data.qvel[0] += ax * dt  # 加速度 × dt = Δv
-            data.qvel[1] += ay * dt
+        if cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2:
+            print("🚨 Danger! 猫猫撞上robot啦！")
+
+        if step > 10 and frames_left <= 0:
+            if method == 'APEX':
+                snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
+                if snapshot_t and snapshot_t != snapshot_t_dt:
+                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model,data)
+                    if triggered:
+                        add_action(move)
+                snapshot_t = snapshot_t_dt
+
+            if method == 'LLM':
+                response = agent.decide_move(get_all_body_states(physical_model, data))
+                try:
+                    move = json.loads(response)
+                    add_action(move)
+                except:
+                    print("error setting move")
+
+        # Execute current move
+        if frames_left > 0:
+            vel = current_action["velocity"]
+            data.qvel[0:3] = vel
 
             frames_left -= 1
 
-            # 当前动作结束，切到下一个
+            # Current Action ends and moves to the next action
             if frames_left <= 0 and action_index + 1 < len(action_sequence):
                 action_index += 1
                 current_action = action_sequence[action_index]
                 frames_left = int(current_action["duration"] * fps)
 
         print(robot_state)
-        # 模拟一步
-        mujoco.mj_step(model, data)
+        # Step
+        mujoco.mj_step(physical_model, data)
 
-        # 渲染并保存帧
+        # render
         renderer.update_scene(data)
         pixels = renderer.render()
         frame = cv2.cvtColor(np.flipud(pixels), cv2.COLOR_RGB2BGR)

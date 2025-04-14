@@ -15,8 +15,8 @@ NODE_FEAT_DIM = 7
 EPOCHS = 30
 LR = 1e-3
 SEED = 2025
-MODEL_SAVE_PATH = "diffgraphormer_physics.pt"
-DATA_PATH = "reverse_graphormer_data.json"
+MODEL_SAVE_PATH = "model/diffgraphormer_physics.pt"
+DATA_PATH = "data/reverse_graphormer_data.json"
 
 # === 设置设备 ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -93,14 +93,6 @@ if __name__ == "__main__":
     split = int(0.8 * len(dataset))
     train_loader = DataLoader(dataset[:split], batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(dataset[split:], batch_size=BATCH_SIZE)
-
-
-    # model = EdgeScoreNet(
-    #     in_feats=NODE_FEAT_DIM,
-    #     hidden_dim=HIDDEN_DIM,
-    #     num_heads=NUM_HEADS,
-    #     edge_feat_dim=EDGE_FEAT_DIM
-    # ).to(device)
 
     model = DiffGraphormer(
         in_feats=NODE_FEAT_DIM,
