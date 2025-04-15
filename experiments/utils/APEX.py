@@ -109,27 +109,27 @@ class APEX:
 
         return {
             "move_left": {
-                "velocity": [-1.0, 0.0, 0.0],
+                "velocity": [-3.0, 0.0, 0.0],
                 "duration": 1.0,
                 "description": "move left with velocity[x] = -1.0 for 1s"
             },
             "move_right": {
-                "velocity": [1.0, 0.0, 0.0],
+                "velocity": [3.0, 0.0, 0.0],
                 "duration": 1.0,
                 "description": "move right with velocity[x] = 1.0 for 1s"
             },
             "move_up": {
-                "velocity": [0.0, 1.0, 0.0],
+                "velocity": [0.0, 3.0, 0.0],
                 "duration": 1.0,
                 "description": "move up with velocity[y] = 1.0 for 1s"
             },
             "move_down": {
-                "velocity": [0.0, -1.0, 0.0],
+                "velocity": [0.0, -3.0, 0.0],
                 "duration": 1.0,
                 "description": "move down with velocity[y] = -1.0 for 1s"
             },
             "jump": {
-                "velocity": [0.0, 0.0, 1.0],
+                "velocity": [0.0, 0.0, 3.0],
                 "duration": 0.2,
                 "description": "jump with velocity[z] = 1.0 for 0.2s, then fall"
             },
@@ -166,7 +166,7 @@ class APEX:
             min_dist = min(np.linalg.norm(robot_pos[:2] - cat[:2]) for cat in cat_pos_list)
             height = robot_pos[2]
 
-            safe_str = "Safe" if min_dist > 1.0 else "Danger"
+            safe_str = "Safe" if min_dist > 0.5 else "Danger"
             jump_str = "Jumped" if height > 0.2 else "Stayed ground"
 
             summary.append(f"- Action [{action}]: "
@@ -187,15 +187,15 @@ class APEX:
         duration = 1.0  # s
 
         if "left" in decision:
-            vel[0] = -1.0
+            vel[0] = -3.0
         elif "right" in decision:
-            vel[0] = 1.0
+            vel[0] = 3.0
         elif "up" in decision:
-            vel[1] = 1.0
+            vel[1] = 3.0
         elif "down" in decision:
-            vel[1] = -1.0
+            vel[1] = -3.0
         elif "jump" in decision:
-            vel[2] = 1.0  # jump
+            vel[2] = 3.0  # jump
             duration = 0.2
 
         return {"velocity": vel, "duration": duration}

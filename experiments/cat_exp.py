@@ -11,7 +11,7 @@ import torch
 
 simple_xml = """
 <mujoco> 
-    <option gravity="0 0 0" integrator="RK4" timestep="0.01" />
+    <option gravity="0 0 1" integrator="RK4" timestep="0.01" />
     
     <visual>
         <map znear="0.01"/>
@@ -132,7 +132,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     agent = LLM_Agent(model=model)
 
     def add_action(move):
-        nonlocal current_action,frames_left,action_index
+        nonlocal current_action, frames_left, action_index
         action_sequence.append(move)
         if frames_left <= 0 and action_index + 1 < len(action_sequence):
             action_index += 1
@@ -140,13 +140,13 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             frames_left = int(current_action["duration"] * fps)
 
     if difficulty == 'Simple':
-        cat_speed = 3.0
+        cat_speed = 1.0
         physical_model = mujoco.MjModel.from_xml_string(simple_xml)
     elif difficulty == "Medium":
-        cat_speed = 3.0
+        cat_speed = 2.0
         physical_model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
     elif difficulty == "Hard":
-        cat_speed = 5.0
+        cat_speed = 3.0
         physical_model = mujoco.MjModel.from_xml_string(Medium_Hard_xml)
 
     # video setting
@@ -171,7 +171,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     # Begin Simulation
     current_action = None
     frames_left = 0
-    action_index = 0
+    action_index = -1
     action_sequence = []
     dt = 1.0 / fps  # unit: seconds
 
@@ -198,6 +198,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
         cat1_state = get_body_state(physical_model, data, "cat1")
         cat2_state = get_body_state(physical_model, data, "cat2")
 
+        # TODO 1 second 1 time
         # Turn cats towards the Agent
         for i in [1, 2]:  # cat1 和 cat2
             cat_name = f"cat{i}"
@@ -216,13 +217,15 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             np.array(robot_state["position"][:2]) - np.array(cat2_state["position"][:2]))
 
         if cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2:
+            print(cat1_state)
+            print(cat2_state)
             print("🚨 Danger! 猫猫撞上robot啦！")
 
         if step > 10 and frames_left <= 0:
             if method == 'APEX':
                 snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
                 if snapshot_t and snapshot_t != snapshot_t_dt:
-                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model,data)
+                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model, data)
                     if triggered:
                         add_action(move)
                 snapshot_t = snapshot_t_dt
@@ -247,6 +250,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
                 action_index += 1
                 current_action = action_sequence[action_index]
                 frames_left = int(current_action["duration"] * fps)
+        else:
+            data.qvel[0:3] = [0.0, 0.0, 0.0]
 
         print(robot_state)
         # Step
