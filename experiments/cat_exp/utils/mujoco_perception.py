@@ -332,7 +332,7 @@ class simulator:
 
 
 if __name__ == "__main__":
-    with open("../../dataset/physics_questions.json", "r") as f:
+    with open("../../physical_question_exp/dataset/physics_questions.json", "r") as f:
         questions = json.load(f)
 
     for q in questions:
@@ -349,16 +349,16 @@ if __name__ == "__main__":
         elif t == "3D Collision":
             q["answer_json"] = simulate_3d_collision(**p)
     # Save output
-    output_path = "../../dataset/physics_answer_sim.json"
+    output_path = "../../physical_question_exp/dataset/physics_answer_sim.json"
     with open(output_path, "w") as f:
         json.dump(questions, f, indent=2)
 
 
     def compare_answers_with_tolerance(tol=0.05):
-        with open("../../dataset/physics_ground_truth.json", "r") as f1:
+        with open("../../physical_question_exp/dataset/physics_ground_truth.json", "r") as f1:
             questions = json.load(f1)
 
-        with open("../../dataset/physics_answer_sim.json", "r") as f2:
+        with open("../../physical_question_exp/dataset/physics_answer_sim.json", "r") as f2:
             answers = json.load(f2)
 
         assert len(questions) == len(answers), "两个文件长度不一致！"

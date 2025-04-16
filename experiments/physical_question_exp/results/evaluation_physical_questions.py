@@ -8,7 +8,7 @@ from collections import defaultdict
 with open("../dataset/physics_ground_truth.json", "r") as f1:
     ground_truth_data = json.load(f1)
 
-with open("./gpt4_physics_results_final.json", "r") as f2:
+with open("gpt4_physics_results_final.json", "r") as f2:
     prediction_data = json.load(f2)
 
 # Tolerance threshold

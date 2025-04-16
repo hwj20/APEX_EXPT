@@ -1,6 +1,4 @@
-import json
-import pygame
-from experiments.utils.Tetris import *
+from experiments.teris_exp.utils.Tetris import *
 def generate_tetris_action_diff_grid(method, history_file="tetris_game_history_30_pgd.json", output_path="tetris_action_diff_grid.png"):
     import json
     from PIL import Image

@@ -4,9 +4,9 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 import cv2
-from experiments.utils.cat_game_agent import LLM_Agent
-from experiments.utils.APEX import APEX
-from model.graphormer import DiffGraphormer
+from experiments.cat_exp.utils.cat_game_agent import LLM_Agent
+from experiments.cat_exp.utils.APEX import APEX
+from experiments.cat_exp.model.graphormer import DiffGraphormer
 import torch
 
 simple_xml = """
@@ -185,7 +185,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             num_heads=4,
             dropout=0.3
         )
-        danger_model.load_state_dict(torch.load('./model/diffgraphormer_physics.pt', map_location='cpu'))
+        danger_model.load_state_dict(torch.load('model/diffgraphormer_physics.pt', map_location='cpu'))
         danger_model.eval()  # 推理模式（关闭dropout）
         apex = APEX(graphormer_model=danger_model, physics_simulator="mujoco", llm_agent=agent, dt=dt)
 

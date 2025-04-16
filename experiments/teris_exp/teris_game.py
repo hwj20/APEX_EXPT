@@ -1,5 +1,5 @@
-from experiments.utils.teris_game_agent import *
-from experiments.utils.Tetris import *
+from experiments.teris_exp.utils.teris_game_agent import *
+from experiments.teris_exp.utils.Tetris import *
 
 results = {
     "gpt-4o-mini": {
