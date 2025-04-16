@@ -112,11 +112,11 @@ def get_body_state(model, data, body_name):
     }
 
 
-def get_all_body_states(model, data):
+def get_all_body_states(model, data, filter_out=['world']):
     states = []
     for i in range(model.nbody):
         name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-        if name:
+        if name and name not in filter_out:
             pos = data.xpos[i].copy()
             vel = data.cvel[i, :6].copy()
             states.append({
@@ -225,7 +225,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             if method == 'APEX':
                 snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
                 if snapshot_t and snapshot_t != snapshot_t_dt:
-                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model, data)
+                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model, data, step)
                     if triggered:
                         add_action(move)
                 snapshot_t = snapshot_t_dt

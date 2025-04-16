@@ -64,12 +64,43 @@ class APEX:
 
         return x_t, x_t_dt, edge_index
 
-    def compute_attention(self, x_t, x_t_dt, edge_index, dt=1.0):
+    def visualize_attention(self, x_t, edge_index, scores, step):
+        import matplotlib.pyplot as plt
+        import networkx as nx
+        import os
+
+        G = nx.DiGraph()
+        node_pos = {i: x_t[i, 1:3].cpu().numpy() for i in range(x_t.shape[0])}
+
+        for i in range(x_t.shape[0]):
+            G.add_node(i)
+
+        edge_list = edge_index.t().cpu().numpy().tolist()
+        for (src, tgt), w in zip(edge_list, scores):
+            G.add_edge(src, tgt, weight=w)
+
+        edge_weights = [G[u][v]['weight'] for u, v in G.edges()]
+        pos = node_pos
+
+        plt.figure(figsize=(5, 5))
+        nx.draw(G, pos, with_labels=True, node_color='lightblue',
+                edge_color=edge_weights, edge_cmap=plt.cm.Reds, width=2)
+        plt.title("Graphormer Attention Heatmap")
+        os.makedirs("visualization", exist_ok=True)
+        plt.savefig(f"visualization/attention_step_{step}.png")
+        plt.close()
+        print(f"attention saved into visualization/attention_step_{step}.png")
+
+    def compute_attention(self, x_t, x_t_dt, edge_index, dt=1.0, save_visual=False, step=0):
         """
         Run the graphormer model to obtain edge danger scores as attention proxy.
         """
         with torch.no_grad():
             scores = self.graphormer(x_t, x_t_dt, edge_index, dt)
+
+        if save_visual:
+            self.visualize_attention(x_t, edge_index, scores.cpu().numpy(),step)
+
         return scores.cpu().numpy()  # convert to list for processing
 
     def select_focused_graph(self, edge_index, attention_scores, k, threshold=0.7):
@@ -200,10 +231,12 @@ class APEX:
 
         return {"velocity": vel, "duration": duration}
 
-    def run(self, snapshot_t, snapshot_t_dt, dt, physical_model, env_data):
+    def run(self, snapshot_t, snapshot_t_dt, dt, physical_model, env_data, step):
         x_t, x_t_dt, edge_index = self.construct_graph(snapshot_t, snapshot_t_dt, dt)
 
-        attention_scores = self.compute_attention(x_t, x_t_dt, edge_index)
+        save_visual = step % 50 == 0
+        print(save_visual)
+        attention_scores = self.compute_attention(x_t, x_t_dt, edge_index, save_visual=save_visual, step=step)
 
         focused_graph = self.select_focused_graph(edge_index, attention_scores, k=5)
 
@@ -219,5 +252,7 @@ class APEX:
 
         decision = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
         move = self.decode_move(decision)
+
+        self.last_trigger = step
 
         return True, move
