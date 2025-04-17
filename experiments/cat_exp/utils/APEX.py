@@ -7,13 +7,14 @@ from .mujoco_perception import simulator
 
 
 class APEX:
-    def __init__(self, graphormer_model, physics_simulator, llm_agent, dt=0.01, device="cpu"):
+    def __init__(self, graphormer_model, physics_simulator, llm_agent,available_move, dt=0.01, device="cpu"):
         self.graphormer = graphormer_model.to(device)
         self.physics_sim = simulator(physics_simulator)
         self.llm_agent = llm_agent
         self.device = device
         self.last_trigger = None
         self.dt = dt
+        self.available_move = available_move
 
     def construct_graph(self, snapshot, snapshot_dt, dt=0.1):
         """
@@ -128,21 +129,6 @@ class APEX:
         edge_descriptions = [f"Object {src} may collide with Object {tgt}" for src, tgt in focused_graph["edges"]]
         return "Potential interactions:\n" + "\n".join(edge_descriptions)
 
-    def enumerate_actions(self, state):
-        """
-        枚举所有可执行动作
-        返回：
-        {
-            "动作名称": {
-                "velocity": [vx, vy, vz],
-                "duration": time (s),
-                "description": "文字描述"
-            }
-        }
-        """
-        with open("../env/available_move.json",'r') as f:
-            return json.load(f)
-        return ''
 
     def simulate_action(self, model, env_data, action):
         return self.physics_sim.sim(model, env_data, action)
@@ -196,7 +182,7 @@ class APEX:
             return False, "stay"
 
         summary = self.generate_physical_summary(focused_graph)
-        actions = self.enumerate_actions(snapshot_t)
+        actions = self.available_move
 
         sim_result = self.simulate_action(physical_model, env_data, actions)
         results = self.describe_simulation(sim_result)

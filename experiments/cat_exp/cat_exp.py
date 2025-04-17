@@ -10,6 +10,8 @@ from experiments.cat_exp.model.graphormer import DiffGraphormer
 from experiments.cat_exp.utils.mujoco_perception import get_body_state, get_all_body_states
 import torch
 
+with open('env/square_demo.xml', 'r') as f:
+    square_xml = f.read()
 with open('env/simple_env.xml', 'r') as f:
     simple_xml = f.read()
 with open('env/medium_env.xml', 'r') as f:
@@ -30,21 +32,23 @@ def move_cat_towards_robot(cat_pos, robot_pos, speed=0.03):
     return vx, vy
 
 
-def run_exp(difficulty, method='APEX', model='gpt-4o'):
+def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     physical_model = None
     agent = LLM_Agent(model=model)
 
-    def add_action(move):
+    def add_action(_move):
         nonlocal current_action, frames_left, action_index
-        action_sequence.append(move)
+        action_sequence.append(_move)
         if frames_left <= 0 and action_index + 1 < len(action_sequence):
             action_index += 1
             current_action = action_sequence[action_index]
             frames_left = int(current_action["duration"] * fps)
 
+    cat_num, cat_speed = 2, 1.0
     if difficulty == 'Simple':
         cat_speed = 1.0
-        physical_model = mujoco.MjModel.from_xml_string(simple_xml)
+        # physical_model = mujoco.MjModel.from_xml_string(simple_xml)
+        physical_model = mujoco.MjModel.from_xml_string(square_xml)
         cat_num = 2
     elif difficulty == "Medium":
         cat_speed = 2.0
@@ -67,7 +71,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
         {"id": 2, "vx": -2, "vy": 4}
     ]
     data = mujoco.MjData(physical_model)
-    renderer = mujoco.Renderer(physical_model)
+    renderer = mujoco.Renderer(physical_model, height=height, width=width)
     for cat in cats:
         cid = mujoco.mj_name2id(physical_model, mujoco.mjtObj.mjOBJ_BODY, "cat" + str(cat['id']))
         cid -= 1
@@ -94,7 +98,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
         )
         danger_model.load_state_dict(torch.load('model/diffgraphormer_physics.pt', map_location='cpu'))
         danger_model.eval()  # Turn off dropout
-        apex = APEX(graphormer_model=danger_model, physics_simulator="mujoco", llm_agent=agent, dt=dt)
+        apex = APEX(graphormer_model=danger_model, physics_simulator="mujoco", llm_agent=agent, dt=dt,
+                    available_move=available_move)
 
     snapshot_t, snapshot_t_dt = None, None
 
@@ -129,9 +134,6 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
             print(cat2_state)
             print(robot_state)
             print("Collision!")
-
-        if step == 230:
-            pass
 
         snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
         if step > init_frames and frames_left <= 0:
@@ -168,11 +170,12 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
             data.qvel[0:3] = [0.0, 0.0, 0.0]
 
         # print(robot_state)
+
         # Step
         mujoco.mj_step(physical_model, data)
 
         # render
-        renderer.update_scene(data)
+        renderer.update_scene(data, camera="top")
         pixels = renderer.render()
         frame = cv2.cvtColor(np.flipud(pixels), cv2.COLOR_RGB2BGR)
         frame_resized = cv2.resize(frame, (width, height))
@@ -184,4 +187,4 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
 
 run_exp("Simple", method="TEST")
 # run_exp("Medium")
-# run_exp("hard")
+# run_exp("Hard")
