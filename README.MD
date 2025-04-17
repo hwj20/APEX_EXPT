@@ -8,7 +8,7 @@
 
 ### 🧱 Tetris with LLM Planning (4 Variants)
 
-| Variant 1                              | Variant 2                         | Variant 3                      | Variant 4                       |
+| gpt-4o-mini                            | gpt-4o                            | VLM                            | APEX                            |
 |----------------------------------------|-----------------------------------|--------------------------------|---------------------------------|
 | ![](media/gpt-4o-mini_action_diff.gif) | ![](media/gpt-4o_action_diff.gif) | ![](media/VLM_action_diff.gif) | ![](media/APEX_action_diff.gif) |
 
