@@ -7,9 +7,8 @@ import cv2
 from experiments.cat_exp.utils.cat_game_agent import LLM_Agent
 from experiments.cat_exp.utils.APEX import APEX
 from experiments.cat_exp.model.graphormer import DiffGraphormer
-from experiments.cat_exp.utils.mujoco_perception import get_body_state,get_all_body_states
+from experiments.cat_exp.utils.mujoco_perception import get_body_state, get_all_body_states
 import torch
-
 
 with open('env/simple_env.xml', 'r') as f:
     simple_xml = f.read()
@@ -17,6 +16,8 @@ with open('env/medium_env.xml', 'r') as f:
     medium_xml = f.read()
 with open('env/hard_env.xml', 'r') as f:
     hard_xml = f.read()
+with open("env/available_move.json", 'r') as f:
+    available_move = json.load(f)
 
 
 def move_cat_towards_robot(cat_pos, robot_pos, speed=0.03):
@@ -27,7 +28,6 @@ def move_cat_towards_robot(cat_pos, robot_pos, speed=0.03):
     unit_dir = direction / norm
     vx, vy = unit_dir * speed
     return vx, vy
-
 
 
 def run_exp(difficulty, method='APEX', model='gpt-4o'):
@@ -45,12 +45,15 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
     if difficulty == 'Simple':
         cat_speed = 1.0
         physical_model = mujoco.MjModel.from_xml_string(simple_xml)
+        cat_num = 2
     elif difficulty == "Medium":
         cat_speed = 2.0
         physical_model = mujoco.MjModel.from_xml_string(medium_xml)
+        cat_num = 3
     elif difficulty == "Hard":
         cat_speed = 3.0
         physical_model = mujoco.MjModel.from_xml_string(hard_xml)
+        cat_num = 4
 
     # video setting
     fps = 100
@@ -77,7 +80,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
     action_index = -1
     action_sequence = []
     dt = 1.0 / fps  # unit: seconds
-    init_frames = int(fps/2)
+    init_frames = int(fps / 2)
 
     # Initialize Model
     apex = None
@@ -96,7 +99,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
     snapshot_t, snapshot_t_dt = None, None
 
     # Simulation: 10s
-    for step in range(10*fps):
+    for step in range(10 * fps):
         # Current State
         robot_state = get_body_state(physical_model, data, "robot")
         cat1_state = get_body_state(physical_model, data, "cat1")
@@ -104,7 +107,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
 
         if step % fps == 0:
             # Turn cats towards the Agent
-            for i in [1, 2]:  # cat1 和 cat2
+            for i in range(1, cat_num + 1):
                 cat_name = f"cat{i}"
                 cat_state = get_body_state(physical_model, data, cat_name)
                 vx, vy = move_cat_towards_robot(cat_state["position"][:2], robot_state["position"][:2],
@@ -120,10 +123,12 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
         cat_distance_2 = np.linalg.norm(
             np.array(robot_state["position"][:3]) - np.array(cat2_state["position"][:3]))
 
-        if step > init_frames and cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2:
+        if step > init_frames and (cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2):
+            print(step)
             print(cat1_state)
             print(cat2_state)
-            print("🚨 Danger! 猫猫撞上robot啦！")
+            print(robot_state)
+            print("Collision!")
 
         if step == 230:
             pass
@@ -136,13 +141,16 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
                     if triggered:
                         add_action(move)
 
-            if method == 'LLM':
-                response = agent.decide_move(get_all_body_states(physical_model, data))
+            if method == 'LLM' and step % fps == 0:
+                response = agent.decide_move(get_all_body_states(physical_model, data), available_move)
                 try:
-                    move = json.loads(response)
+                    move = response
                     add_action(move)
                 except:
                     print("error setting move")
+            if method == 'TEST' and step % fps == 0:
+                move = {'velocity': [0.0, 0.0, 3.0], 'duration': 0.1}
+                add_action(move)
         snapshot_t = snapshot_t_dt
         # Execute current move
         if frames_left > 0:
@@ -174,6 +182,6 @@ def run_exp(difficulty, method='APEX', model='gpt-4o'):
     print(f"turing_cat_llm_{difficulty}.mp4")
 
 
-run_exp("Simple")
+run_exp("Simple", method="TEST")
 # run_exp("Medium")
 # run_exp("hard")

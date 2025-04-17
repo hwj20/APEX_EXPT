@@ -311,22 +311,22 @@ class simulator:
             robot_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "robot")
             dof_start = model.body_dofadr[robot_body_id]
 
-            # 控制逻辑
+            # sim control policy
             if action_name == "move_left":
-                sim_data.qvel[dof_start + 0] -= 1.0
+                sim_data.qvel[dof_start + 0] -= 3.0
             elif action_name == "move_right":
-                sim_data.qvel[dof_start + 0] += 1.0
+                sim_data.qvel[dof_start + 0] += 3.0
             elif action_name == "move_up":
-                sim_data.qvel[dof_start + 1] += 1.0
+                sim_data.qvel[dof_start + 1] += 3.0
             elif action_name == "move_down":
-                sim_data.qvel[dof_start + 1] -= 1.0
+                sim_data.qvel[dof_start + 1] -= 3.0
             elif action_name == "jump":
-                sim_data.qvel[dof_start + 2] += 1.0
+                sim_data.qvel[dof_start + 2] += 3.0
             elif action_name == "stay":
                 pass
 
             # 计算仿真步数
-            steps = int(1.0 / model.opt.timestep) if action_name == "jump" else int(1.0 / model.opt.timestep)
+            steps = int(0.1 / model.opt.timestep) if action_name == "jump" else int(1.0 / model.opt.timestep)
 
             for _ in range(steps):
                 mujoco.mj_step(model, sim_data)

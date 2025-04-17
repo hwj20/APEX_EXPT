@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -92,7 +94,6 @@ class APEX:
         plt.close()
         print(f"attention saved into visualization/attention_step_{step}.png")
 
-    # TODO
     def compute_attention(self, x_t, x_t_dt, edge_index, dt=1.0, save_visual=False, step=0):
         """
         Run the graphormer model to obtain edge danger scores as attention proxy.
@@ -139,44 +140,13 @@ class APEX:
             }
         }
         """
-
-        return {
-            "move_left": {
-                "velocity": [-3.0, 0.0, 0.0],
-                "duration": 1.0,
-                "description": "move left with velocity[x] = -1.0 for 1s"
-            },
-            "move_right": {
-                "velocity": [3.0, 0.0, 0.0],
-                "duration": 1.0,
-                "description": "move right with velocity[x] = 1.0 for 1s"
-            },
-            "move_up": {
-                "velocity": [0.0, 3.0, 0.0],
-                "duration": 1.0,
-                "description": "move up with velocity[y] = 1.0 for 1s"
-            },
-            "move_down": {
-                "velocity": [0.0, -3.0, 0.0],
-                "duration": 1.0,
-                "description": "move down with velocity[y] = -1.0 for 1s"
-            },
-            "jump": {
-                "velocity": [0.0, 0.0, 1.0],
-                "duration": 1.0,
-                "description": "jump with velocity[z] = 1.0 for 1s, then fall"
-            },
-            "stay": {
-                "velocity": [0.0, 0.0, 0.0],
-                "duration": 1.0,
-                "description": "stay still for 1s"
-            }
-        }
+        with open("../env/available_move.json",'r') as f:
+            return json.load(f)
+        return ''
 
     def simulate_action(self, model, env_data, action):
         return self.physics_sim.sim(model, env_data, action)
 
-    # TODO
     def describe_simulation(self, result: dict) -> str:
         """
         输入：
@@ -210,29 +180,7 @@ class APEX:
 
         return "\n".join(summary)
 
-    def decode_move(self, decision: str):
-        """
-        输入 LLM 决策的字符串，返回 {'velocity': [...], 'duration': ...}
-        """
-        decision = decision.lower()  # 防止大小写影响
 
-        # stay
-        vel = [0.0, 0.0, 0.0]  # x, y, z
-        duration = 1.0  # s
-
-        if "left" in decision:
-            vel[0] = -3.0
-        elif "right" in decision:
-            vel[0] = 3.0
-        elif "up" in decision:
-            vel[1] = 3.0
-        elif "down" in decision:
-            vel[1] = -3.0
-        elif "jump" in decision:
-            vel[2] = 3.0  # jump
-            # duration = 0.2
-
-        return {"velocity": vel, "duration": duration}
 
     def run(self, snapshot_t, snapshot_t_dt, dt, physical_model, env_data, step):
         x_t, x_t_dt, edge_index = self.construct_graph(snapshot_t, snapshot_t_dt, dt)
@@ -253,8 +201,7 @@ class APEX:
         sim_result = self.simulate_action(physical_model, env_data, actions)
         results = self.describe_simulation(sim_result)
 
-        decision = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
-        move = self.decode_move(decision)
+        move = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
 
         self.last_trigger = step
 

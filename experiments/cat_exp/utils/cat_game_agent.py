@@ -21,6 +21,32 @@ def strip_markdown(text: str) -> str:
     text = re.sub(r"\n{2,}", "\n", text)
     return text.strip()
 
+
+# Control Policy
+def decode(decision: str):
+    """
+    输入 LLM 决策的字符串，返回 {'velocity': [...], 'duration': ...}
+    """
+    decision = decision.lower()  # 防止大小写影响
+
+    # stay
+    vel = [0.0, 0.0, 0.0]  # x, y, z
+    duration = 1.0  # s
+
+    if "left" in decision:
+        vel[0] = -3.0
+    elif "right" in decision:
+        vel[0] = 3.0
+    elif "up" in decision:
+        vel[1] = 3.0
+    elif "down" in decision:
+        vel[1] = -3.0
+    elif "jump" in decision:
+        vel[2] = 3.0  # jump
+        duration = 0.1
+
+    return {"velocity": vel, "duration": duration}
+
 class LLM_Agent:
     def __init__(self, model="gpt-4o"):
         self.model = model
@@ -65,7 +91,7 @@ class LLM_Agent:
 
             generated_answer = str(completion.choices[0].message.content)
             print(generated_answer)
-            return strip_markdown(generated_answer)
+            return decode(strip_markdown(generated_answer))
         except Exception as e:
             return f"API error: {e}"
 
@@ -82,8 +108,10 @@ class LLM_Agent:
 
         Output the decision in this format:
         {{
-        "move": "stay"
+        "move": "stay",
+        "duration": 1.0,
         }}
+
     
         Only return the JSON object with no explanation or markdown.
         """
@@ -99,7 +127,8 @@ class LLM_Agent:
             )
 
             generated_answer = str(completion.choices[0].message.content)
-            return strip_markdown(generated_answer)
+            print(generated_answer)
+            return decode(strip_markdown(generated_answer))
         except Exception as e:
             return f"API error: {e}"
 

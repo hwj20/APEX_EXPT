@@ -1,0 +1,32 @@
+{
+            "move_left": {
+                "velocity": [-3.0, 0.0, 0.0],
+                "duration": 1.0,
+                "description": "move left with velocity[x] = -1.0 for 1s"
+            },
+            "move_right": {
+                "velocity": [3.0, 0.0, 0.0],
+                "duration": 1.0,
+                "description": "move right with velocity[x] = 1.0 for 1s"
+            },
+            "move_up": {
+                "velocity": [0.0, 3.0, 0.0],
+                "duration": 1.0,
+                "description": "move up with velocity[y] = 1.0 for 1s"
+            },
+            "move_down": {
+                "velocity": [0.0, -3.0, 0.0],
+                "duration": 1.0,
+                "description": "move down with velocity[y] = -1.0 for 1s"
+            },
+            "jump": {
+                "velocity": [0.0, 0.0, 3.0],
+                "duration": 0.1,
+                "description": "jump with velocity[z] = 3.0 for 0.1s, then fall"
+            },
+            "stay": {
+                "velocity": [0.0, 0.0, 0.0],
+                "duration": 1.0,
+                "description": "stay still for 1s"
+            }
+        }
