@@ -6,7 +6,7 @@
 
 ## 🎬 Visual Demo
 
-### 🧱 Tetris with LLM Planning (4 Variants)
+### 🧱 Tetris with LLM Planning
 
 | gpt-4o-mini                            | gpt-4o                            | VLM                            | APEX                            |
 |----------------------------------------|-----------------------------------|--------------------------------|---------------------------------|
@@ -15,8 +15,14 @@
 ---
 
 ### 🐱 Robot-Cat Avoidance Simulation
-
-![](media/cat_avoidance_demo.gif)
+gpt-4o-mini
+![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o-mini.mp4)
+gpt-4o
+![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o.mp4)
+APEX(gpt-4o-mini)
+![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o-mini.mp4)
+APEX(gpt-4o)
+![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o.mp4)
 
 ---
 

@@ -43,6 +43,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             action_index += 1
             current_action = action_sequence[action_index]
             frames_left = int(current_action["duration"] * fps)
+            vel = current_action["velocity"]
+            data.qvel[0:3] = vel  # robot_index:0
 
     cat_num, cat_speed = 2, 1.0
     if difficulty == 'Simple':
@@ -62,7 +64,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     # video setting
     fps = 100
     width, height = 640, 480
-    video_writer = cv2.VideoWriter(f"turing_cat_llm_{difficulty}.mp4", cv2.VideoWriter_fourcc(*"mp4v"), fps,
+    video_writer = cv2.VideoWriter(f"turing_cat_llm_{difficulty}_{method}_{model}.mp4", cv2.VideoWriter_fourcc(*"mp4v"),
+                                   fps,
                                    (width, height))
 
     # Initialize cats and env
@@ -156,9 +159,6 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
         snapshot_t = snapshot_t_dt
         # Execute current move
         if frames_left > 0:
-            vel = current_action["velocity"]
-            data.qvel[0:3] = vel
-
             frames_left -= 1
 
             # Current Action ends and moves to the next action
@@ -166,6 +166,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
                 action_index += 1
                 current_action = action_sequence[action_index]
                 frames_left = int(current_action["duration"] * fps)
+                vel = current_action["velocity"]
+                data.qvel[0:3] = vel  # robot_index:0
         else:
             data.qvel[0:3] = [0.0, 0.0, 0.0]
 
@@ -182,9 +184,9 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
         video_writer.write(frame_resized)
 
     video_writer.release()
-    print(f"turing_cat_llm_{difficulty}.mp4")
+    print(f"turing_cat_llm_{difficulty}_{method}_{model}.mp4")
 
 
-run_exp("Simple", method="TEST")
+run_exp("Simple", method="LLM", model='gpt-4o')
 # run_exp("Medium")
 # run_exp("Hard")

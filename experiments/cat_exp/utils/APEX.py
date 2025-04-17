@@ -160,6 +160,7 @@ class APEX:
             jump_str = "Jumped" if height > 0.6 else "Ground"
 
             summary.append(f"- Action [{action}]: "
+                           f"Max Duration:{info['description']['duration']}, "
                            f"Distance to nearest cat = {min_dist:.2f}m, "
                            f"Height = {height:.2f}m, "
                            f"Assessment = {safe_str}, {jump_str}")
@@ -186,6 +187,7 @@ class APEX:
 
         sim_result = self.simulate_action(physical_model, env_data, actions)
         results = self.describe_simulation(sim_result)
+        print(results)
 
         move = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
 

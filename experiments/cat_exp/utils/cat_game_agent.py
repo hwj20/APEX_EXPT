@@ -1,3 +1,4 @@
+import json
 import os
 import re
 
@@ -28,20 +29,21 @@ def decode(decision: str):
     输入 LLM 决策的字符串，返回 {'velocity': [...], 'duration': ...}
     """
     decision = decision.lower()  # 防止大小写影响
+    decision = json.loads(decision)
 
     # stay
     vel = [0.0, 0.0, 0.0]  # x, y, z
-    duration = 1.0  # s
+    duration = decision['duration']  # s
 
-    if "left" in decision:
+    if "left" in decision['move']:
         vel[0] = -3.0
-    elif "right" in decision:
+    elif "right" in decision['move']:
         vel[0] = 3.0
-    elif "up" in decision:
+    elif "up" in decision['move']:
         vel[1] = 3.0
-    elif "down" in decision:
+    elif "down" in decision['move']:
         vel[1] = -3.0
-    elif "jump" in decision:
+    elif "jump" in decision['move']:
         vel[2] = 3.0  # jump
         duration = 0.1
 

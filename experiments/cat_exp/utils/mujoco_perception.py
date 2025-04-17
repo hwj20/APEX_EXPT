@@ -271,6 +271,7 @@ def solve_problem(question):
 
     return q["answer_json"]
 
+
 def get_body_state(model, data, body_name):
     body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, body_name)
     pos = data.xpos[body_id].copy()
@@ -297,13 +298,15 @@ def get_all_body_states(model, data, filter_out=['world']):
     return states
 
 
-
 class simulator:
     def __init__(self, method):
         self.method = method
 
     def mujoco_sim(self, model, env_data, available_moves):
         sim_results = {}
+        max_duration = 1.0  # 最多移动 1 秒
+        timestep = model.opt.timestep
+        max_steps = int(max_duration / timestep)
 
         for action_name, action_desc in available_moves.items():
             sim_data = copy.deepcopy(env_data)
@@ -311,29 +314,48 @@ class simulator:
             robot_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "robot")
             dof_start = model.body_dofadr[robot_body_id]
 
-            # sim control policy
+            # 设置速度
+            vel = [0.0, 0.0, 0.0]
             if action_name == "move_left":
-                sim_data.qvel[dof_start + 0] -= 3.0
+                vel[0] = -3.0
             elif action_name == "move_right":
-                sim_data.qvel[dof_start + 0] += 3.0
+                vel[0] = 3.0
             elif action_name == "move_up":
-                sim_data.qvel[dof_start + 1] += 3.0
+                vel[1] = 3.0
             elif action_name == "move_down":
-                sim_data.qvel[dof_start + 1] -= 3.0
+                vel[1] = -3.0
             elif action_name == "jump":
-                sim_data.qvel[dof_start + 2] += 3.0
-            elif action_name == "stay":
-                pass
+                vel[2] = 3.0
 
-            # 计算仿真步数
-            steps = int(0.1 / model.opt.timestep) if action_name == "jump" else int(1.0 / model.opt.timestep)
+            for i in range(3):
+                sim_data.qvel[dof_start + i] = vel[i]
 
-            for _ in range(steps):
+            safe_steps = 0
+            last_pos = np.array(sim_data.xpos[robot_body_id])
+
+            for step in range(max_steps):
                 mujoco.mj_step(model, sim_data)
+                current_pos = np.array(sim_data.xpos[robot_body_id])
+                movement = np.linalg.norm(current_pos[:2] - last_pos[:2])
+
+                if movement < 1e-3:
+                    break
+
+                last_pos = current_pos
+                safe_steps += 1
+
+            safe_duration = safe_steps * timestep
+            # stay away from wall
+            if safe_duration < 1.0:
+                safe_duration -= 0.1
 
             sim_results[action_name] = {
-                "final_robot_pos": get_all_body_states(model,sim_data),
-                "description": action_desc
+                "final_robot_pos": get_all_body_states(model, sim_data),
+                "description": {
+                    "velocity": vel,
+                    "duration": safe_duration,
+                    "description": f"{action_name} with velocity={vel} for {safe_duration:.2f}s"
+                }
             }
 
         return sim_results
