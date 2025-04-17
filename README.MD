@@ -16,13 +16,13 @@
 
 ### 🐱 Robot-Cat Avoidance Simulation
 gpt-4o-mini
-![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o-mini.mp4)
+![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o-mini.gif)
 gpt-4o
-![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o.mp4)
+![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o.gif)
 APEX(gpt-4o-mini)
-![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o-mini.mp4)
+![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o-mini.gif)
 APEX(gpt-4o)
-![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o.mp4)
+![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o.gif)
 
 ---
 
