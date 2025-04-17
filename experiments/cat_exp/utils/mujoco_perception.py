@@ -271,11 +271,22 @@ def solve_problem(question):
 
     return q["answer_json"]
 
-def get_all_body_states(model, data):
+def get_body_state(model, data, body_name):
+    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, body_name)
+    pos = data.xpos[body_id].copy()
+    vel = data.cvel[body_id, :6].copy()
+    return {
+        "name": body_name,
+        "position": pos.tolist(),
+        "velocity": vel.tolist()
+    }
+
+
+def get_all_body_states(model, data, filter_out=['world']):
     states = []
     for i in range(model.nbody):
         name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-        if name:
+        if name and name not in filter_out:
             pos = data.xpos[i].copy()
             vel = data.cvel[i, :6].copy()
             states.append({
@@ -284,6 +295,8 @@ def get_all_body_states(model, data):
                 "velocity": vel.tolist()
             })
     return states
+
+
 
 class simulator:
     def __init__(self, method):
@@ -313,7 +326,7 @@ class simulator:
                 pass
 
             # 计算仿真步数
-            steps = int(0.2 / model.opt.timestep) if action_name == "jump" else int(1.0 / model.opt.timestep)
+            steps = int(1.0 / model.opt.timestep) if action_name == "jump" else int(1.0 / model.opt.timestep)
 
             for _ in range(steps):
                 mujoco.mj_step(model, sim_data)

@@ -3,6 +3,8 @@ import numpy as np
 import random
 
 
+def sigmoid(x, k=1.0, x0=1.5):  # k 决定陡峭度，x0 是中点
+    return 1 / (1 + np.exp(-k * (x - x0)))
 def normalize(vec):
     norm = np.linalg.norm(vec)
     return vec / norm if norm > 1e-6 else vec
@@ -21,26 +23,29 @@ def compute_risk_score(pos_master, pos_tgt, vel_tgt, dis_w=0.34, dir_w=0.33, vel
 
     # === 距离分数 ===
     distance_score_raw = 1.0 / (dist + 1e-6)
-    distance_score = np.clip(distance_score_raw, 0, 10) / 10.0  # 归一化到 0~1
+    # distance_score = np.clip(distance_score_raw, 0, 10) / 10.0  # 归一化到 0~1
+    distance_score = sigmoid(distance_score_raw, k=1.0, x0=0.0)  # 越小越危险
+    # distance_score = distance_score_raw*10
 
     # === 朝向分数 ===
     direction_score_raw = np.dot(normalize(dist_vec), normalize(vel_tgt))  # ∈ [-1, 1]
     direction_score = (direction_score_raw + 1) / 2  # 映射到 0~1
 
     # === 速度大小分数 ===
-    velocity_score_raw = np.linalg.norm(vel_tgt)  # ~ 0~1.5
-    velocity_score = np.clip(velocity_score_raw / 1.5, 0, 1)  # 归一化到 0~1
+    velocity_score_raw = np.linalg.norm(vel_tgt)  # ~ 0~3.0
+    # velocity_score = np.clip(velocity_score_raw / 3.0, 0, 1)  # 归一化到 0~1
+    velocity_score = sigmoid(velocity_score_raw, k=1.5, x0=2.5)  # 高于2.5危险急剧上升
+    # velocity_score = np.tanh(velocity_score_raw/ 3.0)
 
     # === 加权求和 ===
     return distance_score * dis_w + direction_score * dir_w + velocity_score * vel_w
-
 
 
 cnt = 0
 tt = 0
 
 
-def create_reverse_sample(collision=True, dt=3.0, num_nodes=6, threshold =0.7):
+def create_reverse_sample(collision=True,t=3.0, dt=0.01, num_nodes=6, threshold=0.75):
     master_idx = 0
     pos_t_list, vel_list = [], []
     for i in range(num_nodes):
@@ -50,19 +55,20 @@ def create_reverse_sample(collision=True, dt=3.0, num_nodes=6, threshold =0.7):
 
     pos_m = pos_t_list[master_idx]
     vel_m = vel_list[master_idx]
-    pos_m_future = pos_m + vel_m * dt
+    pos_m_future = pos_m + vel_m * t
+    ground_truth_label = [0.0]*(num_nodes-1)
     # 强制制造碰撞场景
     if collision:
         tgt_idx = random.randint(1, num_nodes - 1)
+        ground_truth_label[tgt_idx-1] = 1.0
         pos_t = pos_t_list[tgt_idx]
         dir_to_future_master = normalize(pos_m_future - pos_t)
-        # 改成 dis/dt
         dist_to_master = np.linalg.norm(pos_m_future - pos_t)
-        speed = dist_to_master / dt
+        speed = dist_to_master / t
 
         vel_list[tgt_idx] = dir_to_future_master * speed
         pos_tgt_dt = pos_t + speed * dir_to_future_master * dt
-        score = compute_risk_score(pos_m_future, pos_tgt_dt, speed*dir_to_future_master)
+        score = compute_risk_score(pos_m_future, pos_tgt_dt, speed * dir_to_future_master)
         label = 1 if score > threshold else 0  # danger threshold 可调
         # global cnt, tt
         # if label == 1:
@@ -104,7 +110,8 @@ def create_reverse_sample(collision=True, dt=3.0, num_nodes=6, threshold =0.7):
         "edge_index": edge_index,
         "edge_attr_t": edge_attr_t,
         "edge_attr_t_dt": edge_attr_t_dt,
-        "edge_label": edge_label
+        "edge_label": ground_truth_label
+        # "edge_label": edge_label
     }
 
 

@@ -40,13 +40,14 @@ class APEX:
             pos = np.array(obj["position"][:3])
             pos_dt = np.array(objs_dt[idx]["position"][:3])
             vel_recompute = (pos_dt - pos) / dt
+            vel_dir = vel_recompute / (np.linalg.norm(vel_recompute) + 1e-6)
 
             is_master = 1.0 if name == master_name else 0.0
             if is_master:
                 master_idx = idx
 
-            node_feat_t = [is_master] + pos.tolist() + vel_recompute.tolist()
-            node_feat_t_dt = [is_master] + pos_dt.tolist() + vel_recompute.tolist()
+            node_feat_t = [is_master] + pos.tolist() + vel_dir.tolist()
+            node_feat_t_dt = [is_master] + pos_dt.tolist() + vel_dir.tolist()
 
             node_features_t.append(node_feat_t)
             node_features_t_dt.append(node_feat_t_dt)
@@ -91,6 +92,7 @@ class APEX:
         plt.close()
         print(f"attention saved into visualization/attention_step_{step}.png")
 
+    # TODO
     def compute_attention(self, x_t, x_t_dt, edge_index, dt=1.0, save_visual=False, step=0):
         """
         Run the graphormer model to obtain edge danger scores as attention proxy.
@@ -99,7 +101,7 @@ class APEX:
             scores = self.graphormer(x_t, x_t_dt, edge_index, dt)
 
         if save_visual:
-            self.visualize_attention(x_t, edge_index, scores.cpu().numpy(),step)
+            self.visualize_attention(x_t, edge_index, scores.cpu().numpy(), step)
 
         return scores.cpu().numpy()  # convert to list for processing
 
@@ -160,9 +162,9 @@ class APEX:
                 "description": "move down with velocity[y] = -1.0 for 1s"
             },
             "jump": {
-                "velocity": [0.0, 0.0, 3.0],
-                "duration": 0.2,
-                "description": "jump with velocity[z] = 1.0 for 0.2s, then fall"
+                "velocity": [0.0, 0.0, 1.0],
+                "duration": 1.0,
+                "description": "jump with velocity[z] = 1.0 for 1s, then fall"
             },
             "stay": {
                 "velocity": [0.0, 0.0, 0.0],
@@ -174,6 +176,7 @@ class APEX:
     def simulate_action(self, model, env_data, action):
         return self.physics_sim.sim(model, env_data, action)
 
+    # TODO
     def describe_simulation(self, result: dict) -> str:
         """
         输入：
@@ -197,8 +200,8 @@ class APEX:
             min_dist = min(np.linalg.norm(robot_pos[:2] - cat[:2]) for cat in cat_pos_list)
             height = robot_pos[2]
 
-            safe_str = "Safe" if min_dist > 0.5 else "Danger"
-            jump_str = "Jumped" if height > 0.2 else "Stayed ground"
+            safe_str = "Safe" if min_dist > 0.2 else "Danger"
+            jump_str = "Jumped" if height > 0.6 else "Ground"
 
             summary.append(f"- Action [{action}]: "
                            f"Distance to nearest cat = {min_dist:.2f}m, "
@@ -227,7 +230,7 @@ class APEX:
             vel[1] = -3.0
         elif "jump" in decision:
             vel[2] = 3.0  # jump
-            duration = 0.2
+            # duration = 0.2
 
         return {"velocity": vel, "duration": duration}
 
@@ -235,8 +238,8 @@ class APEX:
         x_t, x_t_dt, edge_index = self.construct_graph(snapshot_t, snapshot_t_dt, dt)
 
         save_visual = step % 50 == 0
-        print(save_visual)
-        attention_scores = self.compute_attention(x_t, x_t_dt, edge_index, save_visual=save_visual, step=step)
+        # save_visual = False
+        attention_scores = self.compute_attention(x_t, x_t_dt, edge_index, dt, save_visual=save_visual, step=step)
 
         focused_graph = self.select_focused_graph(edge_index, attention_scores, k=5)
 

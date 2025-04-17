@@ -38,7 +38,7 @@ class DiffGraphormer(nn.Module):
         tgt_pos = pos_t[tgt_idx]
         tgt_vel = vel_t[tgt_idx]
 
-        rel_vec = tgt_pos - master_pos  # [num_edges, 3]
+        rel_vec = master_pos-tgt_pos  # [num_edges, 3]
         dist = torch.norm(rel_vec, dim=-1, keepdim=True) + 1e-6
         direction_score = F.cosine_similarity(rel_vec, tgt_vel, dim=-1, eps=1e-6).unsqueeze(1)  # [num_edges, 1]
         velocity_score = torch.norm(pos_t_dt[tgt_idx] - pos_t[tgt_idx], dim=-1, keepdim=True)
@@ -56,29 +56,30 @@ class DiffGraphormer(nn.Module):
         return edge_pred.view(-1)
 
 
-def focal_loss(logits, targets, alpha=0.25, gamma=2.0, reduction='mean'):
-    """
-    logits: 预测的 raw logits, shape [batch_size]
-    targets: ground truth, shape [batch_size], 取值为 0 或 1
-    alpha: 正例权重
-    gamma: 难易样本调节因子
-    reduction: 'mean' or 'sum'
-    """
-    # 将 logits 转为概率
-    probs = torch.sigmoid(logits)
-    probs = torch.clamp(probs, 1e-6, 1. - 1e-6)
+class FocalLoss(torch.nn.Module):
+    def __init__(self, alpha=0.25, gamma=2.0, reduction='mean'):
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha  # 正类权重
+        self.gamma = gamma  # focusing parameter
+        self.reduction = reduction
 
-    pt = probs * targets + (1 - probs) * (1 - targets)  # pt = p_t
-    w = alpha * targets + (1 - alpha) * (1 - targets)   # 正负样本权重
+    def forward(self, inputs, targets):
+        """
+        inputs: logits (before sigmoid), shape [batch]
+        targets: binary labels, shape [batch]
+        """
+        probs = torch.sigmoid(inputs)
+        ce_loss = F.binary_cross_entropy_with_logits(inputs, targets, reduction='none')
+        p_t = probs * targets + (1 - probs) * (1 - targets)
+        loss = self.alpha * (1 - p_t) ** self.gamma * ce_loss
 
-    loss = -w * (1 - pt) ** gamma * torch.log(pt)
+        if self.reduction == 'mean':
+            return loss.mean()
+        elif self.reduction == 'sum':
+            return loss.sum()
+        else:
+            return loss
 
-    if reduction == 'mean':
-        return loss.mean()
-    elif reduction == 'sum':
-        return loss.sum()
-    else:
-        return loss
 
 if __name__ == "__main__":
     torch.manual_seed(42)

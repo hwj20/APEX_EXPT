@@ -1,6 +1,6 @@
 import torch
 from torch_geometric.data import Data, DataLoader
-from experiments.cat_exp.model.graphormer import DiffGraphormer  # 请确保路径正确
+from experiments.cat_exp.model.graphormer import DiffGraphormer, FocalLoss  # 请确保路径正确
 import json
 
 # === 参数配置 ===
@@ -13,7 +13,7 @@ EPOCHS = 30
 LR = 1e-3
 SEED = 2025
 MODEL_SAVE_PATH = "model/diffgraphormer_physics.pt"
-DATA_PATH = "data/reverse_graphormer_data.json"
+DATA_PATH = "model/data/reverse_graphormer_data.json"
 
 # === 设置设备 ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -101,6 +101,7 @@ if __name__ == "__main__":
     pos_ratio = sum(d.edge_label.sum().item() for d in dataset) / sum(len(d.edge_label) for d in dataset)
     pos_weight = torch.tensor([1.0 / pos_ratio - 1], device=device)  # pos_ratio≈0.44 → pos_weight≈1.27
     criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+    # criterion = FocalLoss(alpha=pos_ratio, gamma=2.0)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
     print("🔥 Training Start!")
