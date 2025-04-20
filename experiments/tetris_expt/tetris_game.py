@@ -122,22 +122,22 @@ if __name__ == "__main__":
     # run_tetris("gpt-4o", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("VLM_APEX", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("VLM", rng=random.Random(42),auto_gen_path=True)
-    run_tetris("gpt-4o-mini", rng=random.Random(42),auto_gen_path=True)
+    # run_tetris("gpt-4o-mini", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("o3-mini", rng=random.Random(42),auto_gen_path=True)
-    #
-    # for model in results.keys():
-    #     for i in range(5):  # 每个模型跑 5 盘
-    #         save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
-    #         results = run_tetris(model, save_path, rng=random.Random(42 + i))
-    #
-    #         results[model]["final_score"].append(results["final_score"])
-    #         results[model]["max_stack_height"].append(results["max_stack_height"])
-    #         results[model]["holes"].append(results["holes"])
-    #         results[model]["bumps"].append(results["bumps"])
-    #         results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
-    #         # 实时保存结果以防中断
-    #         with open("../results/tetris/tetris_eval_results.json", "w") as f:
-    #             json.dump(results, f, indent=2)
+
+    for model in results.keys():
+        for i in range(5):  # 每个模型跑 5 盘
+            save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
+            results = run_tetris(model, save_path, rng=random.Random(42 + i))
+
+            results[model]["final_score"].append(results["final_score"])
+            results[model]["max_stack_height"].append(results["max_stack_height"])
+            results[model]["holes"].append(results["holes"])
+            results[model]["bumps"].append(results["bumps"])
+            results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
+            # 实时保存结果以防中断
+            with open("../results/tetris/tetris_eval_results.json", "w") as f:
+                json.dump(results, f, indent=2)
 
 
 def if_you_want_to_play_game():

@@ -302,7 +302,6 @@ class simulator:
     def __init__(self, method):
         self.method = method
 
-    # TODO
     def mujoco_sim(self, model, env_data, available_moves):
         sim_results = {}
         max_duration = 1.0  # 最多移动 1 秒
@@ -322,9 +321,9 @@ class simulator:
             elif action_name == "move_right":
                 vel[0] = 3.0
             elif action_name == "move_up":
-                vel[1] = 3.0
-            elif action_name == "move_down":
                 vel[1] = -3.0
+            elif action_name == "move_down":
+                vel[1] = 3.0
             elif action_name == "jump":
                 vel[2] = 3.0
 
@@ -338,8 +337,7 @@ class simulator:
                 mujoco.mj_step(model, sim_data)
                 current_pos = np.array(sim_data.xpos[robot_body_id])
                 movement = np.linalg.norm(current_pos[:3] - last_pos[:3])
-
-                if movement < 1e-3:
+                if movement < 1e-3 and action_name not in ['jump', 'stay']:
                     break
 
                 last_pos = current_pos
@@ -347,11 +345,14 @@ class simulator:
 
             safe_duration = safe_steps * timestep
             # stay away from wall
-            if safe_duration < 1.0:
+            if safe_duration < 1.0 and action_name not in ['jump', 'stay']:
                 safe_duration -= 0.1
+                # if save_duration < 0, then the action will be evaluated into 'invalid' in the summary
+            else:
+                safe_duration = 1.0
 
             sim_results[action_name] = {
-                "final_robot_pos": get_all_body_states(model, sim_data),
+                "final_pos": get_all_body_states(model, sim_data),
                 "description": {
                     "velocity": vel,
                     "duration": safe_duration,

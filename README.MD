@@ -78,13 +78,13 @@ PGD
 
 ## 🛠 Setup
 ```bash
-conda create -n apex python=3.10
-pip install -r requirements.txt
+conda create -n apex python=3.11
 ```
+缺什么包装什么包
 
 ---
 
 ## 📈 Citation (coming soon)
 
-If you find this work helpful, please stay tuned for the arXiv/NIPS version 💡
+If you find this work helpful, please stay tuned for the arXivversion 💡
 

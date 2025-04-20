@@ -145,9 +145,9 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
 
         if step > init_frames and (cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2):
             print(step)
-            print(cat1_state)
-            print(cat2_state)
-            print(robot_state)
+            # print(cat1_state)
+            # print(cat2_state)
+            # print(robot_state)
             print("Collision!")
             collision = True
 
@@ -181,7 +181,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                 pixels = renderer.render()
                 frame_rgb = np.flipud(pixels)
                 cv2.imwrite(image_path, cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR))
-                move, action_valid = agent.decide_move_vlm(get_all_body_states(physical_model, data), available_move,image_path)
+                move, action_valid = agent.decide_move_vlm(get_all_body_states(physical_model, data), available_move,
+                                                           image_path)
                 end = time.perf_counter()
                 response_time = end - start
                 try:
@@ -210,7 +211,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
 
         # print(robot_state)
         if run_callback is not None:
-            run_callback(step * fps, collision, new_action, action_valid, response_time)
+            run_callback(step / fps, collision, new_action, action_valid, response_time)
 
         # Step
         mujoco.mj_step(physical_model, data)
@@ -226,64 +227,88 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     print(f"video saved as {file_name}")
     return collision
 
+def run_trial(difficulty, method, model, trial_id):
+    print(f"\nRunning: {difficulty} | {method} | {model} | Trial {trial_id + 1}")
+    survival_time = EXPT_TIME
+    collision_times = 0
+    invalid_actions = 0
+    valid_actions = 0
+    actions = {}
+    response_time_sum = 0.0
+
+    def callback_fn(current_time, collided, new_action, action_valid, response_time):
+        nonlocal survival_time, collision_times, invalid_actions, valid_actions, response_time_sum
+        if survival_time == EXPT_TIME and collided:
+            survival_time = current_time
+        if collided:
+            collision_times += 1
+        if not action_valid:
+            invalid_actions += 1
+        if new_action != "":
+            if action_valid:
+                valid_actions += 1
+            actions[survival_time] = (new_action, response_time)
+            response_time_sum += response_time
+
+    collision_flag = run_exp(difficulty, method=method, model=model, run_callback=callback_fn)
+
+    return {
+        "survival_time": survival_time,
+        "collision_flag": collision_flag,
+        "invalid_actions": invalid_actions,
+        "valid_actions": valid_actions,
+        "latency_sum": response_time_sum,
+        "actions_len": len(actions)
+    }
 
 if __name__ == "__main__":
-    run_exp(difficulty='Simple', method='VLM', model='gpt-4o-mini')
-    run_exp(difficulty='Medium', method='VLM', model='gpt-4o-mini')
-    run_exp(difficulty='Hard', method='VLM', model='gpt-4o-mini')
+    # run_exp(difficulty='Simple', method='APEX', model='gpt-4o')
+    # run_exp(difficulty='Medium', method='VLM', model='gpt-4o-mini')
+    # run_exp(difficulty='Hard', method='VLM', model='gpt-4o-mini')
 
-    # EXPT_TIME = 10  # seconds
-    # NUM_TRIALS = 5
-    # difficulties = ["Simple", "Medium", "Hard"]
-    # methods = ["LLM", "APEX"]
-    # results = {d: {m: {"cfr": 0, "ast": [], "iar": 0, "latency": []} for m in methods} for d in difficulties}
-    # save_path = "results/results.json"
-    #
-    # for difficulty in difficulties:
-    #     for method in methods:
-    #         for i in range(NUM_TRIALS):
-    #             print(f"\nRunning: {difficulty} | {method} | Trial {i + 1}")
-    #             start_time = time()
-    #             survival_time = EXPT_TIME
-    #             collision_times = 0
-    #             invalid_actions = 0
-    #             valid_actions = 0
-    #             actions = {}
-    #             response_time_sum = 0.0
-    #
-    #
-    #             def callback_fn(current_time, collided, new_action, action_valid, response_time):
-    #                 nonlocal survival_time, collision_times, invalid_actions, valid_actions, response_time_sum
-    #                 # the first time to collide
-    #                 if survival_time == EXPT_TIME and collided:
-    #                     survival_time = current_time  # unit: seconds
-    #                 if collided:
-    #                     collision_times += 1
-    #                 if not action_valid:
-    #                     invalid_actions += 1
-    #                 if new_action != "":
-    #                     if action_valid:
-    #                         valid_actions += 1
-    #                     actions[survival_time] = (new_action, response_time)
-    #                     response_time_sum += response_time
-    #
-    #
-    #             collision_flag = run_exp(difficulty, method=method, model='gpt-4o-mini', run_callback=callback_fn)
-    #
-    #             results[difficulty][method]["ast"].append(survival_time)
-    #             results[difficulty][method]["cfr"] += int(not collision_flag)
-    #             results[difficulty][method]["iar"] += invalid_actions / len(actions)
-    #             results[difficulty][method]["latency"].append(response_time_sum / len(actions))
-    #
-    #         with open(save_path, "w") as f:
-    #             json.dump(results, f, indent=4)
-    #
-    # print("\nFinal Results Summary:\n")
-    # for difficulty in difficulties:
-    #     for method in methods:
-    #         summary = results[difficulty][method]
-    #         avg_ast = np.mean(summary["ast"]) if summary["ast"] else 0
-    #         avg_latency = np.mean(summary["latency"]) if summary["latency"] else 0
-    #         cfr_rate = summary["cfr"] / NUM_TRIALS
-    #         print(f"[{difficulty}][{method}] CFR={cfr_rate:.2f} | AST={avg_ast:.2f}s | "
-    #               f"IAR={summary['iar']} | Avg Latency={avg_latency:.2f}s")
+    EXPT_TIME = 10  # seconds
+    NUM_TRIALS = 3
+    difficulties = ["Simple", "Medium", "Hard"]
+    methods = {"LLM": ['gpt-4o', 'gpt-4o-mini'], "APEX": ['gpt-4o', 'gpt-4o-mini'], "VLM": ['gpt-4o']}
+    results = {
+        d: {
+            m: {
+                model: {
+                    "cfr": 0,
+                    "ast": [],
+                    "iar": 0,
+                    "latency": []
+                } for model in methods[m]
+            } for m in methods
+        } for d in difficulties
+    }
+    save_path = "results/results.json"
+
+    for difficulty in difficulties:
+        for method in methods:
+            for model in methods[method]:
+                for i in range(NUM_TRIALS):
+                    result = run_trial(difficulty, method, model, i)
+                    results[difficulty][method][model]["ast"].append(result["survival_time"])
+                    results[difficulty][method][model]["cfr"] += int(not result["collision_flag"])
+
+                    if result["actions_len"] > 0:
+                        results[difficulty][method][model]["iar"] += result["invalid_actions"] / result["actions_len"]
+                        results[difficulty][method][model]["latency"].append(result["latency_sum"] / result["actions_len"])
+                    else:
+                        results[difficulty][method][model]["iar"] += 0
+                        results[difficulty][method][model]["latency"].append(0.0)
+
+                with open(save_path, "w") as f:
+                    json.dump(results, f, indent=4)
+
+    print("\nFinal Results Summary:\n")
+    for difficulty in difficulties:
+        for method in methods:
+            for model in methods[method]:
+                summary = results[difficulty][method][model]
+                avg_ast = np.mean(summary["ast"]) if summary["ast"] else 0
+                avg_latency = np.mean(summary["latency"]) if summary["latency"] else 0
+                cfr_rate = summary["cfr"] / NUM_TRIALS
+                print(f"[{difficulty}][{method}][{model}] CFR={cfr_rate:.2f} | AST={avg_ast:.2f}s | "
+                      f"IAR={summary['iar']:.2f} | Avg Latency={avg_latency:.2f}s")

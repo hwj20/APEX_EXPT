@@ -9,7 +9,7 @@ HIDDEN_DIM = 32
 NUM_HEADS = 4
 EDGE_FEAT_DIM = 3
 NODE_FEAT_DIM = 7
-EPOCHS = 30
+EPOCHS = 100
 LR = 1e-3
 SEED = 2025
 MODEL_SAVE_PATH = "model/diffgraphormer_physics.pt"
@@ -62,21 +62,37 @@ def train(model, loader, optimizer, criterion):
     return total_loss / len(loader)
 
 
-threshold = 0.7
+threshold = 0.5
 
 
 # === 验证函数 ===
 @torch.no_grad()
-def evaluate(model, loader):
+def evaluate(model, loader, threshold=0.5):
     model.eval()
     total = correct = 0
+    true_positives = 0
+    false_negatives = 0
+    positives = 0
+
     for data in loader:
         data = data.to(device)
         logits = model(data.x_t, data.x_t_dt, data.edge_index, dt)
-        pred = (torch.sigmoid(logits) > threshold).float()
+        probs = torch.sigmoid(logits)
+        pred = (probs > threshold).float()
+
         correct += (pred == data.edge_label).sum().item()
         total += len(pred)
-    return correct / total if total > 0 else 0
+
+        # Recall 部分
+        true_positives += ((pred == 1) & (data.edge_label == 1)).sum().item()
+        false_negatives += ((pred == 0) & (data.edge_label == 1)).sum().item()
+        positives += (data.edge_label == 1).sum().item()
+
+    acc = correct / total if total > 0 else 0
+    recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0
+
+    return acc, recall
+
 
 
 # === 主程序 ===
@@ -107,8 +123,8 @@ if __name__ == "__main__":
     print("🔥 Training Start!")
     for epoch in range(1, EPOCHS + 1):
         loss = train(model, train_loader, optimizer, criterion)
-        acc = evaluate(model, val_loader)
-        print(f"Epoch {epoch:02d} | Loss: {loss:.4f} | Val Acc: {acc:.4f}")
+        acc,recall = evaluate(model, val_loader)
+        print(f"Epoch {epoch:02d} | Loss: {loss:.4f} | Val Acc: {acc:.4f} | Recall: {recall:.4f}")
 
     torch.save(model.state_dict(), MODEL_SAVE_PATH)
     print(f"✅ Model saved to {MODEL_SAVE_PATH}")

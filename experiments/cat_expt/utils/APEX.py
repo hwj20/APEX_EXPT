@@ -104,7 +104,7 @@ class APEX:
 
         return scores.cpu().numpy()  # convert to list for processing
 
-    def select_focused_graph(self, edge_index, attention_scores, k, threshold=0.7):
+    def select_focused_graph(self, edge_index, attention_scores, k, threshold=0.5):
         """
         Select top-k edges based on attention scores.
         """
@@ -123,7 +123,10 @@ class APEX:
         """
         Convert focused subgraph to a textual summary.
         """
-        edge_descriptions = [f"Object {src} may collide with Object {tgt}" for src, tgt in focused_graph["edges"]]
+        edge_descriptions = []
+        for src, tgt in focused_graph["edges"]:
+            if src == 0:
+                edge_descriptions = f"Robot {src} may collide with cat {tgt}"
         return "Potential interactions:\n" + "\n".join(edge_descriptions)
 
     def simulate_action(self, model, env_data, action):
@@ -131,10 +134,7 @@ class APEX:
 
     def describe_simulation(self, result: dict) -> str:
         """
-        输入：
-            results: mujoco_sim返回的结果字典
-        输出：
-            人类友好的字符串，总结每个动作的效果
+        describe the simulation results into natural language that LLMs can understand
         """
 
         summary = []
@@ -143,23 +143,27 @@ class APEX:
             robot_pos = None
             cat_pos_list = []
 
-            for obj in info["final_robot_pos"]:
+            for obj in info["final_pos"]:
                 if obj["name"] == "robot":
                     robot_pos = np.array(obj["position"])
                 elif "cat" in obj["name"]:
                     cat_pos_list.append(np.array(obj["position"]))
 
-            min_dist = min(np.linalg.norm(robot_pos[:2] - cat[:2]) for cat in cat_pos_list)
+            min_dist = min(np.linalg.norm(robot_pos[:3] - cat[:3]) for cat in cat_pos_list)
             height = robot_pos[2]
 
             safe_str = "Safe" if min_dist > 0.4 else "Danger"
             jump_str = "Jumped" if height > 0.3 else "Ground"
 
-            summary.append(f"- Action [{action}]: "
-                           f"Max Duration:{info['description']['duration']}, "
-                           f"Distance to nearest cat = {min_dist:.2f}m, "
-                           f"Height = {height:.2f}m, "
-                           f"Assessment = {safe_str}, {jump_str}")
+            if info['description']['duration'] <= 0:
+                summary.append(f"- Action [{action}]: "
+                               f"Assessment = Invalid")
+            else:
+                summary.append(f"- Action [{action}]: "
+                               f"Max Duration:{info['description']['duration']}, "
+                               f"Distance to nearest cat = {min_dist:.2f}m, "
+                               f"Height = {height:.2f}m, "
+                               f"Assessment = {safe_str}, {jump_str}")
 
         return "\n".join(summary)
 

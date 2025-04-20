@@ -45,9 +45,9 @@ def decode(decision: str):
         elif "right" in decision['move']:
             vel[0] = 3.0
         elif "up" in decision['move']:
-            vel[1] = 3.0
-        elif "down" in decision['move']:
             vel[1] = -3.0
+        elif "down" in decision['move']:
+            vel[1] = 3.0
         elif "jump" in decision['move']:
             vel[2] = 3.0  # jump
             duration = 0.1

@@ -157,6 +157,8 @@ def ask_gpt4(result_path, questions, max_questions=200):
 gpt4_results_path = "results/gpt4_mini_physics_results_final_APEX.json"
 gpt4_results = ask_gpt4_with_perception(gpt4_results_path, physics_questions, max_questions=200)
 
+# 下面的代码是假如你某个题目跑错了，只想跑某一个类型的题目，就这么写
+
 # if os.path.exists(gpt4_results_path):
 #     with open(gpt4_results_path, "r") as f:
 #         try:
