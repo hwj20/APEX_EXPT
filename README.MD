@@ -59,20 +59,7 @@ APEX is a hybrid framework designed for reasoning and decision-making under unce
 ---
 
 ## 🗂 Project Structure
-```
-PGD
-├── experiments
-│   ├── cat_exp
-│   │   ├── env
-│   │   ├── model
-│   │   ├── utils
-│   │   └── visualization
-│   ├── physical_question_exp
-│   ├── tetris_exp
-│   └── __pycache__
-├── media
-└── README.md
-```
+
 
 ---
 
