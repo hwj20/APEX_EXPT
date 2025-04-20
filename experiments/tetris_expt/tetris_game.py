@@ -1,5 +1,5 @@
-from experiments.tetris_exp.utils.tetris_game_agent import *
-from experiments.tetris_exp.utils.Tetris import *
+from experiments.tetris_expt.utils.tetris_game_agent import *
+from experiments.tetris_expt.utils.Tetris import *
 
 results = {
     "gpt-4o-mini": {
@@ -128,13 +128,13 @@ if __name__ == "__main__":
     # for model in results.keys():
     #     for i in range(5):  # 每个模型跑 5 盘
     #         save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
-    #         result = run_tetris(model, save_path, rng=random.Random(42 + i))
+    #         results = run_tetris(model, save_path, rng=random.Random(42 + i))
     #
-    #         results[model]["final_score"].append(result["final_score"])
-    #         results[model]["max_stack_height"].append(result["max_stack_height"])
-    #         results[model]["holes"].append(result["holes"])
-    #         results[model]["bumps"].append(result["bumps"])
-    #         results[model]["height_delta_per_move"].append(result["height_delta_per_move"])
+    #         results[model]["final_score"].append(results["final_score"])
+    #         results[model]["max_stack_height"].append(results["max_stack_height"])
+    #         results[model]["holes"].append(results["holes"])
+    #         results[model]["bumps"].append(results["bumps"])
+    #         results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
     #         # 实时保存结果以防中断
     #         with open("../results/tetris/tetris_eval_results.json", "w") as f:
     #             json.dump(results, f, indent=2)

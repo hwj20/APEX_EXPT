@@ -1,4 +1,4 @@
-from experiments.tetris_exp.utils.Tetris import *
+from experiments.tetris_expt.utils.Tetris import *
 import json
 from PIL import Image
 import pygame

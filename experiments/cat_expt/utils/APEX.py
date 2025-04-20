@@ -1,13 +1,14 @@
-import json
+import matplotlib.pyplot as plt
+import networkx as nx
+import os
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from .mujoco_perception import simulator
 
 
 class APEX:
-    def __init__(self, graphormer_model, physics_simulator, llm_agent,available_move, dt=0.01, device="cpu"):
+    def __init__(self, graphormer_model, physics_simulator, llm_agent, available_move, dt=0.01, device="cpu"):
         self.graphormer = graphormer_model.to(device)
         self.physics_sim = simulator(physics_simulator)
         self.llm_agent = llm_agent
@@ -69,10 +70,6 @@ class APEX:
         return x_t, x_t_dt, edge_index
 
     def visualize_attention(self, x_t, edge_index, scores, step):
-        import matplotlib.pyplot as plt
-        import networkx as nx
-        import os
-
         G = nx.DiGraph()
         node_pos = {i: x_t[i, 1:3].cpu().numpy() for i in range(x_t.shape[0])}
 
@@ -129,14 +126,13 @@ class APEX:
         edge_descriptions = [f"Object {src} may collide with Object {tgt}" for src, tgt in focused_graph["edges"]]
         return "Potential interactions:\n" + "\n".join(edge_descriptions)
 
-
     def simulate_action(self, model, env_data, action):
         return self.physics_sim.sim(model, env_data, action)
 
     def describe_simulation(self, result: dict) -> str:
         """
         输入：
-            result: mujoco_sim返回的结果字典
+            results: mujoco_sim返回的结果字典
         输出：
             人类友好的字符串，总结每个动作的效果
         """
@@ -156,8 +152,8 @@ class APEX:
             min_dist = min(np.linalg.norm(robot_pos[:2] - cat[:2]) for cat in cat_pos_list)
             height = robot_pos[2]
 
-            safe_str = "Safe" if min_dist > 0.2 else "Danger"
-            jump_str = "Jumped" if height > 0.6 else "Ground"
+            safe_str = "Safe" if min_dist > 0.4 else "Danger"
+            jump_str = "Jumped" if height > 0.3 else "Ground"
 
             summary.append(f"- Action [{action}]: "
                            f"Max Duration:{info['description']['duration']}, "
@@ -166,8 +162,6 @@ class APEX:
                            f"Assessment = {safe_str}, {jump_str}")
 
         return "\n".join(summary)
-
-
 
     def run(self, snapshot_t, snapshot_t_dt, dt, physical_model, env_data, step):
         x_t, x_t_dt, edge_index = self.construct_graph(snapshot_t, snapshot_t_dt, dt)
@@ -180,7 +174,7 @@ class APEX:
 
         # not trigger
         if focused_graph is None:
-            return False, "stay"
+            return False, "stay", True
 
         summary = self.generate_physical_summary(focused_graph)
         actions = self.available_move
@@ -189,8 +183,8 @@ class APEX:
         results = self.describe_simulation(sim_result)
         print(results)
 
-        move = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
+        move, valid_move = self.llm_agent.decide_move_apex(snapshot_t, summary, actions, results)
 
         self.last_trigger = step
 
-        return True, move
+        return True, move, valid_move

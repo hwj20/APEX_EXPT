@@ -1,13 +1,15 @@
+import time
 import json
+from datetime import datetime
 
 import mujoco
 import mujoco.viewer
 import numpy as np
 import cv2
-from experiments.cat_exp.utils.cat_game_agent import LLM_Agent
-from experiments.cat_exp.utils.APEX import APEX
-from experiments.cat_exp.model.graphormer import DiffGraphormer
-from experiments.cat_exp.utils.mujoco_perception import get_body_state, get_all_body_states
+from experiments.cat_expt.utils.cat_game_agent import LLM_Agent
+from experiments.cat_expt.utils.APEX import APEX
+from experiments.cat_expt.model.graphormer import DiffGraphormer
+from experiments.cat_expt.utils.mujoco_perception import get_body_state, get_all_body_states
 import torch
 
 with open('env/square_demo.xml', 'r') as f:
@@ -32,9 +34,14 @@ def move_cat_towards_robot(cat_pos, robot_pos, speed=0.03):
     return vx, vy
 
 
-def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
+def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
+    # I know how ugly the code is :)
+    if method == 'VLM':
+        model = 'gpt-4o'
+
     physical_model = None
     agent = LLM_Agent(model=model)
+    collision = False
 
     def add_action(_move):
         nonlocal current_action, frames_left, action_index
@@ -64,7 +71,9 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     # video setting
     fps = 100
     width, height = 640, 480
-    video_writer = cv2.VideoWriter(f"turing_cat_llm_{difficulty}_{method}_{model}.mp4", cv2.VideoWriter_fourcc(*"mp4v"),
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"turing_cat_llm_{difficulty}_{method}_{model}_{timestamp}.mp4"
+    video_writer = cv2.VideoWriter(file_name, cv2.VideoWriter_fourcc(*"mp4v"),
                                    fps,
                                    (width, height))
 
@@ -88,6 +97,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
     action_sequence = []
     dt = 1.0 / fps  # unit: seconds
     init_frames = int(fps / 2)
+    response_time = 0.0
 
     # Initialize Model
     apex = None
@@ -112,6 +122,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
         robot_state = get_body_state(physical_model, data, "robot")
         cat1_state = get_body_state(physical_model, data, "cat1")
         cat2_state = get_body_state(physical_model, data, "cat2")
+        new_action = ""
+        action_valid = True
 
         if step % fps == 0:
             # Turn cats towards the Agent
@@ -137,22 +149,47 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             print(cat2_state)
             print(robot_state)
             print("Collision!")
+            collision = True
 
         snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
         if step > init_frames and frames_left <= 0:
             if method == 'APEX':
                 if snapshot_t and snapshot_t != snapshot_t_dt:
-                    triggered, move = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model, data, step)
+                    start = time.perf_counter()
+                    triggered, move, action_valid = apex.run(snapshot_t, snapshot_t_dt, dt, physical_model, data, step)
+                    end = time.perf_counter()
+                    response_time = end - start
                     if triggered:
                         add_action(move)
+                        new_action = move
 
             if method == 'LLM' and step % fps == 0:
-                response = agent.decide_move(get_all_body_states(physical_model, data), available_move)
+                start = time.perf_counter()
+                move, action_valid = agent.decide_move(get_all_body_states(physical_model, data), available_move)
+                end = time.perf_counter()
+                response_time = end - start
                 try:
-                    move = response
                     add_action(move)
+                    new_action = move
                 except:
                     print("error setting move")
+
+            if method == 'VLM' and step % fps == 0:
+                start = time.perf_counter()
+                image_path = f"tmp/frame_{difficulty}_{method}_{model}_step{step}.png"
+                renderer.update_scene(data, camera="top")
+                pixels = renderer.render()
+                frame_rgb = np.flipud(pixels)
+                cv2.imwrite(image_path, cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR))
+                move, action_valid = agent.decide_move_vlm(get_all_body_states(physical_model, data), available_move,image_path)
+                end = time.perf_counter()
+                response_time = end - start
+                try:
+                    add_action(move)
+                    new_action = move
+                except:
+                    print("error setting move")
+
             if method == 'TEST' and step % fps == 0:
                 move = {'velocity': [0.0, 0.0, 3.0], 'duration': 0.1}
                 add_action(move)
@@ -172,6 +209,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
             data.qvel[0:3] = [0.0, 0.0, 0.0]
 
         # print(robot_state)
+        if run_callback is not None:
+            run_callback(step * fps, collision, new_action, action_valid, response_time)
 
         # Step
         mujoco.mj_step(physical_model, data)
@@ -184,9 +223,67 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini'):
         video_writer.write(frame_resized)
 
     video_writer.release()
-    print(f"turing_cat_llm_{difficulty}_{method}_{model}.mp4")
+    print(f"video saved as {file_name}")
+    return collision
 
 
-run_exp("Simple", method="LLM", model='gpt-4o')
-# run_exp("Medium")
-# run_exp("Hard")
+if __name__ == "__main__":
+    run_exp(difficulty='Simple', method='VLM', model='gpt-4o-mini')
+    run_exp(difficulty='Medium', method='VLM', model='gpt-4o-mini')
+    run_exp(difficulty='Hard', method='VLM', model='gpt-4o-mini')
+
+    # EXPT_TIME = 10  # seconds
+    # NUM_TRIALS = 5
+    # difficulties = ["Simple", "Medium", "Hard"]
+    # methods = ["LLM", "APEX"]
+    # results = {d: {m: {"cfr": 0, "ast": [], "iar": 0, "latency": []} for m in methods} for d in difficulties}
+    # save_path = "results/results.json"
+    #
+    # for difficulty in difficulties:
+    #     for method in methods:
+    #         for i in range(NUM_TRIALS):
+    #             print(f"\nRunning: {difficulty} | {method} | Trial {i + 1}")
+    #             start_time = time()
+    #             survival_time = EXPT_TIME
+    #             collision_times = 0
+    #             invalid_actions = 0
+    #             valid_actions = 0
+    #             actions = {}
+    #             response_time_sum = 0.0
+    #
+    #
+    #             def callback_fn(current_time, collided, new_action, action_valid, response_time):
+    #                 nonlocal survival_time, collision_times, invalid_actions, valid_actions, response_time_sum
+    #                 # the first time to collide
+    #                 if survival_time == EXPT_TIME and collided:
+    #                     survival_time = current_time  # unit: seconds
+    #                 if collided:
+    #                     collision_times += 1
+    #                 if not action_valid:
+    #                     invalid_actions += 1
+    #                 if new_action != "":
+    #                     if action_valid:
+    #                         valid_actions += 1
+    #                     actions[survival_time] = (new_action, response_time)
+    #                     response_time_sum += response_time
+    #
+    #
+    #             collision_flag = run_exp(difficulty, method=method, model='gpt-4o-mini', run_callback=callback_fn)
+    #
+    #             results[difficulty][method]["ast"].append(survival_time)
+    #             results[difficulty][method]["cfr"] += int(not collision_flag)
+    #             results[difficulty][method]["iar"] += invalid_actions / len(actions)
+    #             results[difficulty][method]["latency"].append(response_time_sum / len(actions))
+    #
+    #         with open(save_path, "w") as f:
+    #             json.dump(results, f, indent=4)
+    #
+    # print("\nFinal Results Summary:\n")
+    # for difficulty in difficulties:
+    #     for method in methods:
+    #         summary = results[difficulty][method]
+    #         avg_ast = np.mean(summary["ast"]) if summary["ast"] else 0
+    #         avg_latency = np.mean(summary["latency"]) if summary["latency"] else 0
+    #         cfr_rate = summary["cfr"] / NUM_TRIALS
+    #         print(f"[{difficulty}][{method}] CFR={cfr_rate:.2f} | AST={avg_ast:.2f}s | "
+    #               f"IAR={summary['iar']} | Avg Latency={avg_latency:.2f}s")

@@ -1,6 +1,6 @@
 import torch
 from torch_geometric.data import Data, DataLoader
-from experiments.cat_exp.model.graphormer import DiffGraphormer, FocalLoss  # 请确保路径正确
+from experiments.cat_expt.model.graphormer import DiffGraphormer, FocalLoss  # 请确保路径正确
 import json
 
 # === 参数配置 ===
