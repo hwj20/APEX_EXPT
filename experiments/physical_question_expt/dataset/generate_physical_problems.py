@@ -7,7 +7,7 @@ random.seed(42)
 
 
 def generate_3d_linear_motion():
-    """ 生成 3D 直线运动问题 """
+    """ generate 3d linear motion questions"""
 
     # 初速度 (vx, vy, vz) m/s
     v0 = np.array([round(random.uniform(1, 20), 2) for _ in range(3)])
@@ -19,9 +19,9 @@ def generate_3d_linear_motion():
     return {
         "type": "3D Linear Motion",
         "question": f"""
-An object starts at (0,0,0) with an initial velocity of {v0.tolist()} m/s and an acceleration of {a.tolist()} m/s².
-What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after {t} seconds?
-""",
+                    An object starts at (0,0,0) with an initial velocity of {v0.tolist()} m/s and an acceleration of {a.tolist()} m/s².
+                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after {t} seconds?
+                    """,
         "parameters": {"v0": v0.tolist(), "a": a.tolist(), "t": t},
         "answer_json": {
             "velocity_x": "", "velocity_y": "", "velocity_z": "",
@@ -31,24 +31,24 @@ What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after {t} secon
 
 
 def generate_3d_circular_motion():
-    """ 生成更合理的 3D 圆周运动问题（基于标量速度 & 明确平面） """
+    """  generate 3d linear motion questions"""
     r = round(random.uniform(0.5, 5), 2)  # 半径
-    v = round(random.uniform(1, 10), 2)   # 标量速度
-    omega = round(v / r, 2)               # 角速度
-    t = round(random.uniform(1, 10), 2)   # 时间
-    plane = random.choice(["xy-plane", "xz-plane", "yz-plane"])
+    v = round(random.uniform(1, 10), 2)  # 标量速度
+    omega = round(v / r, 2)  # 角速度
+    t = round(random.uniform(1, 10), 2)  # 时间
+    plane = random.choice(["xy-plane", "xz-plane"])
 
     return {
         "type": "3D Circular Motion",
         "question": f"""
-        Object  (Circular Motion)  
-           - Radius: {r} meters  
-           - Speed: {v} m/s  
-           - Angular velocity: {omega} rad/s  
-           - Time: {t} s  
-           - Rotating in the {plane}  
-           - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).
-        """,
+                    Object  (Circular Motion)  
+                       - Radius: {r} meters  
+                       - Speed: {v} m/s  
+                       - Angular velocity: {omega} rad/s  
+                       - Time: {t} s  
+                       - Rotating in the {plane}  
+                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).
+                    """,
         "parameters": {
             "r": r,
             "v": v,
@@ -65,7 +65,7 @@ def generate_3d_circular_motion():
 
 
 def generate_3d_projectile_motion():
-    """ 生成 3D 抛物运动问题 """
+    """  generate 3d linear motion questions"""
 
     # 初速度 (vx, vy, vz) m/s
     v0 = np.array([round(random.uniform(5, 30), 2) for _ in range(3)])
@@ -206,8 +206,6 @@ def generate_collision_problem(bias_ratio=0.5):
     }
 
 
-
-# 重新生成包含 50 道碰撞题的完整物理题集
 def generate_full_physics_questions():
     questions = []
     for _ in range(25):
@@ -223,7 +221,6 @@ def generate_full_physics_questions():
     return questions
 
 
-# 保存完整问题集到 JSON 文件
 def save_full_questions_to_json():
     questions = generate_full_physics_questions()
     file_path = "physics_questions.json"
@@ -232,24 +229,26 @@ def save_full_questions_to_json():
     return file_path
 
 
-# 运行并保存完整文件
-# save_full_questions_to_json()
+if __name__ == 'main':
+    # generate 200 physical questions
+    save_full_questions_to_json()
 
-def revise_json():
-    file_path = "physics_questions.json"
+    # If you wished to revise a certain type of question
 
-    with open(file_path, "r") as f:
-        questions = json.load(f)
-    ques = []
-    for q in questions:
-        if q["type"] == "3D Collision":
-            q = generate_collision_problem()
-        ques.append(q)
+    # def revise_json():
+    #     file_path = "physics_questions.json"
+    #
+    #     with open(file_path, "r") as f:
+    #         questions = json.load(f)
+    #     ques = []
+    #     for q in questions:
+    #         if q["type"] == "3D Collision":
+    #             q = generate_collision_problem()
+    #         ques.append(q)
+    #
+    #     # Save revised version
+    #     revised_path = "physics_questions.json"
+    #     with open(revised_path, "w") as f:
+    #         json.dump(ques, f, indent=2)
 
-    # Save revised version
-    revised_path = "physics_questions.json"
-    with open(revised_path, "w") as f:
-        json.dump(ques, f, indent=2)
-
-
-revise_json()
+    # revise_json()
