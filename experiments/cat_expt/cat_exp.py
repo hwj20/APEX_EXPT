@@ -42,6 +42,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     physical_model = None
     agent = LLM_Agent(model=model)
     collision = False
+    collision_threshold = 0.2
 
     def add_action(_move):
         nonlocal current_action, frames_left, action_index
@@ -78,17 +79,9 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                                    (width, height))
 
     # Initialize cats and env
-    cats = [
-        {"id": 1, "vx": 3, "vy": 2},
-        {"id": 2, "vx": -2, "vy": 4}
-    ]
+
     data = mujoco.MjData(physical_model)
     renderer = mujoco.Renderer(physical_model, height=height, width=width)
-    for cat in cats:
-        cid = mujoco.mj_name2id(physical_model, mujoco.mjtObj.mjOBJ_BODY, "cat" + str(cat['id']))
-        cid -= 1
-        data.qvel[cid * 6] += cat["vx"]
-        data.qvel[cid * 6 + 1] += cat["vy"]
 
     # Begin Simulation
     current_action = None
@@ -120,13 +113,15 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     for step in range(10 * fps):
         # Current State
         robot_state = get_body_state(physical_model, data, "robot")
-        cat1_state = get_body_state(physical_model, data, "cat1")
-        cat2_state = get_body_state(physical_model, data, "cat2")
+        cat_states = []
+        for i in range(1, cat_num + 1):
+            cat_states.append(get_body_state(physical_model, data, f"cat{i}"))
+
         new_action = ""
         action_valid = True
 
         if step % fps == 0:
-            # Turn cats towards the Agent
+            # Turn cats towards the Agent every second
             for i in range(1, cat_num + 1):
                 cat_name = f"cat{i}"
                 cat_state = get_body_state(physical_model, data, cat_name)
@@ -138,18 +133,13 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                 data.qvel[cat_dof_start + 1] = vy
 
         # Collision Check
-        cat_distance_1 = np.linalg.norm(
-            np.array(robot_state["position"][:3]) - np.array(cat1_state["position"][:3]))
-        cat_distance_2 = np.linalg.norm(
-            np.array(robot_state["position"][:3]) - np.array(cat2_state["position"][:3]))
-
-        if step > init_frames and (cat_distance_1 <= 0.2 or cat_distance_2 <= 0.2):
-            print(step)
-            # print(cat1_state)
-            # print(cat2_state)
-            # print(robot_state)
-            print("Collision!")
-            collision = True
+        for cat_state in cat_states:
+            cat_distance = np.linalg.norm(
+                np.array(robot_state["position"][:3]) - np.array(cat_state["position"][:3]))
+            if step > init_frames and cat_distance < collision_threshold:
+                print(step)
+                print("Collision!")
+                collision = True
 
         snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
         if step > init_frames and frames_left <= 0:
@@ -227,6 +217,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     print(f"video saved as {file_name}")
     return collision
 
+
 def run_trial(difficulty, method, model, trial_id):
     print(f"\nRunning: {difficulty} | {method} | {model} | Trial {trial_id + 1}")
     survival_time = EXPT_TIME
@@ -258,8 +249,9 @@ def run_trial(difficulty, method, model, trial_id):
         "invalid_actions": invalid_actions,
         "valid_actions": valid_actions,
         "latency_sum": response_time_sum,
-        "actions_len": len(actions)
+        "actions_len": valid_actions+invalid_actions
     }
+
 
 if __name__ == "__main__":
     # run_exp(difficulty='Simple', method='APEX', model='gpt-4o')
@@ -267,7 +259,7 @@ if __name__ == "__main__":
     # run_exp(difficulty='Hard', method='VLM', model='gpt-4o-mini')
 
     EXPT_TIME = 10  # seconds
-    NUM_TRIALS = 3
+    NUM_TRIALS = 5
     difficulties = ["Simple", "Medium", "Hard"]
     methods = {"LLM": ['gpt-4o', 'gpt-4o-mini'], "APEX": ['gpt-4o', 'gpt-4o-mini'], "VLM": ['gpt-4o']}
     results = {
@@ -293,8 +285,9 @@ if __name__ == "__main__":
                     results[difficulty][method][model]["cfr"] += int(not result["collision_flag"])
 
                     if result["actions_len"] > 0:
-                        results[difficulty][method][model]["iar"] += result["invalid_actions"] / result["actions_len"]
-                        results[difficulty][method][model]["latency"].append(result["latency_sum"] / result["actions_len"])
+                        results[difficulty][method][model]["iar"] += result["invalid_actions"] / result["actions_len"]/NUM_TRIALS
+                        results[difficulty][method][model]["latency"].append(
+                            result["latency_sum"] / result["actions_len"])
                     else:
                         results[difficulty][method][model]["iar"] += 0
                         results[difficulty][method][model]["latency"].append(0.0)
