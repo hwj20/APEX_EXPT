@@ -24,9 +24,9 @@ def solve_3d_circular_motion(p):
     t = p["t"]
     plane = p["rotation_plane"]
 
-    theta = omega * t  # 总旋转角度（rad）
+    theta = omega * t  # circular angle (rad)
 
-    # 默认起点 (r, 0, 0)
+    # start point (r, 0, 0)
     if plane == "xy-plane":
         x = round(r * np.cos(theta), 4)
         y = round(r * np.sin(theta), 4)
@@ -126,7 +126,6 @@ def solve_3d_collision(params):
     discriminant = b ** 2 - 4 * a * c
 
     if discriminant < 0 or a == 0:
-        # 无解 or 静止无相对运动
         will_collide = False
     else:
         sqrt_disc = np.sqrt(discriminant)
@@ -142,7 +141,7 @@ def solve_3d_collision(params):
             "velocity_2": {"vel_2_x": "", "vel_2_y": "", "vel_2_z": ""}
         }
 
-    # 弹性碰撞处理
+    # elastic collision
     n = (p1 - p2)
     n /= np.linalg.norm(n)
     v1_proj = np.dot(v1, n)

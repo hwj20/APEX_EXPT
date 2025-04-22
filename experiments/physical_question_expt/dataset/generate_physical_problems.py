@@ -227,7 +227,7 @@ def save_full_questions_to_json():
     return file_path
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     # generate 200 physical questions
     save_full_questions_to_json()
 

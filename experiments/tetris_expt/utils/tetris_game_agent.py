@@ -1,4 +1,6 @@
 import base64
+import re
+
 import requests
 import os
 
@@ -6,6 +8,16 @@ from openai import OpenAI
 
 api_key = os.getenv("OPENAI_API_KEY")
 
+def strip_markdown(text: str) -> str:
+    text = re.sub(r"```", "", text)
+    text = re.sub("json", "", text)
+    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
+    text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
+    text = re.sub(r"(\*|_)(.*?)\1", r"\2", text)
+    text = re.sub(r"`(.*?)`", r"\1", text)
+    text = re.sub(r"^[-*+]\s+", "", text, flags=re.MULTILINE)
+    text = re.sub(r"\n{2,}", "\n", text)
+    return text.strip()
 
 class LLM_Agent:
     def __init__(self, model="gpt-4o"):

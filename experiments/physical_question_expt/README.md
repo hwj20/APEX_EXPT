@@ -1,4 +1,12 @@
-这个代码，很黑暗，
-dataset的脚本都是创建data或者ground truth
-evaluation那个脚本是纯粹的黑暗脚本，理论上我最好做一个遍历答案树的层次比较脚本，实际上我每个layer都写了一个统计函数。
-总之，just leave it，我们最后再来检查，但llm出错的原因很明显就是数值问题，而不是物理定律问题
+# 🚀 Reproducing:  Dynamic Obstacle Avoiding Experiment
+
+## 📁 Directory Structure
+
+```
+.
+├── cat_exp.py          # expt script
+├── train.py            # train graphromer model
+├── model/              # graphromer model
+└── results/            # results
+```
+

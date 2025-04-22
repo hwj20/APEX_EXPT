@@ -1,6 +1,4 @@
-import copy
 import json
-
 import mujoco
 import numpy as np
 
@@ -171,10 +169,8 @@ def simulate_3d_multi_object_motion(parameters):
     return results
 
 
-def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.001):
-    """
-    模拟两个球体发生弹性碰撞，并返回是否碰撞以及最终速度（真实模拟+碰撞处理）。
-    """
+def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.01):
+    """ elastic collision """
     xml = f"""
     <mujoco>
         <option timestep="{dt}"/>
@@ -197,7 +193,7 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.001):
     v2 = np.array(v2)
     p1 = np.array(p1)
     p2 = np.array(p2)
-    # 设置初始速度
+    # initial velocity
     data.qvel[:3] = v1
     data.qvel[6:9] = v2
 
@@ -219,17 +215,17 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.001):
             n = (pos1 - pos2) / np.linalg.norm(pos1 - pos2)
 
             v_rel = np.dot(v1_cur - v2_cur, n)
-            if v_rel > 0:  # 避免物体分离状态时触发碰撞
+            if v_rel > 0:
                 continue
 
-            # 弹性碰撞公式（在 n 方向）
+            # elastic collision
             v1_new = v1_cur - (2 * m2 / (m1 + m2)) * v_rel * n
             v2_new = v2_cur + (2 * m1 / (m1 + m2)) * v_rel * n
 
             data.qvel[:3] = v1_new
             data.qvel[6:9] = v2_new
 
-    # 获取最终速度
+    # final velocity
     v1_final = data.qvel[:3]
     v2_final = data.qvel[6:9]
     if collided:
@@ -272,104 +268,10 @@ def solve_problem(question):
     return q["answer_json"]
 
 
-def get_body_state(model, data, body_name):
-    body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, body_name)
-    pos = data.xpos[body_id].copy()
-    vel = data.cvel[body_id, :6].copy()
-    return {
-        "name": body_name,
-        "position": pos.tolist(),
-        "velocity": vel.tolist()
-    }
-
-
-def get_all_body_states(model, data, filter_out=['world']):
-    states = []
-    for i in range(model.nbody):
-        name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-        if name and name not in filter_out:
-            pos = data.xpos[i].copy()
-            vel = data.cvel[i, :6].copy()
-            states.append({
-                "name": name,
-                "position": pos.tolist(),
-                "velocity": vel.tolist()
-            })
-    return states
-
-
-class simulator:
-    def __init__(self, method):
-        self.method = method
-
-    def mujoco_sim(self, model, env_data, available_moves):
-        sim_results = {}
-        max_duration = 1.0  # 最多移动 1 秒
-        timestep = model.opt.timestep
-        max_steps = int(max_duration / timestep)
-
-        for action_name, action_desc in available_moves.items():
-            sim_data = copy.deepcopy(env_data)
-
-            robot_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "robot")
-            dof_start = model.body_dofadr[robot_body_id]
-
-            # 设置速度
-            vel = [0.0, 0.0, 0.0]
-            if action_name == "move_left":
-                vel[0] = -3.0
-            elif action_name == "move_right":
-                vel[0] = 3.0
-            elif action_name == "move_up":
-                vel[1] = -3.0
-            elif action_name == "move_down":
-                vel[1] = 3.0
-            elif action_name == "jump":
-                vel[2] = 3.0
-
-            for i in range(3):
-                sim_data.qvel[dof_start + i] = vel[i]
-
-            safe_steps = 0
-            last_pos = np.array(sim_data.xpos[robot_body_id])
-
-            for step in range(max_steps):
-                mujoco.mj_step(model, sim_data)
-                current_pos = np.array(sim_data.xpos[robot_body_id])
-                movement = np.linalg.norm(current_pos[:3] - last_pos[:3])
-                if movement < 1e-3 and action_name not in ['jump', 'stay']:
-                    break
-
-                last_pos = current_pos
-                safe_steps += 1
-
-            safe_duration = safe_steps * timestep
-            # stay away from wall
-            if safe_duration < 1.0 and action_name not in ['jump', 'stay']:
-                safe_duration -= 0.1
-                # if save_duration < 0, then the action will be evaluated into 'invalid' in the summary
-            else:
-                safe_duration = 1.0
-
-            sim_results[action_name] = {
-                "final_pos": get_all_body_states(model, sim_data),
-                "description": {
-                    "velocity": vel,
-                    "duration": safe_duration,
-                    "description": f"{action_name} with velocity={vel} for {safe_duration:.2f}s"
-                }
-            }
-
-        return sim_results
-
-    def sim(self, model, env_data, action):
-        if self.method == 'mujoco':
-            return self.mujoco_sim(model, env_data, action)
-        return None
 
 
 if __name__ == "__main__":
-    with open("../../physical_question_expt/dataset/physics_questions.json", "r") as f:
+    with open("../dataset/physics_questions.json", "r") as f:
         questions = json.load(f)
 
     for q in questions:
@@ -386,20 +288,20 @@ if __name__ == "__main__":
         elif t == "3D Collision":
             q["answer_json"] = simulate_3d_collision(**p)
     # Save output
-    output_path = "../../physical_question_expt/dataset/physics_answer_sim.json"
+    output_path = "../dataset/physics_answer_sim.json"
     with open(output_path, "w") as f:
         json.dump(questions, f, indent=2)
 
 
-    # just to compare the sim results with ground truth(No LLM Answering)
+    # just to compare the sim results with ground truth (without LLM Answering)
     def compare_answers_with_tolerance(tol=0.05):
-        with open("../../physical_question_expt/dataset/physics_ground_truth.json", "r") as f1:
+        with open("../dataset/physics_ground_truth.json", "r") as f1:
             questions = json.load(f1)
 
-        with open("../../physical_question_expt/dataset/physics_answer_sim.json", "r") as f2:
+        with open("../dataset/physics_answer_sim.json", "r") as f2:
             answers = json.load(f2)
 
-        assert len(questions) == len(answers), "两个文件长度不一致！"
+        assert len(questions) == len(answers), "The number of question are different"
 
         for i in range(len(questions)):
             q = questions[i]
@@ -408,7 +310,7 @@ if __name__ == "__main__":
             ans1 = q.get("answer_json", {})
             ans2 = sim.get("answer_json", {})
 
-            # 如果结构不一样直接报错
+            # different structure
             if set(ans1.keys()) != set(ans2.keys()):
                 print(f"\n❗️[Mismatch Keys @ Question {i}]")
                 print("Keys in ground_truth:", ans1.keys())
@@ -419,7 +321,6 @@ if __name__ == "__main__":
             for key in ans1:
                 try:
                     if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
-                        # 递归比较子字典
                         for _key in ans1[key]:
                             v1 = float(ans1[key][_key])
                             v2 = float(ans2[key][_key])
@@ -431,12 +332,11 @@ if __name__ == "__main__":
                         if abs(v1 - v2) > tol:
                             diff[key] = (v1, v2)
                 except:
-                    # 比较字符串或无法转为 float 的项
                     if ans1[key] != ans2.get(key):
                         diff[key] = (ans1[key], ans2.get(key))
 
             if diff:
-                print(f"\n❗️[Mismatch @ Question {i}] Type: {q.get('type', 'Unknown')}")
+                print(f"\n❗[Mismatch @ Question {i}] Type: {q.get('type', 'Unknown')}")
                 print("Question:\n", q.get("question", "No text"))
                 print("Differences (beyond ±{:.3f}):".format(tol))
                 for k, (v1, v2) in diff.items():

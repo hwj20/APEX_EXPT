@@ -1,4 +1,4 @@
-# 🧠 APEX: Attention-Powered EXecutive Framework
+# 🧠 APEX: Physical  Framework
 
 > 🚀 A modular decision-making framework combining graph-based physical perception with LLM-driven reasoning, tested in dynamic and uncertain environments like obstacle avoidance and Tetris!
 
@@ -45,6 +45,13 @@ APEX is a hybrid framework designed for reasoning and decision-making under unce
 
 ## 🧪 Experiments
 
+### Physical Questions
+- Ask LLM to answer physical questions without using python.
+
+### 🧱 Tetris LLM Planning
+- Predicts optimal block placement
+- Avoids overflow & line gaps using reasoning
+
 ### ✅ Cat Avoidance Task
 - Difficulty levels: `Simple`, `Medium`, `Hard`
 - Metrics:
@@ -52,26 +59,17 @@ APEX is a hybrid framework designed for reasoning and decision-making under unce
   - **IAR**: Invalid Action Rate
   - **AST**: Average Survival Time
 
-### 🧱 Tetris LLM Planning
-- Predicts optimal block placement
-- Avoids overflow & line gaps using reasoning
-
----
-
-## 🗂 Project Structure
-
-
 ---
 
 ## 🛠 Setup
 ```bash
 conda create -n apex python=3.11
+conda activate apex
 ```
-缺什么包装什么包
 
 ---
 
 ## 📈 Citation (coming soon)
 
-If you find this work helpful, please stay tuned for the arXivversion 💡
+If you find this work helpful, please stay tuned for the arXiv version 💡
 

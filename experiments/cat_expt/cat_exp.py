@@ -1,7 +1,6 @@
 import time
 import json
 from datetime import datetime
-
 import mujoco
 import mujoco.viewer
 import numpy as np
@@ -9,7 +8,7 @@ import cv2
 from experiments.cat_expt.utils.cat_game_agent import LLM_Agent
 from experiments.cat_expt.utils.APEX import APEX
 from experiments.cat_expt.model.graphormer import DiffGraphormer
-from experiments.cat_expt.utils.mujoco_perception import get_body_state, get_all_body_states
+from experiments.cat_expt.utils.mujoco_simulator import get_body_state, get_all_body_states
 import torch
 
 with open('env/square_demo.xml', 'r') as f:
@@ -96,9 +95,9 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     apex = None
     if method == 'APEX':
         danger_model = DiffGraphormer(
-            in_feats=7,  # 输入维度要一致
+            in_feats=7,
             edge_feat_dim=3,
-            hidden_dim=32,  # 你训练时的 hidden size
+            hidden_dim=32,
             num_heads=4,
             dropout=0.3
         )

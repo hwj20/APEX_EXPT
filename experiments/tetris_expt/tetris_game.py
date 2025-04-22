@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     for model in results.keys():
         for i in range(5):  # 每个模型跑 5 盘
-            save_path = f"./results/tetris/{model}_{i}_tetris_game_history.json"
+            save_path = f"results/tetris_results/{model}_{i}_tetris_game_history.json"
             results = run_tetris(model, save_path, rng=random.Random(42 + i))
 
             results[model]["final_score"].append(results["final_score"])
@@ -136,7 +136,7 @@ if __name__ == "__main__":
             results[model]["bumps"].append(results["bumps"])
             results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
             # 实时保存结果以防中断
-            with open("../results/tetris/tetris_eval_results.json", "w") as f:
+            with open("../results/tetris_results/tetris_eval_results.json", "w") as f:
                 json.dump(results, f, indent=2)
 
 

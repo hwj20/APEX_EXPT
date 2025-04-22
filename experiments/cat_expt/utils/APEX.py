@@ -4,7 +4,7 @@ import os
 
 import numpy as np
 import torch
-from .mujoco_perception import simulator
+from experiments.cat_expt.utils.mujoco_simulator import simulator
 
 
 class APEX:
@@ -19,14 +19,14 @@ class APEX:
 
     def construct_graph(self, snapshot, snapshot_dt, dt=0.1):
         """
-        输入:
-        - snapshot: 当前环境状态 {'objects': [...]}
-        - snapshot_dt: 下一帧环境状态 {'objects': [...]}
-        - dt: 时间间隔
-        返回:
-        - x_t: 当前帧特征
-        - x_t_dt: 下一帧特征
-        - edge_index: 边信息 [from, to]
+        input:
+        - snapshot: current frame env {'objects': [...]}
+        - snapshot_dt: next frame env {'objects': [...]}
+        - dt: delta t
+        output:
+        - x_t: features of current frame
+        - x_t_dt: features of next frame
+        - edge_index: [from, to]
         """
 
         node_features_t = []
@@ -56,7 +56,7 @@ class APEX:
             node_features_t.append(node_feat_t)
             node_features_t_dt.append(node_feat_t_dt)
 
-        # 构造 master -> other 的边
+        # construct edge of master -> other
         for idx in range(len(objs)):
             if idx == master_idx:
                 continue
@@ -176,7 +176,7 @@ class APEX:
 
         focused_graph = self.select_focused_graph(edge_index, attention_scores, k=5)
 
-        # not trigger
+        # not triggered
         if focused_graph is None:
             return False, "stay", True
 

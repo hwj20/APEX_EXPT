@@ -1,10 +1,11 @@
+import copy
 import json
 import os
 
 from openai import OpenAI
-from experiments.cat_expt.utils.mujoco_perception import solve_problem
+from experiments.physical_question_expt.utils.mujoco_perception import solve_problem
 
-# 读取物理题
+# question path
 file_path = "dataset/physics_questions.json"
 with open(file_path, "r") as f:
     physics_questions = json.load(f)
@@ -12,7 +13,7 @@ with open(file_path, "r") as f:
 api_key = os.getenv("OPENAI_API_KEY")
 
 
-def ask_gpt4_with_perception(result_path, questions, max_questions=200):
+def ask_gpt4_with_perception(result_path, questions, model, max_questions=200):
     if os.path.exists(result_path):
         with open(result_path, "r") as f:
             try:
@@ -24,11 +25,9 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
     else:
         existing_results = []
 
-    # 计算已完成的题目数量
+    # find solved questions
     existing_question_texts = {r["question"]["question"] for r in existing_results}
-    # results = []
 
-    # 限制测试题目数量，避免消耗过多计算资源
     selected_questions = questions[:max_questions]
 
     for q in selected_questions:
@@ -38,7 +37,7 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
             print(f"Skipping already processed question: {q['question']}")
             continue
 
-        # this step will change "answer_json" in q but we will only count the answer_json responded by LLM
+        # Note: this step will change "answer_json" in q; but we will not use it as the answer in the end
         ref = solve_problem(q)
 
         prompt = f"""
@@ -56,13 +55,12 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
         Respond the JSON string only without any markdown symbol.
         """
 
-        # 调用 GPT-4 API 进行物理题解答
         try:
             client = OpenAI(
                 api_key=api_key,
             )
             completion = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model=model,
                 messages=[
                     {"role": "system", "content": "You are a physics expert."},
                     {"role": "user", "content": prompt}],
@@ -70,11 +68,10 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
             )
             gpt_answer = str(completion.choices[0].message.content)
             print(gpt_answer)
-            # 追加结果
+            # append answer
             result_entry = {"question": q, "gpt4_response": gpt_answer}
             existing_results.append(result_entry)
 
-            # 立即保存到文件，防止 API 崩溃导致数据丢失
             with open(result_path, "w") as f:
                 json.dump(existing_results, f, indent=4)
 
@@ -84,8 +81,7 @@ def ask_gpt4_with_perception(result_path, questions, max_questions=200):
     return existing_results
 
 
-# GPT-4 API 调用函数（模拟批量考试）
-def ask_gpt4(result_path, questions, max_questions=200):
+def ask_gpt4(result_path, questions, model, max_questions=200):
     if os.path.exists(result_path):
         with open(result_path, "r") as f:
             try:
@@ -97,11 +93,8 @@ def ask_gpt4(result_path, questions, max_questions=200):
     else:
         existing_results = []
 
-    # 计算已完成的题目数量
     existing_question_texts = {r["question"]["question"] for r in existing_results}
-    # results = []
 
-    # 限制测试题目数量，避免消耗过多计算资源
     selected_questions = questions[:max_questions]
 
     for q in selected_questions:
@@ -109,7 +102,7 @@ def ask_gpt4(result_path, questions, max_questions=200):
             with open(result_path, "w") as f:
                 json.dump(existing_results, f, indent=4)
             print(f"Skipping already processed question: {q['question']}")
-            continue  # 如果已经解过这道题，跳过
+            continue  # Skip the questions solved
         prompt = f"""
         Solve the following problem and return the answer in JSON format.
 
@@ -124,13 +117,12 @@ def ask_gpt4(result_path, questions, max_questions=200):
         Respond the JSON string only without any markdown symbol.
         """
 
-        # 调用 GPT-4 API 进行物理题解答
         try:
             client = OpenAI(
                 api_key=api_key,
             )
             completion = client.chat.completions.create(
-                model="gpt-4o",
+                model=model,
                 messages=[
                     {"role": "system", "content": "You are a physics expert."},
                     {"role": "user", "content": prompt}],
@@ -138,11 +130,11 @@ def ask_gpt4(result_path, questions, max_questions=200):
             )
             gpt_answer = str(completion.choices[0].message.content)
             print(gpt_answer)
-            # 追加结果
+            # Append result
             result_entry = {"question": q, "gpt4_response": gpt_answer}
             existing_results.append(result_entry)
 
-            # 立即保存到文件，防止 API 崩溃导致数据丢失
+            # Save to file for each question
             with open(result_path, "w") as f:
                 json.dump(existing_results, f, indent=4)
 
@@ -152,12 +144,20 @@ def ask_gpt4(result_path, questions, max_questions=200):
     return existing_results
 
 
-# gpt4_results_path = "gpt4_physics_results_final.json"
-# gpt4_results = ask_gpt4(gpt4_results_path, physics_questions, max_questions=200)
-gpt4_results_path = "results/gpt4_mini_physics_results_final_APEX.json"
-gpt4_results = ask_gpt4_with_perception(gpt4_results_path, physics_questions, max_questions=200)
+# This exp will run for about one hour
+# # I suggest to it in multi scripts, like one script for one model
 
-# 下面的代码是假如你某个题目跑错了，只想跑某一个类型的题目，就这么写
+models = ['gpt-4o', 'gpt-4o-mini']
+for model in models:
+    ques = copy.deepcopy(physics_questions)
+    gpt4_results_path = f"results/{model}_physics_results_final.json"
+    gpt4_results = ask_gpt4(gpt4_results_path, ques, model, max_questions=200)
+
+    ques = copy.deepcopy(physics_questions)
+    gpt4_results_path = f"results/{model}_physics_results_final_APEX.json"
+    gpt4_results = ask_gpt4_with_perception(gpt4_results_path, ques, model, max_questions=200)
+
+# The following code is designed as if you wish to rerun a certain kind of questions, not all
 
 # if os.path.exists(gpt4_results_path):
 #     with open(gpt4_results_path, "r") as f:
@@ -176,7 +176,7 @@ gpt4_results = ask_gpt4_with_perception(gpt4_results_path, physics_questions, ma
 # for q in to_merge:
 #     if q["question"]["question"] not in existing_question_texts:
 #         results.append(q)
-#         continue  # 如果已经解过这道题，跳过
+#         continue  # skip the question solved before
 #
 # print(len(results))
 # with open(gpt4_results_path, "w") as f:

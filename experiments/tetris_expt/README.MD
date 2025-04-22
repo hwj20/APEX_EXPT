@@ -1,1 +1,10 @@
-这个稍微好了一些，只是eval还是有点乱，但每局游戏的数据都保存下来了，所以只是一个可视化数据的问题
+# 🚀 Reproducing: Tetris Game Experiment
+
+## 📁 Directory Structure
+
+```
+.
+├── tetris_game.py       # expt script
+└── results/            # evaluation script and results
+```
+

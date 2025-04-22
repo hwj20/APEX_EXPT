@@ -10,28 +10,20 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 
 def strip_markdown(text: str) -> str:
-    # 去除代码块标记 ```json ```python等
     text = re.sub(r"```", "", text)
     text = re.sub("json", "", text)
-    # 去除标题 #
+
     text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
-    # 去除加粗/斜体 ** ** 或 __ __ 或 * *
     text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
     text = re.sub(r"(\*|_)(.*?)\1", r"\2", text)
-    # 去除行内代码 `
     text = re.sub(r"`(.*?)`", r"\1", text)
-    # 去除列表项 - *
     text = re.sub(r"^[-*+]\s+", "", text, flags=re.MULTILINE)
-    # 去除多余空行
     text = re.sub(r"\n{2,}", "\n", text)
     return text.strip()
 
 
 # Control Policy
 def decode(decision: str):
-    """
-    输入 LLM 决策的字符串，返回 {'velocity': [...], 'duration': ...}
-    """
     try:
         decision = decision.lower()  # 防止大小写影响
         decision = json.loads(decision)

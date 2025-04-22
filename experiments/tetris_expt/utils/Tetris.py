@@ -3,18 +3,20 @@ import re
 import pygame
 import random
 
-# 游戏窗口大小
+from experiments.tetris_expt.utils.tetris_game_agent import strip_markdown
+
+# Game Window
 WIDTH, HEIGHT = 300, 600
 BLOCK_SIZE = 30  # 每个方块的大小
 COLUMNS = WIDTH // BLOCK_SIZE
 ROWS = HEIGHT // BLOCK_SIZE
 GRAVITY_SPEED = 1
-# 颜色定义
+# Color
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 
-# 俄罗斯方块形状
+# Shapes
 SHAPES = [
     [[1, 1, 1, 1]],  # I 形
     [[1, 1], [1, 1]],  # O 形
@@ -26,34 +28,7 @@ SHAPES = [
 ]
 
 
-# testing
-# json_str = """
-# ```json
-# [
-#   {"move": "rotate", "times": 1},
-#   {"move": "left", "times": 1},
-#   {"move": "down", "times": 1}
-# ]
-# ```
-# """
-#
 
-def strip_markdown(text: str) -> str:
-    # 去除代码块标记 ```json ```python等
-    text = re.sub(r"```", "", text)
-    text = re.sub("json", "", text)
-    # 去除标题 #
-    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
-    # 去除加粗/斜体 ** ** 或 __ __ 或 * *
-    text = re.sub(r"(\*\*|__)(.*?)\1", r"\2", text)
-    text = re.sub(r"(\*|_)(.*?)\1", r"\2", text)
-    # 去除行内代码 `
-    text = re.sub(r"`(.*?)`", r"\1", text)
-    # 去除列表项 - *
-    text = re.sub(r"^[-*+]\s+", "", text, flags=re.MULTILINE)
-    # 去除多余空行
-    text = re.sub(r"\n{2,}", "\n", text)
-    return text.strip()
 
 
 LANDED = 2
@@ -242,6 +217,7 @@ class Tetris:
 
         results = {}
 
+        # Simulation for different rotations
         for rotation_times in range(4):
             for dx in range(-COLUMNS, COLUMNS):
                 # Deepcopy game state
