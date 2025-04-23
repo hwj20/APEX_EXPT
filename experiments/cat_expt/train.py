@@ -3,7 +3,6 @@ from torch_geometric.data import Data, DataLoader
 from experiments.cat_expt.model.graphormer import DiffGraphormer, FocalLoss  # 请确保路径正确
 import json
 
-# === 参数配置 ===
 BATCH_SIZE = 1
 HIDDEN_DIM = 32
 NUM_HEADS = 4
@@ -15,12 +14,10 @@ SEED = 2025
 MODEL_SAVE_PATH = "model/diffgraphormer_physics.pt"
 DATA_PATH = "model/data/reverse_graphormer_data.json"
 
-# === 设置设备 ===
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("🚀 Device:", device)
 
 
-# === 加载数据 ===
 def load_dataset(path):
     with open(path, 'r') as f:
         raw = json.load(f)
@@ -46,7 +43,6 @@ def load_dataset(path):
     return dataset
 
 
-# === 训练函数 ===
 def train(model, loader, optimizer, criterion):
     model.train()
     total_loss = 0
@@ -65,7 +61,6 @@ def train(model, loader, optimizer, criterion):
 threshold = 0.5
 
 
-# === 验证函数 ===
 @torch.no_grad()
 def evaluate(model, loader, threshold=0.5):
     model.eval()
@@ -83,7 +78,7 @@ def evaluate(model, loader, threshold=0.5):
         correct += (pred == data.edge_label).sum().item()
         total += len(pred)
 
-        # Recall 部分
+        # Recall
         true_positives += ((pred == 1) & (data.edge_label == 1)).sum().item()
         false_negatives += ((pred == 0) & (data.edge_label == 1)).sum().item()
         positives += (data.edge_label == 1).sum().item()
@@ -94,8 +89,6 @@ def evaluate(model, loader, threshold=0.5):
     return acc, recall
 
 
-
-# === 主程序 ===
 if __name__ == "__main__":
     dt = 0.01
     torch.manual_seed(SEED)
@@ -123,7 +116,7 @@ if __name__ == "__main__":
     print("🔥 Training Start!")
     for epoch in range(1, EPOCHS + 1):
         loss = train(model, train_loader, optimizer, criterion)
-        acc,recall = evaluate(model, val_loader)
+        acc, recall = evaluate(model, val_loader)
         print(f"Epoch {epoch:02d} | Loss: {loss:.4f} | Val Acc: {acc:.4f} | Recall: {recall:.4f}")
 
     torch.save(model.state_dict(), MODEL_SAVE_PATH)

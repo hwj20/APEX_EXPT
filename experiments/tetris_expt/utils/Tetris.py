@@ -7,7 +7,7 @@ from experiments.tetris_expt.utils.tetris_game_agent import strip_markdown
 
 # Game Window
 WIDTH, HEIGHT = 300, 600
-BLOCK_SIZE = 30  # 每个方块的大小
+BLOCK_SIZE = 30
 COLUMNS = WIDTH // BLOCK_SIZE
 ROWS = HEIGHT // BLOCK_SIZE
 GRAVITY_SPEED = 1
@@ -18,13 +18,13 @@ BLUE = (0, 0, 255)
 
 # Shapes
 SHAPES = [
-    [[1, 1, 1, 1]],  # I 形
-    [[1, 1], [1, 1]],  # O 形
-    [[1, 1, 1], [0, 1, 0]],  # T 形
-    [[1, 1, 0], [0, 1, 1]],  # Z 形
-    [[0, 1, 1], [1, 1, 0]],  # S 形
-    [[1, 1, 1], [1, 0, 0]],  # L 形
-    [[1, 1, 1], [0, 0, 1]]  # J 形
+    [[1, 1, 1, 1]],  # I
+    [[1, 1], [1, 1]],  # O
+    [[1, 1, 1], [0, 1, 0]],  # T
+    [[1, 1, 0], [0, 1, 1]],  # Z
+    [[0, 1, 1], [1, 1, 0]],  # S
+    [[1, 1, 1], [1, 0, 0]],  # L
+    [[1, 1, 1], [0, 0, 1]]  # J
 ]
 
 
@@ -87,11 +87,11 @@ class Tetris:
         }
 
     def new_piece(self):
-        """生成一个新方块"""
+        """generate a new piece"""
         return self.rng.choice(SHAPES)
 
     def move(self, dx, dy):
-        """尝试移动方块，如果碰撞则不移动"""
+        """move a piece"""
         if not self.check_collision(dx, dy):
             self.piece_x += dx
             self.piece_y += dy
@@ -101,16 +101,16 @@ class Tetris:
             return False
 
     def rotate(self):
-        """旋转方块"""
+        """rotate a piece"""
         rotated = [list(row) for row in zip(*self.current_piece[::-1])]
-        if not self.check_collision(0, 0, rotated):  # 旋转后不碰撞才允许
+        if not self.check_collision(0, 0, rotated):  # no collision after rotation
             self.current_piece = rotated
             return True
         else:
             return False
 
     def check_collision(self, dx=0, dy=0, piece=None):
-        """检测是否会碰撞"""
+        """check collision"""
         piece = piece or self.current_piece
         for y, row in enumerate(piece):
             for x, cell in enumerate(row):
@@ -118,40 +118,39 @@ class Tetris:
                     new_x = self.piece_x + x + dx
                     new_y = self.piece_y + y + dy
                     if new_x < 0 or new_x >= COLUMNS or new_y >= ROWS or (new_y >= 0 and self.board[new_y][new_x] == LANDED):
-                        return True  # 碰撞了
+                        return True  # collision
         return False
 
     def has_landed(self):
-        """检测当前方块是否落地"""
-        return self.check_collision(dy=1)  # 看看下一行有没有空间
+        """check if the piece landed"""
+        return self.check_collision(dy=1)  # to see if it can drop
 
     def place_piece(self):
-        """将方块固定到棋盘"""
+        """fixed a piece in board when it landed"""
         for y, row in enumerate(self.current_piece):
             for x, cell in enumerate(row):
                 if cell:
-                    self.board[self.piece_y + y][self.piece_x + x] = LANDED  # 记录到 board
-        self.clear_lines()  # 试图消行
+                    self.board[self.piece_y + y][self.piece_x + x] = LANDED  # record to board
+        self.clear_lines()  # try to clear lines
         if self.generate_new_piece:
-            self.current_piece = self.new_piece()  # 生成新方块
+            self.current_piece = self.new_piece()  # generate new piece
         self.piece_x = COLUMNS // 2 - len(self.current_piece[0]) // 2
         self.piece_y = 0
-        if self.check_collision():  # 如果新方块一生成就碰撞，游戏结束
+        if self.check_collision():  # game ends when collision found in generating new piece
             self.running = False
 
     def clear_lines(self):
-        """检查棋盘，清除满行，并计分"""
-        new_board = [row for row in self.board if not all(row)]  # 只保留未满行的行
+        """clear lines, record scores"""
+        new_board = [row for row in self.board if not all(row)]
         lines_cleared = ROWS - len(new_board)
-        self.score += lines_cleared * 100  # 每行 +100 分
-        self.board = [[0] * COLUMNS for _ in range(lines_cleared)] + new_board  # 重新填充棋盘
+        self.score += lines_cleared * 100  # + 100 pt/line
+        self.board = [[0] * COLUMNS for _ in range(lines_cleared)] + new_board
         return lines_cleared
 
+    # control policy
     def step(self, action_json):
-        """解析 LLM 代理的 JSON 并执行动作"""
         success = True
         action_json = strip_markdown(action_json)
-        # print(action_json)
         action_data_all = json.loads(action_json)  # 解析 JSON 格式的指令
         if not isinstance(action_data_all, list):
             action_data_all = [action_data_all]
@@ -175,7 +174,7 @@ class Tetris:
         return success
 
     def gravity(self):
-        """控制方块自动下落"""
+        """move down each time when gravity_counter=GRAVITY_SPEED"""
         self.gravity_counter += 1
         if self.gravity_counter >= GRAVITY_SPEED:
             if self.has_landed():
@@ -185,7 +184,7 @@ class Tetris:
             self.gravity_counter = 0
 
     def extract_active_rows(self, board):
-        """去除全零行，仅返回堆积部分"""
+        """return non-zero rows"""
         return [row for row in board if any(row)]
 
     def apex_evaluate(self):
@@ -280,24 +279,24 @@ class Tetris:
                 if cell:
                     board_x = x_offset + col_idx
                     board_y = y_offset + row_idx
-                    # 越界检测
+                    # Boundary check
                     if board_x < 0 or board_x >= COLUMNS or board_y < 0 or board_y >= ROWS:
                         return False
-                    # 碰撞检测
+                    # Collision check
                     if self.board[board_y][board_x]:
                         return False
         return True
 
     def get_state(self):
-        """返回当前棋盘和方块位置，方块标记为 1"""
-        board_with_piece = [row[:] for row in self.board]  # 复制棋盘
+        """return current states"""
+        board_with_piece = [row[:] for row in self.board]  # copy board
         for y, row in enumerate(self.current_piece):
             for x, cell in enumerate(row):
                 if cell:
                     board_y = self.piece_y + y
                     board_x = self.piece_x + x
                     if 0 <= board_y < ROWS and 0 <= board_x < COLUMNS:
-                        board_with_piece[board_y][board_x] = CURRENT_PIECE  # 标记当前活动方块
+                        board_with_piece[board_y][board_x] = CURRENT_PIECE  # mark current piece
 
         return {
             "board": board_with_piece,
@@ -308,23 +307,23 @@ class Tetris:
         }
 
     def render(self, screen):
-        """渲染游戏画面"""
+        """render game screen"""
         screen.fill(BLACK)
 
-        # 绘制固定的棋盘方块
+        # draw fixed pieces
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
                 if cell == LANDED:
                     pygame.draw.rect(screen, BLUE, (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
 
-        # 绘制当前下落的方块
+        # draw dropping pieces
         for y, row in enumerate(self.current_piece):
             for x, cell in enumerate(row):
                 if cell == CURRENT_PIECE:
                     pygame.draw.rect(screen, WHITE, (
                         (self.piece_x + x) * BLOCK_SIZE, (self.piece_y + y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE))
 
-        # 显示分数
+        # show scores
         font = pygame.font.Font(None, 36)
         score_text = font.render(f"Score: {self.score}", True, WHITE)
         screen.blit(score_text, (10, 10))
@@ -332,6 +331,6 @@ class Tetris:
         pygame.display.flip()
 
     def capture_game_screen(self, screen):
-        """截取当前游戏画面，转换成 VLM 可读格式"""
-        pygame.image.save(screen, "screenshot.png")  # 存为 PNG
-        return "screenshot.png"  # 返回文件路径
+        """screenshot for VLM"""
+        pygame.image.save(screen, "screenshot.png")
+        return "screenshot.png"

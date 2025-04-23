@@ -40,7 +40,6 @@ def generate_tetris_action_diff_grid(method, history_file="tetris_game_history_3
 
     pygame.quit()
 
-    # 拼图：6列 × 3行
     cols = 6
     rows = 3
     thumb_width = WIDTH
@@ -52,19 +51,19 @@ def generate_tetris_action_diff_grid(method, history_file="tetris_game_history_3
         y = (idx // cols) * thumb_height
         grid_image.paste(im, (x, y))
 
-    # 保存静态网格图
+    # save static difference picture
     grid_image.save(output_path)
     print(f"✅ Tetris action diff grid saved to {output_path}")
 
-    # 生成 GIF 动图
+    # generate gif
     gif_path = method + "_action_diff.gif"
     image_list[0].save(
         gif_path,
         format="GIF",
         save_all=True,
         append_images=image_list[1:],
-        duration=500,  # 毫秒
-        loop=0         # 无限循环
+        duration=500,  # unit: ms
+        loop=0         # loop forever
     )
     print(f"✅ Tetris action diff GIF saved to {gif_path}")
 
@@ -131,7 +130,7 @@ def replay_tetris(history_file="tetris_game_history_30_mini.json"):
         clock.tick(1)
 
     pygame.quit()
-    print("游戏回放完成！")
+    print("replay completed")
 
 
 if __name__ == "__main__":

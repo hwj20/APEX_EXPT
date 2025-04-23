@@ -18,22 +18,21 @@ class DiffGraphormer(nn.Module):
 
     def forward(self, x_t, x_t_dt, edge_index, dt):
         """
-        x_t: [num_nodes, 7] 包含是否主节点 (1维), pos_t (3维), velocity_unit (3维)
-        x_t_dt: [num_nodes, 7] 其实我们只用 pos_t_dt 来计算速度大小
+        x_t: [num_nodes, 7] is_master(1 dim), pos_t (3 dim), velocity_unit (3 dim)
+        x_t_dt: [num_nodes, 7] same to x_t. But actually we just use pos_t_dt to calculate the speed.
         edge_index: [2, num_edges] (from, to)
         """
         master_mask = x_t[:, 0] == 1
-        assert master_mask.sum() == 1, "必须有且仅有一个主节点"
+        assert master_mask.sum() == 1, "only one master"
         master_idx = master_mask.nonzero(as_tuple=False).squeeze()
 
-        pos_t = x_t[:, 1:4]         # 当前帧位置
-        pos_t_dt = x_t_dt[:, 1:4]   # 下一帧位置
-        vel_t = F.normalize(pos_t_dt - pos_t, dim=-1) /dt # 单位速度方向向量
+        pos_t = x_t[:, 1:4]
+        pos_t_dt = x_t_dt[:, 1:4]
+        vel_t = F.normalize(pos_t_dt - pos_t, dim=-1) /dt  # unit vector of velocity
 
         master_pos = pos_t[master_idx].unsqueeze(0)         # shape: [1, 3]
         master_vel = vel_t[master_idx].unsqueeze(0)         # shape: [1, 3]
 
-        # Edge 计算（每条边是从 master_idx 指向某节点）
         tgt_idx = edge_index[1]  # [num_edges]
         tgt_pos = pos_t[tgt_idx]
         tgt_vel = vel_t[tgt_idx]
@@ -56,10 +55,11 @@ class DiffGraphormer(nn.Module):
         return edge_pred.view(-1)
 
 
+# Not Used, we found a 70 acc% model with 90%+ recall is enough in current scene
 class FocalLoss(torch.nn.Module):
     def __init__(self, alpha=0.25, gamma=2.0, reduction='mean'):
         super(FocalLoss, self).__init__()
-        self.alpha = alpha  # 正类权重
+        self.alpha = alpha
         self.gamma = gamma  # focusing parameter
         self.reduction = reduction
 
@@ -81,6 +81,7 @@ class FocalLoss(torch.nn.Module):
             return loss
 
 
+# Test script
 if __name__ == "__main__":
     torch.manual_seed(42)
 
@@ -92,7 +93,7 @@ if __name__ == "__main__":
 
     x_t = torch.randn((num_nodes, node_feat_dim))
     x_t_dt = torch.randn((num_nodes, node_feat_dim))
-    x_t[0, 0] = 1.0  # 设第 0 个是主节点，其余为 0
+    x_t[0, 0] = 1.0
     x_t[1:, 0] = 0.0
 
     edge_index = torch.tensor([[0]*num_edges, [1, 2, 3, 4, 5]], dtype=torch.long)
