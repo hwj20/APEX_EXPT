@@ -25,7 +25,7 @@ def strip_markdown(text: str) -> str:
 # Control Policy
 def decode(decision: str):
     try:
-        decision = decision.lower()  # 防止大小写影响
+        decision = decision.lower()
         decision = json.loads(decision)
 
         # stay
