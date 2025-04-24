@@ -44,7 +44,7 @@ def ask_gpt4_with_perception(result_path, questions, model, max_questions=200):
         Solve the following problem and return the answer in JSON format.
 
         Problem: {q["question"]}
-        The external physical engine calculations: {ref}
+        The external physical engine predictions: {ref}
 
         Expected JSON response:
         {{
