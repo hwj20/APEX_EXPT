@@ -1,3 +1,4 @@
 /screenshot.png
 *.xml
 *.iml
+/experiments/cat_expt/visualization/frames/
