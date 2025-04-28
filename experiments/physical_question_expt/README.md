@@ -1,12 +1,11 @@
-# 🚀 Reproducing:  Dynamic Obstacle Avoiding Experiment
+# 🚀 Reproducing:  Physical QA Experiment
 
 ## 📁 Directory Structure
 
 ```
 .
-├── cat_exp.py          # expt script
-├── train.py            # train graphromer model
-├── model/              # graphromer model
+├── gpt_answer.py          # expt script
+├── dataset/              # dataset
 └── results/            # results
 ```
 
