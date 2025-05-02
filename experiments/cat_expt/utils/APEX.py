@@ -8,7 +8,7 @@ from experiments.cat_expt.utils.mujoco_simulator import simulator
 
 
 class APEX:
-    def __init__(self, graphormer_model, physics_simulator, llm_agent, available_move, dt=0.01, device="cpu"):
+    def __init__(self, graphormer_model, physics_simulator, llm_agent, available_move, dt=0.01, device="cpu", top_k=5):
         self.graphormer = graphormer_model.to(device)
         self.physics_sim = simulator(physics_simulator)
         self.llm_agent = llm_agent
@@ -16,6 +16,7 @@ class APEX:
         self.last_trigger = None
         self.dt = dt
         self.available_move = available_move
+        self.top_k = top_k
 
     def construct_graph(self, snapshot, snapshot_dt, dt=0.1):
         """
@@ -92,7 +93,7 @@ class APEX:
         plt.close()
         print(f"attention saved into visualization/attention_step_{step}.png")
 
-    def compute_attention(self, x_t, x_t_dt, edge_index, dt=1.0, save_visual=False, step=0):
+    def compute_attention(self, x_t, x_t_dt, edge_index, dt=0.1, save_visual=False, step=0):
         """
         Run the graphormer model to obtain edge danger scores as attention proxy.
         """
@@ -174,7 +175,7 @@ class APEX:
         # save_visual = False
         attention_scores = self.compute_attention(x_t, x_t_dt, edge_index, dt, save_visual=save_visual, step=step)
 
-        focused_graph = self.select_focused_graph(edge_index, attention_scores, k=5)
+        focused_graph = self.select_focused_graph(edge_index, attention_scores, k=self.top_k)
 
         # not triggered
         if focused_graph is None:

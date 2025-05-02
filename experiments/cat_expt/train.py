@@ -1,6 +1,7 @@
 import torch
 from torch_geometric.data import Data, DataLoader
-from experiments.cat_expt.model.graphormer import DiffGraphormer, FocalLoss  # 请确保路径正确
+from experiments.cat_expt.model.graphormer import DiffGraphormer, FocalLoss
+from experiments.cat_expt.model.graph_models_ablation_study import DiffGAT,DiffGCN
 import json
 
 BATCH_SIZE = 1
@@ -100,6 +101,20 @@ if __name__ == "__main__":
     train_loader = DataLoader(dataset[:split], batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(dataset[split:], batch_size=BATCH_SIZE)
 
+    # Epoch 100 | Loss: 0.9205 | Val Acc: 0.8740 | Recall: 1.0000
+    # model = DiffGAT(
+    #     in_feats=NODE_FEAT_DIM,
+    #     hidden_dim=HIDDEN_DIM,
+    #     dropout=0.3
+    # ).to(device)
+    #
+    # Epoch 100 | Loss: 0.9147 | Val Acc: 0.78 | Recall: 1.0000
+    # model = DiffGCN(
+    #     in_feats=NODE_FEAT_DIM,
+    #     hidden_dim=HIDDEN_DIM,
+    #     dropout=0.3
+    # ).to(device)
+    #
     model = DiffGraphormer(
         in_feats=NODE_FEAT_DIM,
         hidden_dim=HIDDEN_DIM,
