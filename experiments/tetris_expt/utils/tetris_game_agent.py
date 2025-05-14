@@ -1,3 +1,5 @@
+from transformers import BlipForQuestionAnswering, BlipProcessor
+from PIL import Image
 import base64
 import re
 
@@ -271,3 +273,44 @@ class LLM_Agent:
             return message
         except Exception as e:
             return f"API error: {e}"
+
+
+class VLMAgent:
+    def __init__(self):
+        self.processor = BlipProcessor.from_pretrained("Salesforce/blip-vqa-base")
+        self.model = BlipForQuestionAnswering.from_pretrained("Salesforce/blip-vqa-base")
+
+    def vlm_vqa_tetris_move(self, image_path):
+        """
+        Given a screenshot of the current Tetris board and a text prompt
+        describing the rules/goal, returns the model’s answer (your JSON).
+        """
+        prompt = """
+        You are a Tetris AI agent. Your goal is to maximize the score by:
+        - Clearing as many lines as possible.
+        - Keeping the board as flat as possible.
+        - Avoiding unnecessary stacking.
+
+        Available moves:
+        - "left": Move the piece left by one column.
+        - "right": Move the piece right by one column.
+        - "rotate": Rotate the piece 90 degrees clockwise.
+        - "down": Instantly drop the piece to the lowest possible position.
+
+        Only return a JSON list of moves, e.g.
+        [
+          {"move": "left", "times": 2},
+          {"move": "rotate", "times": 1},
+          {"move": "down", "times": 1}
+        ]
+        """
+        # load & , preprocess image
+        image = Image.open(image_path).convert("RGB")
+
+        # feed image + long prompt as the "question"
+        inputs = self.processor(image,prompt, return_tensors="pt")
+
+        # generate / answer
+        out_ids = self.model.generate(**inputs)
+        answer = self.processor.decode(out_ids[0], skip_special_tokens=True)
+        return answer

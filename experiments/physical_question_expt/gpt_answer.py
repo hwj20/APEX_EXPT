@@ -38,7 +38,7 @@ def ask_gpt4_with_perception(result_path, questions, model, max_questions=200):
             continue
 
         # Note: this step will change "answer_json" in q; but we will not use it as the answer in the end
-        ref = solve_problem(q)
+        ref = solve_problem(q,dt=0.001)
 
         prompt = f"""
         Solve the following problem and return the answer in JSON format.

@@ -28,12 +28,23 @@ def create_basic_model(r):
 def simulate_3d_linear_motion(v0, a, t, dt):
     model = create_basic_model(0)
     data = mujoco.MjData(model)
+
+    # initialize
+    vel = np.array(v0, dtype=float)  # current velocity
+    pos = np.zeros(3, dtype=float)  # current position
+
     steps = int(t / dt)
-    for i in range(steps):
-        for j in range(3):
-            data.qvel[j] = a[j] * dt * i + v0[j]
-            data.qpos[j] = v0[j] * dt * i + 0.5 * a[j] * (dt * i) ** 2
+    for _ in range(steps):
+        # Euler integrate velocity and position
+        vel += np.array(a, dtype=float) * dt
+        pos += vel * dt
+
+        # write back into MuJoCo state
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
         mujoco.mj_step(model, data)
+
     return {
         "velocity_x": round(data.qvel[0], 4),
         "velocity_y": round(data.qvel[1], 4),
@@ -44,7 +55,6 @@ def simulate_3d_linear_motion(v0, a, t, dt):
     }
 
 
-# Simulate 3D circular motion manually
 def simulate_3d_circular_motion(p, dt):
     r = p["r"]
     omega = p["omega"]
@@ -55,23 +65,41 @@ def simulate_3d_circular_motion(p, dt):
     model = create_basic_model(r)
     data = mujoco.MjData(model)
 
-    for i in range(steps):
-        angle = omega * dt * i
+    angle = 0.0
+    if plane == "xy-plane":
+        pos = np.array([r, 0.0, 0.0])
+    elif plane == "xz-plane":
+        pos = np.array([r, 0.0, 0.0])
+    else:  # "yz-plane"
+        pos = np.array([0.0, r, 0.0])
+
+    data.qpos[:3] = pos
+    data.qvel[:3] = 0.0
+
+    for _ in range(steps):
+        angle += omega * dt
+
         if plane == "xy-plane":
-            data.qpos[0] = r * np.cos(angle)
-            data.qpos[1] = r * np.sin(angle)
-            data.qpos[2] = 0.0
+            new_pos = np.array([r * np.cos(angle),
+                                r * np.sin(angle),
+                                0.0])
         elif plane == "xz-plane":
-            data.qpos[0] = r * np.cos(angle)
-            data.qpos[1] = 0.0
-            data.qpos[2] = r * np.sin(angle)
+            new_pos = np.array([r * np.cos(angle),
+                                0.0,
+                                r * np.sin(angle)])
         else:  # "yz-plane"
-            data.qpos[0] = 0.0
-            data.qpos[1] = r * np.cos(angle)
-            data.qpos[2] = r * np.sin(angle)
-        for j in range(3):
-            data.qvel[j] = 0
+            new_pos = np.array([0.0,
+                                r * np.cos(angle),
+                                r * np.sin(angle)])
+
+        vel = (new_pos - pos) / dt
+
+        data.qpos[:3] = new_pos
+        data.qvel[:3] = vel
+
         mujoco.mj_step(model, data)
+
+        pos = new_pos
 
     return {
         "x_B": round(data.qpos[0], 4),
@@ -81,27 +109,40 @@ def simulate_3d_circular_motion(p, dt):
 
 
 # Simulate 3D projectile motion
-def simulate_3d_projectile_motion(v0, angle, dt):
+def simulate_3d_projectile_motion(v0, angle_unused, dt):
+    """
+    Euler-step simulation of 3D projectile motion.
+    v0: initial velocity vector [vx, vy, vz]
+    angle_unused: not needed, since v0 already has components
+    dt: timestep
+    """
     model = create_basic_model(0)
     data = mujoco.MjData(model)
-    g = 9.81
-    vz = v0[2]
-    t_total = 2 * vz / g
-    steps = int(t_total / dt)
 
-    for i in range(steps):
-        for j in range(3):
-            if j == 2:
-                data.qvel[j] = v0[j] - g * dt * i
-                data.qpos[j] = v0[j] * dt * i - 0.5 * g * (dt * i) ** 2
-            else:
-                data.qvel[j] = v0[j]
-                data.qpos[j] = v0[j] * dt * i
+    vel = np.array(v0, dtype=float)
+    pos = np.zeros(3, dtype=float)
+
+    g = 9.81
+    flight_time = 2 * v0[2] / g
+    steps = int(flight_time / dt)
+
+    for _ in range(steps):
+        vel[2] -= g * dt
+
+        pos += vel * dt
+        if pos[2] <= 0:
+            break
+
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
         mujoco.mj_step(model, data)
 
+    max_height = (v0[2] ** 2) / (2 * g)
+
     return {
-        "flight_time": round(t_total, 4),
-        "maximum_height": round((vz ** 2) / (2 * g), 4),
+        "flight_time": round(flight_time, 4),
+        "maximum_height": round(max_height, 4),
         "range_x": round(data.qpos[0], 4),
         "range_y": round(data.qpos[1], 4),
         "range_z": round(data.qpos[2], 4)
@@ -109,25 +150,22 @@ def simulate_3d_projectile_motion(v0, angle, dt):
 
 
 def simulate_3d_projectile_position(v0, t, dt):
-    """
-    Simulate projectile motion for time t and return position at t.
-    v0: initial velocity vector [vx, vy, vz]
-    dt: timestep
-    """
     model = create_basic_model(0)
     data = mujoco.MjData(model)
+
+    vel = np.array(v0, dtype=float)
+    pos = np.zeros(3, dtype=float)
     g = 9.81
 
     steps = int(t / dt)
-    for i in range(steps):
-        # update velocities
-        data.qvel[0] = v0[0]
-        data.qvel[1] = v0[1]
-        data.qvel[2] = v0[2] - g * dt * i
-        # update positions
-        data.qpos[0] = v0[0] * dt * i
-        data.qpos[1] = v0[1] * dt * i
-        data.qpos[2] = v0[2] * dt * i - 0.5 * g * (dt * i) ** 2
+    for _ in range(steps):
+        vel[2] -= g * dt
+
+        pos += vel * dt
+
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
         mujoco.mj_step(model, data)
 
     return {
@@ -212,8 +250,8 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.01):
 
         v1_cur = data.qvel[:3]
         v2_cur = data.qvel[6:9]
-        pos1 += v1_cur * i * dt
-        pos2 += v2_cur * i * dt
+        pos1 += v1_cur * dt
+        pos2 += v2_cur * dt
 
         dist = np.linalg.norm(pos1 - pos2)
 
@@ -294,7 +332,7 @@ def compare_answers_with_tolerance(file_name, tol=0.05):
                     try:
                         v1 = float(ans_true[key][subkey])
                         v2 = float(ans_pred[key][subkey])
-                        if abs(v1 - v2) >max(0.05,abs(tol * v1)):
+                        if abs(v1 - v2) > max(0.05, abs(tol * v1)):
                             diff_found = True
                             break
                     except:
@@ -305,7 +343,7 @@ def compare_answers_with_tolerance(file_name, tol=0.05):
                 try:
                     v1 = float(ans_true[key])
                     v2 = float(ans_pred.get(key, ""))
-                    if abs(v1 - v2) > max(0.05,abs(tol * v1)):
+                    if abs(v1 - v2) > max(0.05, abs(tol * v1)):
                         diff_found = True
                 except:
                     if ans_true[key] != ans_pred.get(key):
@@ -316,9 +354,9 @@ def compare_answers_with_tolerance(file_name, tol=0.05):
         if not diff_found:
             stats[q_type]["correct"] += 1
         # else:
-            # print(f"\n❗️[Mismatch Keys @ Q{i}]: {q_type}")
-            # print("Keys in ground truth:", ans_true)
-            # print("Keys in prediction:", ans_pred)
+        # print(f"\n❗️[Mismatch Keys @ Q{i}]: {q_type}")
+        # print("Keys in ground truth:", ans_true)
+        # print("Keys in prediction:", ans_pred)
 
     # Print accuracy per question type
     print("\nAccuracy per question type:")
@@ -390,4 +428,3 @@ if __name__ == "__main__":
         df_avg = df.groupby(["dt", "question_type"])["duration_s"].mean().reset_index()
         print(f"\nAverage duration per question type for dt={dt}:")
         print(df_avg[df_avg["dt"] == dt])
-

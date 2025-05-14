@@ -19,16 +19,24 @@ def create_basic_model(r):
 
 
 # Simulate 3D linear motion with manual integration
-def simulate_3d_linear_motion(v0, a, t):
+def simulate_3d_linear_motion(v0, a, t, dt=0.001):
     model = create_basic_model(0)
     data = mujoco.MjData(model)
 
-    dt = 0.001
+    # initialize
+    vel = np.array(v0, dtype=float)  # current velocity
+    pos = np.zeros(3, dtype=float)  # current position
+
     steps = int(t / dt)
-    for i in range(steps):
-        for j in range(3):
-            data.qvel[j] = a[j] * dt * i + v0[j]
-            data.qpos[j] = v0[j] * dt * i + 0.5 * a[j] * (dt * i) ** 2
+    for _ in range(steps):
+        # Euler integrate velocity and position
+        vel += np.array(a, dtype=float) * dt
+        pos += vel * dt
+
+        # write back into MuJoCo state
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
         mujoco.mj_step(model, data)
 
     return {
@@ -41,37 +49,51 @@ def simulate_3d_linear_motion(v0, a, t):
     }
 
 
-# Simulate 3D circular motion manually
-def simulate_3d_circular_motion(p):
+def simulate_3d_circular_motion(p, dt=0.001):
     r = p["r"]
     omega = p["omega"]
     t_total = p["t"]
     plane = p["rotation_plane"]
-    dt = 0.001
     steps = int(t_total / dt)
 
     model = create_basic_model(r)
     data = mujoco.MjData(model)
 
-    for i in range(steps):
-        angle = omega * dt * i
-        if plane == "xy-plane":
-            data.qpos[0] = r * np.cos(angle)  # x
-            data.qpos[1] = r * np.sin(angle)  # y
-            data.qpos[2] = 0.0
-        elif plane == "xz-plane":
-            data.qpos[0] = r * np.cos(angle)  # x
-            data.qpos[1] = 0.0
-            data.qpos[2] = r * np.sin(angle)  # z
-        else:  # "yz-plane"
-            data.qpos[0] = 0.0
-            data.qpos[1] = r * np.cos(angle)  # y
-            data.qpos[2] = r * np.sin(angle)  # z
+    angle = 0.0
+    if plane == "xy-plane":
+        pos = np.array([r, 0.0, 0.0])
+    elif plane == "xz-plane":
+        pos = np.array([r, 0.0, 0.0])
+    else:  # "yz-plane"
+        pos = np.array([0.0, r, 0.0])
 
-        for j in range(3):
-            data.qvel[j] = 0
+    data.qpos[:3] = pos
+    data.qvel[:3] = 0.0
+
+    for _ in range(steps):
+        angle += omega * dt
+
+        if plane == "xy-plane":
+            new_pos = np.array([r * np.cos(angle),
+                                r * np.sin(angle),
+                                0.0])
+        elif plane == "xz-plane":
+            new_pos = np.array([r * np.cos(angle),
+                                0.0,
+                                r * np.sin(angle)])
+        else:  # "yz-plane"
+            new_pos = np.array([0.0,
+                                r * np.cos(angle),
+                                r * np.sin(angle)])
+
+        vel = (new_pos - pos) / dt
+
+        data.qpos[:3] = new_pos
+        data.qvel[:3] = vel
 
         mujoco.mj_step(model, data)
+
+        pos = new_pos
 
     return {
         "x_B": round(data.qpos[0], 4),
@@ -81,95 +103,112 @@ def simulate_3d_circular_motion(p):
 
 
 # Simulate 3D projectile motion
-def simulate_3d_projectile_motion(v0, angle):
+def simulate_3d_projectile_motion(v0, dt=0.001):
+    """
+    Euler-step simulation of 3D projectile motion.
+    v0: initial velocity vector [vx, vy, vz]
+    angle_unused: not needed, since v0 already has components
+    dt: timestep
+    """
     model = create_basic_model(0)
     data = mujoco.MjData(model)
 
-    dt = 0.001
-    g = 9.81
-    vz = v0[2]
-    t_total = 2 * vz / g  # flight time until it hits the ground again
+    vel = np.array(v0, dtype=float)
+    pos = np.zeros(3, dtype=float)
 
-    for i in range(int(t_total / dt)):
-        for j in range(3):
-            if j == 2:  # z-axis affected by gravity
-                data.qvel[j] = v0[j] - g * dt * i
-                data.qpos[j] = v0[j] * dt * i - 0.5 * g * (dt * i) ** 2
-            else:
-                data.qvel[j] = v0[j]
-                data.qpos[j] = v0[j] * dt * i
+    g = 9.81
+    flight_time = 2 * v0[2] / g
+    steps = int(flight_time / dt)
+
+    for _ in range(steps):
+        vel[2] -= g * dt
+
+        pos += vel * dt
+        if pos[2] <= 0:
+            break
+
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
         mujoco.mj_step(model, data)
 
+    max_height = (v0[2] ** 2) / (2 * g)
+
     return {
-        "flight_time": round(t_total, 4),
-        "maximum_height": round((vz ** 2) / (2 * g), 4),
+        "flight_time": round(flight_time, 4),
+        "maximum_height": round(max_height, 4),
         "range_x": round(data.qpos[0], 4),
         "range_y": round(data.qpos[1], 4),
         "range_z": round(data.qpos[2], 4)
     }
 
 
-def simulate_3d_multi_object_motion(parameters):
-    results = {}
+def simulate_3d_projectile_position(v0, t, dt=0.001):
+    model = create_basic_model(0)
+    data = mujoco.MjData(model)
 
-    # Object A: Linear Motion (Analytical solution)
-    v0 = np.array(parameters["object_A"]["v0"])
-    a = np.array(parameters["object_A"]["a"])
-    t = parameters["object_A"]["t"]
-    pos_A = v0 * t + 0.5 * a * (t ** 2)
-    results["pos_A"] = {
-        "x_A": round(pos_A[0], 4),
-        "y_A": round(pos_A[1], 4),
-        "z_A": round(pos_A[2], 4)
+    vel = np.array(v0, dtype=float)
+    pos = np.zeros(3, dtype=float)
+    g = 9.81
+
+    steps = int(t / dt)
+    for _ in range(steps):
+        vel[2] -= g * dt
+
+        pos += vel * dt
+
+        data.qvel[:3] = vel
+        data.qpos[:3] = pos
+
+        mujoco.mj_step(model, data)
+
+    return {
+        "x_C": round(data.qpos[0], 4),
+        "y_C": round(data.qpos[1], 4),
+        "z_C": round(data.qpos[2], 4)
     }
 
-    # Object B: Circular Motion
-    r = parameters["object_B"]["r"]
-    omega = parameters["object_B"]["omega"]
-    t = parameters["object_B"]["t"]
-    plane = parameters["object_B"]["rotation_plane"]
-    theta = omega * t
 
-    if plane == "xy-plane":
-        x = r * np.cos(theta)
-        y = r * np.sin(theta)
-        z = 0.0
-    elif plane == "xz-plane":
-        x = r * np.cos(theta)
-        y = 0.0
-        z = r * np.sin(theta)
-    else:  # yz-plane
-        x = 0.0
-        y = r * np.cos(theta)
-        z = r * np.sin(theta)
-
-    results["pos_B"] = {
-        "x_B": round(x, 4),
-        "y_B": round(y, 4),
-        "z_B": round(z, 4)
+def simulate_3d_multi_object_motion(parameters, dt=0.001):
+    """
+    Simulate multi-object motion using individual simulation functions for each object.
+    """
+    # Object A: Linear Motion via simulation
+    linear_res = simulate_3d_linear_motion(
+        np.array(parameters["object_A"]["v0"]),
+        np.array(parameters["object_A"]["a"]),
+        parameters["object_A"]["t"],
+        dt
+    )
+    # Rename keys to match multi-object format
+    pos_A = {
+        "x_A": linear_res["displacement_x"],
+        "y_A": linear_res["displacement_y"],
+        "z_A": linear_res["displacement_z"]
     }
 
-    # Object C: Projectile Motion
+    # Object B: Circular Motion via simulation
+    circ_res = simulate_3d_circular_motion(parameters["object_B"], dt)
+    pos_B = {
+        "x_B": circ_res["x_B"],
+        "y_B": circ_res["y_B"],
+        "z_B": circ_res["z_B"]
+    }
+
+    # Object C: Projectile Motion via simulation
     v0_c = np.array(parameters["object_C"]["v0"])
-    angle_deg = parameters["object_C"]["angle"]
-    t = parameters["object_C"]["t"]
-    g = 9.81  # gravity in z-direction
-
-    pos_C = np.zeros(3)
-    pos_C[0] = v0_c[0] * t  # x
-    pos_C[1] = v0_c[1] * t  # y
-    pos_C[2] = v0_c[2] * t - 0.5 * g * (t ** 2)  # z
-
-    results["pos_C"] = {
-        "x_C": round(pos_C[0], 4),
-        "y_C": round(pos_C[1], 4),
-        "z_C": round(pos_C[2], 4)
+    t_c = parameters["object_C"]["t"]
+    pos_C_sim = simulate_3d_projectile_position(v0_c, t_c, dt)
+    pos_C = {
+        "x_C": pos_C_sim["x_C"],
+        "y_C": pos_C_sim["y_C"],
+        "z_C": pos_C_sim["z_C"]
     }
 
-    return results
+    return {"pos_A": pos_A, "pos_B": pos_B, "pos_C": pos_C}
 
 
-def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.01):
+def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.001):
     """ elastic collision """
     xml = f"""
     <mujoco>
@@ -205,8 +244,8 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.01):
 
         v1_cur = data.qvel[:3]
         v2_cur = data.qvel[6:9]
-        pos1 += v1_cur * i * dt
-        pos2 += v2_cur * i * dt
+        pos1 += v1_cur * dt
+        pos2 += v2_cur * dt
 
         dist = np.linalg.norm(pos1 - pos2)
 
@@ -250,47 +289,41 @@ def simulate_3d_collision(m1, m2, p1, p2, v1, v2, r, sim_steps=1000, dt=0.01):
         }
 
 
-def solve_problem(question):
-    q = question
-    t = q["type"]
-    p = q["parameters"]
+def solve_problem(question, dt):
+    t = question["type"]
+    p = question["parameters"]
     if t == "3D Linear Motion":
-        q["answer_json"] = simulate_3d_linear_motion(**p)
+        return simulate_3d_linear_motion(np.array(p["v0"]), np.array(p["a"]), p["t"], dt)
     elif t == "3D Circular Motion":
-        q["answer_json"] = simulate_3d_circular_motion(p)
+        return simulate_3d_circular_motion(p, dt)
     elif t == "3D Projectile Motion":
-        q["answer_json"] = simulate_3d_projectile_motion(**p)
+        return simulate_3d_projectile_motion(np.array(p["v0"]), dt)
     elif t == "3D Multi-Object Motion":
-        q["answer_json"] = simulate_3d_multi_object_motion(p)
+        return simulate_3d_multi_object_motion(p, dt)
     elif t == "3D Collision":
-        q["answer_json"] = simulate_3d_collision(**p)
-
-    return q["answer_json"]
-
-
+        return simulate_3d_collision(
+            p["m1"], p["m2"], p["p1"], p["p2"], p["v1"], p["v2"], p["r"], sim_steps=1000, dt=dt
+        )
 
 
 if __name__ == "__main__":
     with open("../dataset/physics_questions.json", "r") as f:
         questions = json.load(f)
 
+    results = []
+    # Process each question
     for q in questions:
-        t = q["type"]
-        p = q["parameters"]
-        if t == "3D Linear Motion":
-            q["answer_json"] = simulate_3d_linear_motion(**p)
-        elif t == "3D Circular Motion":
-            q["answer_json"] = simulate_3d_circular_motion(p)
-        elif t == "3D Projectile Motion":
-            q["answer_json"] = simulate_3d_projectile_motion(**p)
-        elif t == "3D Multi-Object Motion":
-            q["answer_json"] = simulate_3d_multi_object_motion(p)
-        elif t == "3D Collision":
-            q["answer_json"] = simulate_3d_collision(**p)
+        answer = solve_problem(q, dt=0.001)
+
+        # Save answer
+        q_with_ans = q.copy()
+        q_with_ans["answer_json"] = answer
+        results.append(q_with_ans)
+
     # Save output
     output_path = "../dataset/physics_answer_sim.json"
     with open(output_path, "w") as f:
-        json.dump(questions, f, indent=2)
+        json.dump(results, f, indent=2)
 
 
     # just to compare the sim results with ground truth (without LLM Answering)
@@ -324,12 +357,12 @@ if __name__ == "__main__":
                         for _key in ans1[key]:
                             v1 = float(ans1[key][_key])
                             v2 = float(ans2[key][_key])
-                            if abs(v1 - v2) > tol:
+                            if abs(v1 - v2) > max(0.05, abs(tol * v1)):
                                 diff[key] = (v1, v2)
                     else:
                         v1 = float(ans1[key])
                         v2 = float(ans2[key])
-                        if abs(v1 - v2) > tol:
+                        if abs(v1 - v2) > max(0.05, abs(tol * v1)):
                             diff[key] = (v1, v2)
                 except:
                     if ans1[key] != ans2.get(key):

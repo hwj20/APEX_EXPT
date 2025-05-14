@@ -9,11 +9,8 @@ random.seed(42)
 def generate_3d_linear_motion():
     """ generate 3d linear motion questions"""
 
-    # 初速度 (vx, vy, vz) m/s
     v0 = np.array([round(random.uniform(1, 20), 2) for _ in range(3)])
-    # 加速度 (ax, ay, az) m/s²
     a = np.array([round(random.uniform(-5, 5), 2) for _ in range(3)])
-    # 时间 s
     t = round(random.uniform(1, 10), 2)
 
     return {
@@ -70,15 +67,15 @@ def generate_3d_projectile_motion():
     # initial velocity (vx, vy, vz) m/s
     v0 = np.array([round(random.uniform(5, 30), 2) for _ in range(3)])
     # projection angle
-    angle = round(random.uniform(15, 75), 2)
+    # angle = round(random.uniform(15, 75), 2)
 
     return {
         "type": "3D Projectile Motion",
         "question": f"""
-            A projectile is launched from (0,0,0) with an initial velocity of {v0.tolist()} m/s at an angle of {angle} degrees from x-y plane.
+            A projectile is launched from (0,0,0) with an initial velocity of {v0.tolist()} m/s from x-y plane.
             Calculate its flight time, maximum height (h), and range (dx, dy, dz).
             """,
-        "parameters": {"v0": v0.tolist(), "angle": angle},
+        "parameters": {"v0": v0.tolist()},
         "answer_json": {
             "flight_time": "",
             "maximum_height": "",
@@ -87,7 +84,6 @@ def generate_3d_projectile_motion():
     }
 
 
-# 生成多物体运动问题（直线、圆周、抛物运动的坐标计算）
 def generate_3d_multi_object_motion():
     """ generate 3d multi object motion"""
 
@@ -106,7 +102,7 @@ def generate_3d_multi_object_motion():
     # Object C: Projectile Motion
     v_C = np.array([round(random.uniform(5, 30), 2), round(random.uniform(5, 30), 2),
                     round(random.uniform(5, 30), 2)])
-    theta_C = round(random.uniform(15, 75), 2)
+    # theta_C = round(random.uniform(15, 75), 2)
     t_C = round(random.uniform(1, 10), 2)
 
     return {
@@ -129,14 +125,13 @@ def generate_3d_multi_object_motion():
 
             3. Object C (Projectile Motion)  
                - Initial speed: {v_C.tolist()} m/s  
-               - Launch angle: {theta_C} degrees from x-y plane 
                - Time: {t_C} s  
-               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0).
+               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.
             """,
         "parameters": {
             "object_A": {"v0": v_A.tolist(), "a": a_A.tolist(), "t": t_A},
             "object_B": {"r": r_B, "v": v_B, "omega": omega_B, "t": t_B, "rotation_plane": rotation_axis},
-            "object_C": {"v0": v_C.tolist(), "angle": theta_C, "t": t_C}
+            "object_C": {"v0": v_C.tolist(), "t": t_C}
         },
         "answer_json": {
             "pos_A": {"x_A": "", "y_A": "", "z_A": ""},

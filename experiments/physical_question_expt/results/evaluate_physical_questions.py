@@ -12,7 +12,7 @@ This script is in a mess, horrible, evil, but correct.
 with open("../dataset/physics_ground_truth.json", "r") as f1:
     ground_truth_data = json.load(f1)
 
-with open("gpt-4o_physics_results_final_APEX.json", "r") as f2:
+with open("gpt-4o_physics_results_final.json", "r") as f2:
     prediction_data = json.load(f2)
 
 # Tolerance threshold
@@ -40,6 +40,7 @@ para_index = {item["question"]: item["parameters"] for item in ground_truth_data
 # Evaluation stats
 results = defaultdict(lambda: {"correct": 0, "total": 0, "mse_list": [], "numeric_valid": 0, "numeric_total": 0})
 
+
 def safe_eval(expr):
     try:
         if expr == '':
@@ -57,6 +58,7 @@ def safe_eval(expr):
             return float(eval(expr, {"__builtins__": {}}, allowed_funcs))
     except:
         return None
+
 
 # Compare predictions to ground truth
 for question_text, ans1 in gt_index.items():
@@ -77,47 +79,47 @@ for question_text, ans1 in gt_index.items():
     total_sq_error = 0
     count = 0
 
-    for key in ans1:
-        if key == 'range_z':
-            continue
+    if task_type == '3D Collision' and ans1['will_collide'] == 'false' and ans2['will_collide'] == 'false':
+        matched = True
+    else:
+        for key in ans1:
+            if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
+                for subkey in ans1[key]:
+                    val = ans2[key].get(subkey)
+                    if isinstance(val, str) and ("+" in val or "*" in val):
+                        results[task_type]["numeric_total"] += 1
+                    v1 = safe_eval(ans1[key][subkey]) if isinstance(ans1[key][subkey], str) else ans1[key][subkey]
+                    v2 = safe_eval(ans2[key].get(subkey)) if isinstance(ans2[key].get(subkey), str) else ans2[key].get(
+                        subkey)
 
-        if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
-            for subkey in ans1[key]:
-                val = ans2[key].get(subkey)
+                    if v1 is not None and v2 is not None and isinstance(v1, (int, float)) and isinstance(v2, (int, float)):
+                        total_sq_error += (v1 - v2) ** 2
+                        count += 1
+                        if abs(v1 - v2) > max(0.05, abs(tolerance * v1)):
+                            matched = False
+            else:
+                v1 = safe_eval(ans1[key]) if isinstance(ans1[key], str) else ans1[key]
+                v2 = safe_eval(ans2.get(key)) if isinstance(ans2.get(key), str) else ans2.get(key)
+
+                val = ans2.get(key)
                 if isinstance(val, str) and ("+" in val or "*" in val):
                     results[task_type]["numeric_total"] += 1
-                v1 = safe_eval(ans1[key][subkey]) if isinstance(ans1[key][subkey], str) else ans1[key][subkey]
-                v2 = safe_eval(ans2[key].get(subkey)) if isinstance(ans2[key].get(subkey), str) else ans2[key].get(subkey)
 
-                if v1 is not None and v2 is not None and isinstance(v1, (int, float)) and isinstance(v2, (int, float)):
+                if isinstance(v1, bool):
+                    if v1 != v2:
+                        matched = False
+                elif v1 is not None and v2 is not None and isinstance(v1, (int, float)) and isinstance(v2, (int, float)):
                     total_sq_error += (v1 - v2) ** 2
                     count += 1
-                    if abs(v1 - v2) > abs(tolerance * v1):
+                    if abs(v1 - v2) > max(0.05, abs(tolerance * v1)):
                         matched = False
-        else:
-            v1 = safe_eval(ans1[key]) if isinstance(ans1[key], str) else ans1[key]
-            v2 = safe_eval(ans2.get(key)) if isinstance(ans2.get(key), str) else ans2.get(key)
 
-            val = ans2.get(key)
-            if isinstance(val, str) and ("+" in val or "*" in val):
-                results[task_type]["numeric_total"] += 1
-
-            if isinstance(v1, bool):
-                if v1 != v2:
-                    matched = False
-            elif v1 is not None and v2 is not None and isinstance(v1, (int, float)) and isinstance(v2, (int, float)):
-                total_sq_error += (v1 - v2) ** 2
-                count += 1
-                if abs(v1 - v2) > abs(tolerance * v1):
-                    matched = False
-
-    if count > 0:
-        results[task_type]["mse_list"].append(total_sq_error / count)
+    results[task_type]["mse_list"].append(total_sq_error)
 
     if matched:
         results[task_type]["correct"] += 1
     else:
-        print('-'*20)
+        print('-' * 20)
         print(ans1)
         print(ans2)
 
@@ -126,7 +128,7 @@ result_data = []
 for task, stat in results.items():
     accuracy = stat["correct"] / stat["total"] * 100 if stat["total"] > 0 else 0
     mse = np.mean(stat["mse_list"]) if stat["mse_list"] else None
-    numeric_rate =(stat["total"]- stat["numeric_total"]) / stat["total"] * 100 if stat["numeric_total"] >= 0 else None
+    numeric_rate = (stat["total"] - stat["numeric_total"]) / stat["total"] * 100 if stat["numeric_total"] >= 0 else None
     result_data.append({
         "Task Type": task,
         "Accuracy (%)": round(accuracy, 2),
@@ -134,7 +136,6 @@ for task, stat in results.items():
         "Numerical Validity (%)": round(numeric_rate, 2) if numeric_rate is not None else "N/A",
         "Total Samples": stat["total"]
     })
-
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)

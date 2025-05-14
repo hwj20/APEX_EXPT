@@ -55,7 +55,7 @@ class DiffGraphormer(nn.Module):
         return edge_pred.view(-1)
 
 
-# Not Used, we found a 70 acc% model with 90%+ recall is enough in current scene
+# Not Used, we found a 70 acc% model with 90%+ recall is enough in current scene.py
 class FocalLoss(torch.nn.Module):
     def __init__(self, alpha=0.25, gamma=2.0, reduction='mean'):
         super(FocalLoss, self).__init__()

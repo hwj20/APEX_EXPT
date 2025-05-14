@@ -30,6 +30,13 @@ results = {
         "bumps": [],
         "height_delta_per_move": []
     },
+    "CLIP": {
+        "final_score": [],
+        "max_stack_height": [],
+        "holes": [],
+        "bumps": [],
+        "height_delta_per_move": []
+    },
     "gpt-4o": {
         "final_score": [],
         "max_stack_height": [],
@@ -50,13 +57,18 @@ results = {
 
 def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(42), auto_gen_path=False):
     pygame.init()
-    MAX_EPOCH = 30
+    MAX_EPOCH = 30  # 1 piece/2 epochs
     if auto_gen_path:
         save_path = save_path + method + str(MAX_EPOCH) + save_type
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     tetris = Tetris(rng=rng)
+
+    # initialize agents
     ag = LLM_Agent(model="gpt-4o")
+    vlm_ag = VLMAgent()
+
+    # game history
     game_history = []
     cnt = 0
 
@@ -83,6 +95,9 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
             elif method == 'VLM':
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move(image_path)
+            elif method == 'CLIP':
+                image_path = tetris.capture_game_screen(screen)
+                action_json = vlm_ag.clip_decide_move(image_path)
             elif method == 'VLM_APEX':
                 APEX_results = tetris.apex_evaluate()
                 image_path = tetris.capture_game_screen(screen)
@@ -149,18 +164,19 @@ if __name__ == "__main__":
     # run_tetris("APEX", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("gpt-4o", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("VLM_APEX", rng=random.Random(42),auto_gen_path=True)
+    run_tetris("CLIP", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("VLM", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("gpt-4o-mini", rng=random.Random(42),auto_gen_path=True)
     # run_tetris("o3-mini", rng=random.Random(42),auto_gen_path=True)
-    for model in results.keys():
-        for i in range(5):  # 5 trails
-            save_path = f"results/tetris_results/{model}_{i}_tetris_game_history.json"
-            results = run_tetris(model, save_path, rng=random.Random(42 + i))
-
-            results[model]["final_score"].append(results["final_score"])
-            results[model]["max_stack_height"].append(results["max_stack_height"])
-            results[model]["holes"].append(results["holes"])
-            results[model]["bumps"].append(results["bumps"])
-            results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
-            with open("../results/tetris_results/tetris_eval_results.json", "w") as f:
-                json.dump(results, f, indent=2)
+    # for model in results.keys():
+    #     for i in range(5):  # 5 trails
+    #         save_path = f"results/tetris_results/{model}_{i}_tetris_game_history.json"
+    #         results = run_tetris(model, save_path, rng=random.Random(42 + i))
+    #
+    #         results[model]["final_score"].append(results["final_score"])
+    #         results[model]["max_stack_height"].append(results["max_stack_height"])
+    #         results[model]["holes"].append(results["holes"])
+    #         results[model]["bumps"].append(results["bumps"])
+    #         results[model]["height_delta_per_move"].append(results["height_delta_per_move"])
+    #         with open("../results/tetris_results/tetris_eval_results.json", "w") as f:
+    #             json.dump(results, f, indent=2)
