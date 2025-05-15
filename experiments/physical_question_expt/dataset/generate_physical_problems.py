@@ -40,7 +40,6 @@ def generate_3d_circular_motion():
         "question": f"""
                     Object  (Circular Motion)  
                        - Radius: {r} meters  
-                       - Speed: {v} m/s  
                        - Angular velocity: {omega} rad/s  
                        - Time: {t} s  
                        - Rotating in the {plane}  
@@ -117,7 +116,6 @@ def generate_3d_multi_object_motion():
 
             2. Object B (Circular Motion)  
                - Radius: {r_B} meters  
-               - Speed: {v_B} m/s  
                - Angular velocity: {omega_B} rad/s  
                - Time: {t_B} s  
                - Rotating in the {rotation_axis}  

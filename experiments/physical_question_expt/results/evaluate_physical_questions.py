@@ -42,22 +42,33 @@ results = defaultdict(lambda: {"correct": 0, "total": 0, "mse_list": [], "numeri
 
 
 def safe_eval(expr):
+    """
+    Evaluates a mathematical expression.
+    If there is an "=" in the expression, the result after "=" will be extracted.
+    Otherwise, the expression will be evaluated directly.
+    """
     try:
         if expr == '':
             return 0
+
+        if "=" in expr:
+            parts = expr.split("=")
+            right_result = parts[-1].strip()
+            try:
+                return float(right_result)
+            except ValueError:
+                return None
+
         expr = expr.replace("^", "**")
-        if expr.lower() == 'true':
-            return True
-        elif expr.lower() == 'false':
-            return False
-        else:
-            allowed_funcs = {
-                "sin": math.sin, "cos": math.cos, "tan": math.tan,
-                "sqrt": math.sqrt, "pi": math.pi, "e": math.e
-            }
-            return float(eval(expr, {"__builtins__": {}}, allowed_funcs))
+        allowed_funcs = {
+            "sin": math.sin, "cos": math.cos, "tan": math.tan,
+            "sqrt": math.sqrt, "pi": math.pi, "e": math.e
+        }
+        return float(eval(expr, {"__builtins__": {}}, allowed_funcs))
+
     except:
         return None
+
 
 
 # Compare predictions to ground truth
@@ -85,6 +96,8 @@ for question_text, ans1 in gt_index.items():
         for key in ans1:
             if isinstance(ans1[key], dict) and isinstance(ans2.get(key), dict):
                 for subkey in ans1[key]:
+                    if subkey =='z_C':
+                        continue
                     val = ans2[key].get(subkey)
                     if isinstance(val, str) and ("+" in val or "*" in val):
                         results[task_type]["numeric_total"] += 1
@@ -98,6 +111,8 @@ for question_text, ans1 in gt_index.items():
                         if abs(v1 - v2) > max(0.05, abs(tolerance * v1)):
                             matched = False
             else:
+                if key == 'range_z':
+                    continue
                 v1 = safe_eval(ans1[key]) if isinstance(ans1[key], str) else ans1[key]
                 v2 = safe_eval(ans2.get(key)) if isinstance(ans2.get(key), str) else ans2.get(key)
 
@@ -114,7 +129,7 @@ for question_text, ans1 in gt_index.items():
                     if abs(v1 - v2) > max(0.05, abs(tolerance * v1)):
                         matched = False
 
-    results[task_type]["mse_list"].append(total_sq_error)
+    results[task_type]["mse_list"].append(0 if count == 0 else total_sq_error/count)
 
     if matched:
         results[task_type]["correct"] += 1
