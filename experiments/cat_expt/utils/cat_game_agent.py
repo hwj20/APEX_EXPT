@@ -59,7 +59,7 @@ class LLM_Agent:
         You are controlling a robot in a 3D physical environment with moving obstacles.
         Your goal is to avoid collisions with cats while progressing toward the target location.
 
-        Current state:
+        Current state (The map has square walls located at x = ±5 meters and y = ±5 meters):
         {state}
 
         Obstacles:
@@ -103,7 +103,7 @@ class LLM_Agent:
         You are controlling a robot in a 3D physical environment with moving obstacles.
         Your goal is to avoid collisions with cats while progressing toward the target location.
 
-        Current state:
+        Current state (The map has square walls located at x = ±5 meters and y = ±5 meters):
         {state}
 
         Available Moves:
@@ -142,7 +142,7 @@ class LLM_Agent:
         You are controlling a robot in a 3D physical environment with moving obstacles.
         Your goal is to avoid collisions with cats while progressing toward the target location.
 
-        Current State:
+        Current state (The map has square walls located at x = ±5 meters and y = ±5 meters):
         {state}
 
         Available Moves:
@@ -156,7 +156,7 @@ class LLM_Agent:
     
         Only return the JSON object with no explanation or markdown.
         
-        Here is the screenshot:
+        Here is the screenshot(Red balls cat, green ball-your controlled agent):
         """
 
         system_prompt = "You are an AI robot that avoids dynamic obstacles."
