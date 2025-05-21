@@ -74,5 +74,16 @@ conda activate apex
 ---
 
 ## 📈 Citation (coming soon)
-If you find this work helpful, please cite this paper💡
+If you find this work helpful, please cite our paper💡
+```bibtex
+@misc{huang2025apexempoweringllmsphysicsbased,
+      title={APEX: Empowering LLMs with Physics-Based Task Planning for Real-time Insight}, 
+      author={Wanjing Huang and Weixiang Yan and Zhen Zhang and Ambuj Singh},
+      year={2025},
+      eprint={2505.13921},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2505.13921}, 
+}
+```
 
