@@ -8,8 +8,8 @@
 
 ### 🧱 Tetris with LLM Planning
 
-| gpt-4o-mini                            | gpt-4o                            | VLM                            | APEX                            |
-|----------------------------------------|-----------------------------------|--------------------------------|---------------------------------|
+| gpt-4o-mini                            | gpt-4o                            | VLM                            | APEX(gpt-4o)                           |
+|----------------------------------------|-----------------------------------|--------------------------------|----------------------------------------|
 | ![](media/tetris/gpt-4o-mini_action_diff.gif) | ![](media/tetris/gpt-4o_action_diff.gif) | ![](media/tetris/VLM_action_diff.gif) | ![](media/tetris/APEX_action_diff.gif) |
 
 ---
@@ -17,19 +17,23 @@
 ### 🐱 Robot-Cat Avoidance Simulation
 gpt-4o-mini
 
-![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o-mini.gif)
+![](media/cat/turing_cat_llm_Hard_LLM_gpt-4o-mini_20250513_212755.gif)
 
 gpt-4o
 
-![](media/cat/turing_cat_llm_Simple_LLM_gpt-4o.gif)
+![](media/cat/turing_cat_llm_Hard_LLM_gpt-4o_20250513_212747.gif)
+
+VLM
+
+![](media/cat/turing_cat_llm_Hard_VLM_gpt-4o_20250513_212822.gif)
 
 APEX(gpt-4o-mini)
 
-![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o-mini.gif)
+![](media/cat/turing_cat_llm_Hard_APEX_gpt-4o-mini_20250513_212813.gif)
 
 APEX(gpt-4o)
 
-![](media/cat/turing_cat_llm_Simple_APEX_gpt-4o.gif)
+![](media/cat/turing_cat_llm_Hard_APEX_gpt-4o_20250513_212804.gif)
 
 ---
 
@@ -70,6 +74,5 @@ conda activate apex
 ---
 
 ## 📈 Citation (coming soon)
-
-If you find this work helpful, please stay tuned for the arXiv version 💡
+If you find this work helpful, please cite this paper💡
 
