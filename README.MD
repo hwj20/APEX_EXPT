@@ -73,7 +73,7 @@ conda activate apex
 
 ---
 
-## 📈 Citation (coming soon)
+## 📈 Citation
 If you find this work helpful, please cite our paper💡
 ```bibtex
 @misc{huang2025apexempoweringllmsphysicsbased,
