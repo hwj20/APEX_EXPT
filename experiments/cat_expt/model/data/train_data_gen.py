@@ -3,7 +3,7 @@ import numpy as np
 import random
 
 
-def sigmoid(x, k=1.0, x0=1.5):  # k 决定陡峭度，x0 是中点
+def sigmoid(x, k=1.0, x0=1.5): 
     return 1 / (1 + np.exp(-k * (x - x0)))
 def normalize(vec):
     norm = np.linalg.norm(vec)
@@ -21,23 +21,23 @@ def compute_risk_score(pos_master, pos_tgt, vel_tgt, dis_w=0.34, dir_w=0.33, vel
     dist_vec = pos_tgt - pos_master
     dist = np.linalg.norm(dist_vec)
 
-    # === 距离分数 ===
+    # === distance score ===
     distance_score_raw = 1.0 / (dist + 1e-6)
-    # distance_score = np.clip(distance_score_raw, 0, 10) / 10.0  # 归一化到 0~1
-    distance_score = sigmoid(distance_score_raw, k=1.0, x0=0.0)  # 越小越危险
+    # distance_score = np.clip(distance_score_raw, 0, 10) / 10.0  
+    distance_score = sigmoid(distance_score_raw, k=1.0, x0=0.0) 
     # distance_score = distance_score_raw*10
 
-    # === 朝向分数 ===
+    # === direction score ===
     direction_score_raw = np.dot(normalize(dist_vec), normalize(vel_tgt))  # ∈ [-1, 1]
-    direction_score = (direction_score_raw + 1) / 2  # 映射到 0~1
+    direction_score = (direction_score_raw + 1) / 2 
 
-    # === 速度大小分数 ===
+    # === velocity score ===
     velocity_score_raw = np.linalg.norm(vel_tgt)  # ~ 0~3.0
-    # velocity_score = np.clip(velocity_score_raw / 3.0, 0, 1)  # 归一化到 0~1
-    velocity_score = sigmoid(velocity_score_raw, k=1.5, x0=2.5)  # 高于2.5危险急剧上升
+    # velocity_score = np.clip(velocity_score_raw / 3.0, 0, 1)  
+    velocity_score = sigmoid(velocity_score_raw, k=1.5, x0=2.5)  
     # velocity_score = np.tanh(velocity_score_raw/ 3.0)
 
-    # === 加权求和 ===
+    # === total score with weights ===
     return distance_score * dis_w + direction_score * dir_w + velocity_score * vel_w
 
 
@@ -57,7 +57,7 @@ def create_reverse_sample(collision=True,t=3.0, dt=0.01, num_nodes=6, threshold=
     vel_m = vel_list[master_idx]
     pos_m_future = pos_m + vel_m * t
     ground_truth_label = [0.0]*(num_nodes-1)
-    # 强制制造碰撞场景
+    # make a collision scence
     if collision:
         tgt_idx = random.randint(1, num_nodes - 1)
         ground_truth_label[tgt_idx-1] = 1.0
@@ -69,7 +69,7 @@ def create_reverse_sample(collision=True,t=3.0, dt=0.01, num_nodes=6, threshold=
         vel_list[tgt_idx] = dir_to_future_master * speed
         pos_tgt_dt = pos_t + speed * dir_to_future_master * dt
         score = compute_risk_score(pos_m_future, pos_tgt_dt, speed * dir_to_future_master)
-        label = 1 if score > threshold else 0  # danger threshold 可调
+        label = 1 if score > threshold else 0  # danger threshold 
         # global cnt, tt
         # if label == 1:
         #     cnt += 1
