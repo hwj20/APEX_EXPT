@@ -30,13 +30,13 @@ results = {
         "bumps": [],
         "height_delta_per_move": []
     },
-    "CLIP": {
-        "final_score": [],
-        "max_stack_height": [],
-        "holes": [],
-        "bumps": [],
-        "height_delta_per_move": []
-    },
+    # "CLIP": {
+    #     "final_score": [],
+    #     "max_stack_height": [],
+    #     "holes": [],
+    #     "bumps": [],
+    #     "height_delta_per_move": []
+    # },
     "gpt-4o": {
         "final_score": [],
         "max_stack_height": [],
