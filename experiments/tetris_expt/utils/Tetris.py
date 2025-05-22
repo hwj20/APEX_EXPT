@@ -37,15 +37,15 @@ CURRENT_PIECE = 1
 class Tetris:
     def __init__(self, rng=None, generate_new_piece=True):
         self.generate_new_piece = generate_new_piece
-        self.rng = rng or random.Random()  # 不会影响外部 random
-        self.board = [[0] * COLUMNS for _ in range(ROWS)]  # 10x20 的棋盘
+        self.rng = rng or random.Random()  # set random
+        self.board = [[0] * COLUMNS for _ in range(ROWS)]  # 10x20 
         if self.generate_new_piece:
-            self.current_piece = self.new_piece()  # 当前活动方块
+            self.current_piece = self.new_piece()  # current piece
             self.piece_x = COLUMNS // 2 - len(self.current_piece[0]) // 2
             self.piece_y = 0
         self.running = True
-        self.score = 0  # 计分系统！
-        self.gravity_counter = 0  # 控制重力
+        self.score = 0  # score
+        self.gravity_counter = 0  # gravity
         self.previous_state = None
     def final_evaluation(self):
         """Evaluate final score, max height, holes, bumps, and height change per move"""
@@ -151,12 +151,12 @@ class Tetris:
     def step(self, action_json):
         success = True
         action_json = strip_markdown(action_json)
-        action_data_all = json.loads(action_json)  # 解析 JSON 格式的指令
+        action_data_all = json.loads(action_json)  
         if not isinstance(action_data_all, list):
             action_data_all = [action_data_all]
         for action_data in action_data_all:
             action = action_data.get("move", "down")
-            times = action_data.get("times", 1)  # 默认执行 1 次
+            times = action_data.get("times", 1)  
 
             for _ in range(times):
                 if action == "left":
@@ -170,7 +170,7 @@ class Tetris:
                         success = False
                 elif action == "down":
                     while not self.has_landed():
-                        self.piece_y += 1  # 直接到底
+                        self.piece_y += 1
         return success
 
     def gravity(self):
