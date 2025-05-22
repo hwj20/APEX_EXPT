@@ -80,7 +80,6 @@ class LLM_Agent:
 
     # baseline
     def decide_move(self, state,model):
-        """调用 LLM 进行决策"""
         prompt = f"""
         You are playing Tetris. Your goal is to maximize the score by:
         - Clearing as many lines as possible.
