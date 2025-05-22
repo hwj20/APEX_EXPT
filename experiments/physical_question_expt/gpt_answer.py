@@ -144,8 +144,8 @@ def ask_gpt4(result_path, questions, model, max_questions=200):
     return existing_results
 
 
-# This exp will run for about one hour
-# # I suggest to it in multi scripts, like one script for one model
+# This expt will run for about one hour
+# my suggestion is to run it in multi scripts, like one script for one model
 
 models = ['gpt-4o', 'gpt-4o-mini']
 for model in models:
