@@ -1,0 +1,89 @@
+[
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.15, 1.48, 6.23] m/s and an acceleration of [-2.77, 2.36, 1.77] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 9.03 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.15,
+                    1.48,
+                    6.23
+                ],
+                "a": [
+                    -2.77,
+                    2.36,
+                    1.77
+                ],
+                "t": 9.03
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\"reasoning\": \"To solve this problem, we use the kinematic equations for motion with constant acceleration. Since the motion is in three dimensions, we apply these equations independently for each component (x, y, z).\\n\\nGiven:\\nInitial velocity (v0) = [13.15, 1.48, 6.23] m/s\\nAcceleration (a) = [-2.77, 2.36, 1.77] m/s\u00b2\\nTime (t) = 9.03 s\\n\\nEquations:\\n1. Final Velocity (v) = v0 + a * t\\n2. Displacement (d) = v0 * t + 0.5 * a * t\u00b2\\n\\nCalculations:\\nFirst, calculate t\u00b2: (9.03)^2 = 81.5409\\nThen, calculate 0.5 * t\u00b2: 0.5 * 81.5409 = 40.77045\\n\\nFor Velocity (vx, vy, vz):\\n\\nvx = v0x + ax * t = 13.15 + (-2.77) * 9.03 = 13.15 - 24.9931 = -11.8431 m/s\\nvy = v0y + ay * t = 1.48 + (2.36) * 9.03 = 1.48 + 21.3108 = 22.7908 m/s\\nvz = v0z + az * t = 6.23 + (1.77) * 9.03 = 6.23 + 15.9831 = 22.2131 m/s\\n\\nFor Displacement (dx, dy, dz):\\n\\ndx = v0x * t + 0.5 * ax * t\u00b2 = 13.15 * 9.03 + 0.5 * (-2.77) * 81.5409 = 118.7845 - 2.77 * 40.77045 = 118.7845 - 112.8398415 = 5.9446585 m\\ndy = v0y * t + 0.5 * ay * t\u00b2 = 1.48 * 9.03 + 0.5 * (2.36) * 81.5409 = 13.3644 + 2.36 * 40.77045 = 13.3644 + 96.228302 = 109.592702 m\\ndz = v0z * t + 0.5 * az * t\u00b2 = 6.23 * 9.03 + 0.5 * (1.77) * 81.5409 = 56.2569 + 1.77 * 40.77045 = 56.2569 + 72.1647915 = 128.4216915 m\\n\\nRounding to 4 decimal places for consistency:\", \"answer\": {\"velocity_x\": -11.8431, \"velocity_y\": 22.7908, \"velocity_z\": 22.2131, \"displacement_x\": 5.9447, \"displacement_y\": 109.5927, \"displacement_z\": 128.4217}}",
+        "duration_seconds": 9.052
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [2.65, 9.02, 1.57] m/s and an acceleration of [-2.81, 0.05, -4.73] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 2.79 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    2.65,
+                    9.02,
+                    1.57
+                ],
+                "a": [
+                    -2.81,
+                    0.05,
+                    -4.73
+                ],
+                "t": 2.79
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To find the velocity and displacement after a given time, we use the equations of motion for constant acceleration.\\n\\nGiven:\\nInitial velocity (v0) = [2.65, 9.02, 1.57] m/s\\nAcceleration (a) = [-2.81, 0.05, -4.73] m/s\\u00b2\\nTime (t) = 2.79 s\\nInitial position (r0) = (0,0,0)\\n\\nFormulas:\\n1. Final Velocity (v) = v0 + a * t\\n2. Displacement (d) = v0 * t + 0.5 * a * t\\u00b2 (since initial position is (0,0,0))\\n\\nLet's calculate for each component (x, y, z):\\n\\n**1. Calculate Final Velocity (vx, vy, vz):**\\nvx = v0x + ax * t\\nvy = v0y + ay * t\\nvz = v0z + az * t\\n\\nvx = 2.65 + (-2.81) * 2.79 = 2.65 - 7.840 = -5.1900 m/s\\nvy = 9.02 + (0.05) * 2.79 = 9.02 + 0.1395 = 9.1595 m/s\\nvz = 1.57 + (-4.73) * 2.79 = 1.57 - 13.1907 = -11.6207 m/s\\n\\n**2. Calculate Displacement (dx, dy, dz):**\\ndx = v0x * t + 0.5 * ax * t\\u00b2\\ndy = v0y * t + 0.5 * ay * t\\u00b2\\ndz = v0z * t + 0.5 * az * t\\u00b2\\n\\nFirst, calculate t\\u00b2:\\nt\\u00b2 = (2.79)\\u00b2 = 7.7841 s\\u00b2\\n\\ndx = (2.65 * 2.79) + (0.5 * -2.81 * 7.7841) = 7.3935 + (-1.405 * 7.7841) = 7.3935 - 10.9395105 = -3.5460105 m\\ndy = (9.02 * 2.79) + (0.5 * 0.05 * 7.7841) = 25.1658 + (0.025 * 7.7841) = 25.1658 + 0.1946025 = 25.3604025 m\\ndz = (1.57 * 2.79) + (0.5 * -4.73 * 7.7841) = 4.3803 + (-2.365 * 7.7841) = 4.3803 - 18.4061265 = -14.0258265 m\\n\\nRounding the results to four decimal places for consistency.\"\n    \"answer\": {\n        \"velocity_x\": -5.1900,\n        \"velocity_y\": 9.1595,\n        \"velocity_z\": -11.6207,\n        \"displacement_x\": -3.5460,\n        \"displacement_y\": 25.3604,\n        \"displacement_z\": -14.0258\n    }\n}",
+        "duration_seconds": 13.618
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.35, 11.35, 5.19] m/s and an acceleration of [0.89, 3.09, -4.94] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 8.25 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.35,
+                    11.35,
+                    5.19
+                ],
+                "a": [
+                    0.89,
+                    3.09,
+                    -4.94
+                ],
+                "t": 8.25
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To find the velocity and displacement after a given time, we use the kinematic equations for constant acceleration, applied independently to each component (x, y, z).\\n\\nGiven:\\nInitial velocity v0 = [13.35, 11.35, 5.19] m/s\\nAcceleration a = [0.89, 3.09, -4.94] m/s\\u00b2\\nTime t = 8.25 s\\n\\nFormulas:\\nFinal velocity: v = v0 + a * t\\nDisplacement: d = v0 * t + 0.5 * a * t\\u00b2\\n\\nStep 1: Calculate the final velocity components (vx, vy, vz)\\n\\nvx = v0x + ax * t = 13.35 + (0.89 * 8.25) = 13.35 + 7.3425 = 20.6925 m/s\\nvy = v0y + ay * t = 11.35 + (3.09 * 8.25) = 11.35 + 25.4925 = 36.8425 m/s\\nvz = v0z + az * t = 5.19 + (-4.94 * 8.25) = 5.19 - 40.755 = -35.565 m/s\\n\\nStep 2: Calculate the displacement components (dx, dy, dz)\\n\\nt\\u00b2 = (8.25)\\u00b2 = 68.0625 s\\u00b2\\n\\ndx = v0x * t + 0.5 * ax * t\\u00b2 = (13.35 * 8.25) + (0.5 * 0.89 * 68.0625)\\n   = 110.1375 + (0.445 * 68.0625) = 110.1375 + 30.2980625 = 140.4355625 m\\ndy = v0y * t + 0.5 * ay * t\\u00b2 = (11.35 * 8.25) + (0.5 * 3.09 * 68.0625)\\n   = 93.6375 + (1.545 * 68.0625) = 93.6375 + 105.1664375 = 198.8039375 m\\ndz = v0z * t + 0.5 * az * t\\u00b2 = (5.19 * 8.25) + (0.5 * -4.94 * 68.0625)\\n   = 42.8175 + (-2.47 * 68.0625) = 42.8175 - 168.005625 = -125.188125 m\\n\\nStep 3: Round the results to two decimal places.\\n\\nvx \\u2248 20.69\\nvy \\u2248 36.84\\nvz \\u2248 -35.57\\ndx \\u2248 140.44\\ndy \\u2248 198.80\\ndz \\u2248 -125.19\",\n    \"answer\": {\n        \"velocity_x\": 20.69,\n        \"velocity_y\": 36.84,\n        \"velocity_z\": -35.57,\n        \"displacement_x\": 140.44,\n        \"displacement_y\": 198.80,\n        \"displacement_z\": -125.19\n    }\n}",
+        "duration_seconds": 16.808
+    }
+]

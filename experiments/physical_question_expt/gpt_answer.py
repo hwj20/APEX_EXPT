@@ -6,7 +6,7 @@ from openai import OpenAI
 from experiments.physical_question_expt.utils.mujoco_perception import solve_problem
 
 # question path
-file_path = "dataset/physics_questions.json"
+file_path = "./experiments/physical_question_expt/dataset/physics_questions.json"
 with open(file_path, "r") as f:
     physics_questions = json.load(f)
 

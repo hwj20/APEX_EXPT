@@ -1,0 +1,89 @@
+[
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.15, 1.48, 6.23] m/s and an acceleration of [-2.77, 2.36, 1.77] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 9.03 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.15,
+                    1.48,
+                    6.23
+                ],
+                "a": [
+                    -2.77,
+                    2.36,
+                    1.77
+                ],
+                "t": 9.03
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "\n\n{\n    \"reasoning\": \"Using the equations of motion under constant acceleration: velocity v = u + a*t and displacement s = u*t + 0.5*a*t\u00b2. For each component (x, y, z), initial velocity u and acceleration a are given. Time t = 9.03 s.\",\n    \"answer\": {\n        \"velocity_x\": \"-11.86\",\n        \"velocity_y\": \"22.79\",\n        \"velocity_z\": \"22.21\",\n        \"displacement_x\": \"5.76\",\n        \"displacement_y\": \"109.58\",\n        \"displacement_z\": \"128.42\"\n    }\n}",
+        "duration_seconds": 28.961
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [2.65, 9.02, 1.57] m/s and an acceleration of [-2.81, 0.05, -4.73] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 2.79 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    2.65,
+                    9.02,
+                    1.57
+                ],
+                "a": [
+                    -2.81,
+                    0.05,
+                    -4.73
+                ],
+                "t": 2.79
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "\n\n{\n    \"reasoning\": \"Using the equations of motion under constant acceleration: velocity v = u + a*t and displacement s = u*t + 0.5*a*t\u00b2. Calculations were performed component-wise for x, y, and z directions with the given initial velocity [2.65, 9.02, 1.57] m/s, acceleration [-2.81, 0.05, -4.73] m/s\u00b2, and time t=2.79 s.\",\n    \"answer\": {\n        \"velocity_x\": -5.1899,\n        \"velocity_y\": 9.1595,\n        \"velocity_z\": -11.6267,\n        \"displacement_x\": -3.54815,\n        \"displacement_y\": 25.3604,\n        \"displacement_z\": -14.0290965\n    }\n}",
+        "duration_seconds": 23.09
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.35, 11.35, 5.19] m/s and an acceleration of [0.89, 3.09, -4.94] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 8.25 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.35,
+                    11.35,
+                    5.19
+                ],
+                "a": [
+                    0.89,
+                    3.09,
+                    -4.94
+                ],
+                "t": 8.25
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "\n\n{\n    \"reasoning\": \"Using the equations of motion for constant acceleration: velocity v = u + a*t and displacement s = u*t + 0.5*a*t\u00b2. For each component (x, y, z), initial velocity u and acceleration a are given. Time t is 8.25 seconds. Calculations are performed component-wise.\",\n    \"answer\": {\n        \"velocity_x\": \"20.69\",\n        \"velocity_y\": \"36.84\",\n        \"velocity_z\": \"-35.57\",\n        \"displacement_x\": \"140.43\",\n        \"displacement_y\": \"198.79\",\n        \"displacement_z\": \"-125.30\"\n    }\n}",
+        "duration_seconds": 36.498
+    }
+]

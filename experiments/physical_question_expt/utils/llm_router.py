@@ -1,4 +1,5 @@
 import os
+from openai import OpenAI as OpenRouterClient
 from huggingface_hub import InferenceClient
 import google.generativeai as genai
 import openai
@@ -7,7 +8,7 @@ import requests
 from openai import OpenAI as OpenAIClient
 from anthropic import Anthropic
 
-# 如果你之后还会加 DeepSeek / HuggingFace / 本地 LLaMA，也可以都加进来
+# TODO 改一下 deepseek/llama 的接口到 openrouter
 #  OpenAI o3 o4 4.1 DeepSeek-R1, Claude 4,Gemini 2.5 Llama 3, 4
 
 def call_llm(model, messages):
@@ -26,27 +27,44 @@ def call_llm(model, messages):
 
     elif model.startswith("claude-"):
         client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+        # 提取 system message（如果有）
+        system_prompt = ""
+        real_messages = []
+        for m in messages:
+            if m["role"] == "system":
+                system_prompt = m["content"]
+            else:
+                real_messages.append(m)
+
         completion = client.messages.create(
             model=model,
             max_tokens=1000,
-            messages=messages,
+            system=system_prompt,
+            messages=real_messages
         )
         return completion.content[0].text
 
-    elif model.startswith("deepseek-"):
-        api_key = os.getenv("DEEPSEEK_API_KEY")
-        api_base = "https://api.deepseek.com/v1"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "model": model,
-            "messages": messages,
-            "temperature": 0.5
-        }
-        response = requests.post(f"{api_base}/chat/completions", headers=headers, json=payload)
-        return response.json()
+    elif model.startswith("tngtech/") or "openrouter.ai" in os.getenv("OPENROUTER_API_KEY", ""):
+
+        client = OpenRouterClient(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+        )
+
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.5,
+            extra_headers={
+                "HTTP-Referer": "https://apex.com",  # 可自定义
+                "X-Title": "ApexAgent",  # 可自定义
+            },
+            extra_body={}
+        )
+
+        return completion.choices[0].message.content
+
     elif model.startswith("gemini"):
         api_key = os.getenv("GEMINI_API_KEY")
         print(api_key)
@@ -73,11 +91,24 @@ def call_llm(model, messages):
 
         # 取出生成内容
         return data["candidates"][0]["content"]["parts"][0]["text"]
-    elif "llama" in model:
-        hf_token = os.getenv("HUGGINGFACE_TOKEN")
-        client = InferenceClient(model=model, token=hf_token)
-        prompt_text = messages[-1]["content"]
-        return client.text_generation(prompt_text, max_new_tokens=200)
+    elif "openrouter" in model or model.startswith("meta-llama/"):
+        client = OpenRouterClient(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+        )
+
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0.5,
+            extra_headers={
+                "HTTP-Referer": "https://apex.com",  # 可自定义
+                "X-Title": "ApexAgent",  # 可自定义
+            },
+            extra_body={}
+        )
+
+        return completion.choices[0].message.content
 
 
     else:
