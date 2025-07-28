@@ -1,0 +1,332 @@
+[
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 6.57 kg, 0.74 kg, and 3.11 kg are located at positions (-5.54, 4.73) m, (3.53, 7.84) m, and (-8.26, -1.56) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                6.57,
+                0.74,
+                3.11
+            ],
+            "positions": [
+                [
+                    -5.54,
+                    4.73
+                ],
+                [
+                    3.53,
+                    7.84
+                ],
+                [
+                    -8.26,
+                    -1.56
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 0.78 kg, 2.58 kg, and 5.3 kg are located at positions (-9.47, -6.02) m, (3.0, 0.9) m, and (-5.59, 1.79) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                0.78,
+                2.58,
+                5.3
+            ],
+            "positions": [
+                [
+                    -9.47,
+                    -6.02
+                ],
+                [
+                    3.0,
+                    0.9
+                ],
+                [
+                    -5.59,
+                    1.79
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 8.19 kg, 0.56 kg, and 8.16 kg are located at positions (3.96, -3.19) m, (-6.89, 9.14) m, and (-3.27, -8.15) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                8.19,
+                0.56,
+                8.16
+            ],
+            "positions": [
+                [
+                    3.96,
+                    -3.19
+                ],
+                [
+                    -6.89,
+                    9.14
+                ],
+                [
+                    -3.27,
+                    -8.15
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 1.42 kg, 8.55 kg, and 6.24 kg are located at positions (6.14, 4.59) m, (0.72, 9.46) m, and (-2.43, 1.04) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                1.42,
+                8.55,
+                6.24
+            ],
+            "positions": [
+                [
+                    6.14,
+                    4.59
+                ],
+                [
+                    0.72,
+                    9.46
+                ],
+                [
+                    -2.43,
+                    1.04
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 8.38 kg, 6.38 kg, and 8.69 kg are located at positions (1.55, 4.09) m, (-9.08, -5.44) m, and (-4.21, -8.4) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                8.38,
+                6.38,
+                8.69
+            ],
+            "positions": [
+                [
+                    1.55,
+                    4.09
+                ],
+                [
+                    -9.08,
+                    -5.44
+                ],
+                [
+                    -4.21,
+                    -8.4
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 2.71 kg, 1.46 kg, and 3.14 kg are located at positions (2.71, -2.7) m, (-2.6, -5.81) m, and (-4.66, 8.73) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                2.71,
+                1.46,
+                3.14
+            ],
+            "positions": [
+                [
+                    2.71,
+                    -2.7
+                ],
+                [
+                    -2.6,
+                    -5.81
+                ],
+                [
+                    -4.66,
+                    8.73
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 6.66 kg, 6.29 kg, and 2.13 kg are located at positions (4.58, -6.73) m, (-2.41, 9.79) m, and (2.8, 1.14) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                6.66,
+                6.29,
+                2.13
+            ],
+            "positions": [
+                [
+                    4.58,
+                    -6.73
+                ],
+                [
+                    -2.41,
+                    9.79
+                ],
+                [
+                    2.8,
+                    1.14
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 7.0 kg, 8.51 kg, and 7.87 kg are located at positions (-5.42, -9.36) m, (-3.69, -4.65) m, and (-5.78, 8.86) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                7.0,
+                8.51,
+                7.87
+            ],
+            "positions": [
+                [
+                    -5.42,
+                    -9.36
+                ],
+                [
+                    -3.69,
+                    -4.65
+                ],
+                [
+                    -5.78,
+                    8.86
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 8.83 kg, 3.49 kg, and 6.73 kg are located at positions (-2.09, 8.29) m, (-0.82, -4.7) m, and (-5.07, 1.23) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                8.83,
+                3.49,
+                6.73
+            ],
+            "positions": [
+                [
+                    -2.09,
+                    8.29
+                ],
+                [
+                    -0.82,
+                    -4.7
+                ],
+                [
+                    -5.07,
+                    1.23
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    },
+    {
+        "type": "Three-Body Motion",
+        "question": "\n        Three bodies with masses 3.0 kg, 6.05 kg, and 9.03 kg are located at positions (-2.01, -5.61) m, (9.95, 0.19) m, and (-8.18, -9.06) m respectively. Using G = 6.674e-11 N\u00b7m\u00b2/kg\u00b2, calculate the acceleration components (ax, ay) of each body at t = 1s.\n    ",
+        "parameters": {
+            "masses": [
+                3.0,
+                6.05,
+                9.03
+            ],
+            "positions": [
+                [
+                    -2.01,
+                    -5.61
+                ],
+                [
+                    9.95,
+                    0.19
+                ],
+                [
+                    -8.18,
+                    -9.06
+                ]
+            ]
+        },
+        "answer_json": {
+            "acceleration_1_x": "",
+            "acceleration_1_y": "",
+            "acceleration_2_x": "",
+            "acceleration_2_y": "",
+            "acceleration_3_x": "",
+            "acceleration_3_y": ""
+        }
+    }
+]

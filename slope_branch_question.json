@@ -1,0 +1,191 @@
+[
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 8.52 meters long, angled at 15 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [7.77, 7.84] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 8.52,
+            "slope_angle_deg": 15,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                7.77,
+                7.84
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 8.21 meters long, angled at 25 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [6.26, 6.74] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 8.21,
+            "slope_angle_deg": 25,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                6.26,
+                6.74
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 8.39 meters long, angled at 25 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [1.3, 3.19] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 8.39,
+            "slope_angle_deg": 25,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                1.3,
+                3.19
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 5.79 meters long, angled at 20 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 1 triangular obstacles (0.2 m high) placed at distances [3.15] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 5.79,
+            "slope_angle_deg": 20,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                3.15
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 5.89 meters long, angled at 20 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [0.57, 3.57] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 5.89,
+            "slope_angle_deg": 20,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                0.57,
+                3.57
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 9.83 meters long, angled at 20 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [3.33, 6.48] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 9.83,
+            "slope_angle_deg": 20,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                3.33,
+                6.48
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 8.05 meters long, angled at 25 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [1.35, 5.62] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 8.05,
+            "slope_angle_deg": 25,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                1.35,
+                5.62
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 8.01 meters long, angled at 15 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [4.79, 6.83] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 8.01,
+            "slope_angle_deg": 15,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                4.79,
+                6.83
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 9.3 meters long, angled at 20 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [1.56, 4.95] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 9.3,
+            "slope_angle_deg": 20,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                1.56,
+                4.95
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    },
+    {
+        "type": "Triangle Collision Prediction",
+        "question": "A spherical ball of radius 0.1 m and mass 0.5 kg is placed at the top of an inclined plane 6.8 meters long, angled at 25 degrees. The ball rolls down without slipping under gravity (g = 9.81 m/s²). There are 2 triangular obstacles (0.2 m high) placed at distances [0.83, 5.73] meters from the top of the slope.\n\nAt exactly t = 1.0 seconds after release, where is the center of the ball on the slope? Assume the ball stops instantly if its edge collides with the apex of a triangle.\nGive a precise numeric answer in meters along the slope.",
+        "parameters": {
+            "slope_length": 6.8,
+            "slope_angle_deg": 25,
+            "ball_radius": 0.1,
+            "ball_mass": 0.5,
+            "gravity": 9.81,
+            "obstacle_positions": [
+                0.83,
+                5.73
+            ],
+            "observation_time": 1.0
+        },
+        "answer_json": {
+            "ball_center_position_at_1s": ""
+        }
+    }
+]
