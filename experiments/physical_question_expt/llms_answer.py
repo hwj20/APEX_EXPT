@@ -22,7 +22,7 @@ def run_model_on_questions(model, questions, result_path, with_perception=False,
 
     existing_question_texts = {r["question"]["question"] for r in existing_results}
     selected_questions = questions[:max_questions]
-
+    selected_questions = questions[::5][:max_questions]
     for q in selected_questions:
         if q["question"] in existing_question_texts:
             print(f"Skipping already processed question: {q['question']}")
@@ -85,11 +85,11 @@ def run_model_on_questions(model, questions, result_path, with_perception=False,
 
 if __name__ == "__main__":
     models = [
-        # "gpt-4.1",
-        "tngtech/deepseek-r1t2-chimera:free",
-        # "claude-sonnet-4-20250514",
-        # "gemini-2.5-flash",
-        # "meta-llama/llama-4-scout",
+        "gpt-4.1",
+        "deepseek/deepseek-r1-0528",
+        "claude-sonnet-4-20250514",
+        "gemini-2.5-flash",
+        "meta-llama/llama-4-scout",
     ]
 
     for model in models:

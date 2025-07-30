@@ -150,6 +150,7 @@ class Tetris:
     # control policy
     def step(self, action_json):
         success = True
+        print(action_json)
         action_json = strip_markdown(action_json)
         action_data_all = json.loads(action_json)  
         if not isinstance(action_data_all, list):

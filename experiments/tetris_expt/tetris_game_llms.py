@@ -1,51 +1,36 @@
-from experiments.tetris_expt.utils.tetris_game_agent import *
+from experiments.tetris_expt.utils.tetris_game_agent_other_llms import *
 from experiments.tetris_expt.utils.Tetris import *
 
 results = {
-    "gpt-4o-mini": {
+    "gpt-4.1": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "APEX": {
+    "deepseek/deepseek-r1-0528": { # no vision input
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "VLM_APEX": {
+    "claude-sonnet-4-20250514": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "VLM": {
+    "gemini-2.5-flash": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    # "CLIP": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # },
-    "gpt-4o": {
-        "final_score": [],
-        "max_stack_height": [],
-        "holes": [],
-        "bumps": [],
-        "height_delta_per_move": []
-    },
-
-    "o3-mini": {
+    "meta-llama/llama-4-scout": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
@@ -66,7 +51,6 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
 
     # initialize agents
     ag = LLM_Agent(model="gpt-4o")
-    vlm_ag = VLMAgent()
 
     # game history
     game_history = []
@@ -90,18 +74,11 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
             if method == 'APEX':
                 APEX_results = tetris.apex_evaluate()
                 action_json = ag.decide_move_APEX(state, APEX_results)
-            elif method in ["gpt-4o", "gpt-4o-mini", "o3-mini"]:
-                action_json = ag.decide_move(state, method)
             elif method == 'VLM':
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move(image_path)
-            elif method == 'CLIP':
-                image_path = tetris.capture_game_screen(screen)
-                action_json = vlm_ag.clip_decide_move(image_path)
-            elif method == 'VLM_APEX':
-                APEX_results = tetris.apex_evaluate()
-                image_path = tetris.capture_game_screen(screen)
-                action_json = ag.vlm_decide_move_APEX(image_path, APEX_results)
+            else:
+                action_json = ag.decide_move(state, method)
 
             if action_json is None:
                 action_json = '{"move":"down","times":1}'
@@ -170,7 +147,7 @@ if __name__ == "__main__":
     # run_tetris("o3-mini", rng=random.Random(42),auto_gen_path=True)
     for model in results.keys():
         for i in range(5):  # 5 trails
-            save_path = f"results/tetris_results/{model}_{i}_tetris_game_history.json"
+            save_path = f"experiments/tetris_expt/results/tetris_results/{model.replace('/','')}_{i}_tetris_game_history.json"
             res = run_tetris(model, save_path, rng=random.Random(42 + i))
     
             results[model]["final_score"].append(res["final_score"])

@@ -1,0 +1,1652 @@
+[
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.15, 1.48, 6.23] m/s and an acceleration of [-2.77, 2.36, 1.77] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 9.03 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.15,
+                    1.48,
+                    6.23
+                ],
+                "a": [
+                    -2.77,
+                    2.36,
+                    1.77
+                ],
+                "t": 9.03
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The motion is under constant acceleration, so for each component, the final velocity is calculated using v = u + a * t and displacement using s = u * t + 0.5 * a * t^2. Given initial velocity components u_x = 13.15 m/s, u_y = 1.48 m/s, u_z = 6.23 m/s, acceleration components a_x = -2.77 m/s\u00b2, a_y = 2.36 m/s\u00b2, a_z = 1.77 m/s\u00b2, and time t = 9.03 s, the calculations are performed for each direction. The results are rounded to two decimal places based on the input precision.\",\n    \"answer\": {\n        \"velocity_x\": -11.86,\n        \"velocity_y\": 22.79,\n        \"velocity_z\": 22.21,\n        \"displacement_x\": 5.81,\n        \"displacement_y\": 109.58,\n        \"displacement_z\": 128.42\n    }\n}",
+        "duration_seconds": 262.276
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [11.49, 16.76, 12.75] m/s and an acceleration of [3.62, 0.77, 2.05] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 1.41 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    11.49,
+                    16.76,
+                    12.75
+                ],
+                "a": [
+                    3.62,
+                    0.77,
+                    2.05
+                ],
+                "t": 1.41
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"Using kinematic equations for constant acceleration, velocity components are calculated as v = u + a * t, and displacement components as s = u * t + 0.5 * a * t\u00b2 for each axis. Given initial velocity [11.49, 16.76, 12.75] m/s, acceleration [3.62, 0.77, 2.05] m/s\u00b2, and time t = 1.41 s, the values are computed and rounded to two decimal places for consistency with input precision.\",\n    \"answer\": {\n        \"velocity_x\": 16.59,\n        \"velocity_y\": 17.85,\n        \"velocity_z\": 15.64,\n        \"displacement_x\": 19.80,\n        \"displacement_y\": 24.40,\n        \"displacement_z\": 20.02\n    }\n}",
+        "duration_seconds": 128.773
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [5.01, 18.92, 17.65] m/s and an acceleration of [-1.85, 1.55, -1.04] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 9.23 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    5.01,
+                    18.92,
+                    17.65
+                ],
+                "a": [
+                    -1.85,
+                    1.55,
+                    -1.04
+                ],
+                "t": 9.23
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The velocity components are calculated using the formula v = u + a * t for each dimension, and displacement components using s = u * t + 0.5 * a * t^2. Given initial velocity [5.01, 18.92, 17.65] m/s, acceleration [-1.85, 1.55, -1.04] m/s\u00b2, and time t = 9.23 s, the calculations were performed. The results for velocity and displacement were rounded to three significant figures for consistency with the input precision.\",\n    \"answer\": {\n        \"velocity_x\": \"-12.1\",\n        \"velocity_y\": \"33.2\",\n        \"velocity_z\": \"8.05\",\n        \"displacement_x\": \"-32.6\",\n        \"displacement_y\": \"241\",\n        \"displacement_z\": \"119\"\n    }\n}",
+        "duration_seconds": 449.935
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [13.18, 3.12, 9.26] m/s and an acceleration of [-0.46, 4.54, 3.76] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 3.37 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    13.18,
+                    3.12,
+                    9.26
+                ],
+                "a": [
+                    -0.46,
+                    4.54,
+                    3.76
+                ],
+                "t": 3.37
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To find the velocity and displacement after 3.37 seconds, I used the equations of motion for constant acceleration. For velocity, the formula is v = u + a t for each component. For displacement, the formula is s = u t + (1/2) a t\u00b2 for each component. Given initial velocity u = [13.18, 3.12, 9.26] m/s, acceleration a = [-0.46, 4.54, 3.76] m/s\u00b2, and time t = 3.37 s, I calculated each component separately. The values were computed step by step and rounded to two decimal places for consistency with the input precision.\",\n    \"answer\": {\n        \"velocity_x\": 11.63,\n        \"velocity_y\": 18.42,\n        \"velocity_z\": 21.93,\n        \"displacement_x\": 41.80,\n        \"displacement_y\": 36.29,\n        \"displacement_z\": 52.56\n    }\n}",
+        "duration_seconds": 48.273
+    },
+    {
+        "question": {
+            "type": "3D Linear Motion",
+            "question": "\n                    An object starts at (0,0,0) with an initial velocity of [10.03, 11.45, 6.04] m/s and an acceleration of [3.72, -0.77, -2.88] m/s\u00b2.\n                    What are its velocity (vx, vy, vz) and displacement (dx, dy, dz) after 5.85 seconds?\n                    ",
+            "parameters": {
+                "v0": [
+                    10.03,
+                    11.45,
+                    6.04
+                ],
+                "a": [
+                    3.72,
+                    -0.77,
+                    -2.88
+                ],
+                "t": 5.85
+            },
+            "answer_json": {
+                "velocity_x": "",
+                "velocity_y": "",
+                "velocity_z": "",
+                "displacement_x": "",
+                "displacement_y": "",
+                "displacement_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To find the velocity and displacement after 5.85 seconds, use the equations of motion. For velocity: v = u + a * t. For displacement: s = u * t + 0.5 * a * t^2. Apply these to each component (x, y, z) separately. Initial velocity components: u_x = 10.03 m/s, u_y = 11.45 m/s, u_z = 6.04 m/s. Acceleration components: a_x = 3.72 m/s\u00b2, a_y = -0.77 m/s\u00b2, a_z = -2.88 m/s\u00b2. Time t = 5.85 s. Calculate t^2 = (5.85)^2 = 34.2225. Compute velocity: v_x = 10.03 + 3.72 * 5.85 = 31.792, v_y = 11.45 + (-0.77) * 5.85 = 6.9455 \u2248 6.946 (rounded to three decimals), v_z = 6.04 + (-2.88) * 5.85 = -10.808. Compute displacement: s_x = 10.03 * 5.85 + 0.5 * 3.72 * 34.2225 = 122.32935 \u2248 122.329, s_y = 11.45 * 5.85 + 0.5 * (-0.77) * 34.2225 = 53.8068375 \u2248 53.807, s_z = 6.04 * 5.85 + 0.5 * (-2.88) * 34.2225 = -13.9464 \u2248 -13.946. Rounding to three decimal places for consistency.\",\n    \"answer\": {\n        \"velocity_x\": 31.792,\n        \"velocity_y\": 6.946,\n        \"velocity_z\": -10.808,\n        \"displacement_x\": 122.329,\n        \"displacement_y\": 53.807,\n        \"displacement_z\": -13.946\n    }\n}",
+        "duration_seconds": 80.415
+    },
+    {
+        "question": {
+            "type": "3D Circular Motion",
+            "question": "\n                    Object  (Circular Motion)  \n                       - Radius: 1.36 meters  \n                       - Angular velocity: 1.38 rad/s  \n                       - Time: 4.88 s  \n                       - Rotating in the xz-plane  \n                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).\n                    ",
+            "parameters": {
+                "r": 1.36,
+                "v": 1.87,
+                "omega": 1.38,
+                "t": 4.88,
+                "rotation_plane": "xz-plane"
+            },
+            "answer_json": {
+                "x_B": "",
+                "y_B": "",
+                "z_B": ""
+            }
+        },
+        "gpt4_response": "",
+        "duration_seconds": 486.468
+    },
+    {
+        "question": {
+            "type": "3D Circular Motion",
+            "question": "\n                    Object  (Circular Motion)  \n                       - Radius: 2.49 meters  \n                       - Angular velocity: 3.51 rad/s  \n                       - Time: 5.95 s  \n                       - Rotating in the xy-plane  \n                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).\n                    ",
+            "parameters": {
+                "r": 2.49,
+                "v": 8.75,
+                "omega": 3.51,
+                "t": 5.95,
+                "rotation_plane": "xy-plane"
+            },
+            "answer_json": {
+                "x_B": "",
+                "y_B": "",
+                "z_B": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The object undergoes uniform circular motion in the xy-plane starting at (r, 0, 0). The position at time t is given by x = r * cos(\u03c9t) and y = r * sin(\u03c9t), with z = 0. Here, r = 2.49 m, \u03c9 = 3.51 rad/s, and t = 5.95 s. First, compute the angular displacement \u03b8 = \u03c9t = 3.51 * 5.95 = 20.8845 rad. Since trigonometric functions are periodic with 2\u03c0, reduce \u03b8 modulo 2\u03c0 for the equivalent angle: 2\u03c0 \u2248 6.283185307 rad, so \u03b8_eff = 20.8845 - 3 * 2\u03c0 = 20.8845 - 18.849555921 = 2.034944079 rad. Then, x = 2.49 * cos(2.034944079) \u2248 2.49 * (-0.44724) = -1.1135076 m, and y = 2.49 * sin(2.034944079) \u2248 2.49 * 0.89443 = 2.2272307 m. Rounding to three significant figures based on input precision: x_B = -1.11, y_B = 2.23, z_B = 0.\",\n    \"answer\": {\"x_B\": \"-1.11\", \"y_B\": \"2.23\", \"z_B\": \"0\"}\n}",
+        "duration_seconds": 441.801
+    },
+    {
+        "question": {
+            "type": "3D Circular Motion",
+            "question": "\n                    Object  (Circular Motion)  \n                       - Radius: 1.78 meters  \n                       - Angular velocity: 4.08 rad/s  \n                       - Time: 7.57 s  \n                       - Rotating in the xz-plane  \n                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).\n                    ",
+            "parameters": {
+                "r": 1.78,
+                "v": 7.27,
+                "omega": 4.08,
+                "t": 7.57,
+                "rotation_plane": "xz-plane"
+            },
+            "answer_json": {
+                "x_B": "",
+                "y_B": "",
+                "z_B": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The object is in circular motion in the xz-plane with radius r = 1.78 m, angular velocity \u03c9 = 4.08 rad/s, and starts at (r, 0, 0). At time t = 7.57 s, the angular displacement \u03b8 = \u03c9t = 4.08 * 7.57 = 30.8856 rad. Since the motion is circular, the position is given by x = r * cos(\u03b8), y = 0 (as motion is confined to the xz-plane), and z = r * sin(\u03b8). Reducing \u03b8 modulo 2\u03c0 gives \u03b8_mod = 5.752858771 rad, which is in the fourth quadrant. The reference angle is 0.530326535 rad, so cos(\u03b8) = cos(reference) \u2248 0.8626 and sin(\u03b8) = -sin(reference) \u2248 -0.5058. Thus, x_B = 1.78 * 0.8626 \u2248 1.5354, which rounds to 1.54 with three significant figures. z_B = 1.78 * (-0.5058) \u2248 -0.9003, which rounds to -0.900 with three significant figures. y_B remains 0.\",\n    \"answer\": {\n        \"x_B\": \"1.54\",\n        \"y_B\": \"0\",\n        \"z_B\": \"-0.900\"\n    }\n}",
+        "duration_seconds": 428.371
+    },
+    {
+        "question": {
+            "type": "3D Circular Motion",
+            "question": "\n                    Object  (Circular Motion)  \n                       - Radius: 4.74 meters  \n                       - Angular velocity: 1.29 rad/s  \n                       - Time: 6.21 s  \n                       - Rotating in the xy-plane  \n                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).\n                    ",
+            "parameters": {
+                "r": 4.74,
+                "v": 6.13,
+                "omega": 1.29,
+                "t": 6.21,
+                "rotation_plane": "xy-plane"
+            },
+            "answer_json": {
+                "x_B": "",
+                "y_B": "",
+                "z_B": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The object is in uniform circular motion in the xy-plane with radius r = 4.74 m and angular velocity \u03c9 = 1.29 rad/s. Starting from the initial position (r, 0, 0), the position at time t is given by x_B = r cos(\u03b8), y_B = r sin(\u03b8), and z_B = 0, where \u03b8 = \u03c9t. At t = 6.21 s, \u03b8 = \u03c9t = 1.29 \u00d7 6.21 = 8.0109 rad. Since the motion is periodic with period 2\u03c0, the effective angle is reduced modulo 2\u03c0: 8.0109 rad - 2\u03c0 rad \u2248 8.0109 - 6.283185 = 1.727715 rad. Then, x_B = 4.74 \u00d7 cos(1.727715) \u2248 4.74 \u00d7 (-0.156434) = -0.7415, and y_B = 4.74 \u00d7 sin(1.727715) \u2248 4.74 \u00d7 0.987688 = 4.6817. Considering significant figures (inputs have three), x_B is rounded to -0.742 and y_B to 4.68. z_B remains 0 as there is no motion out of the xy-plane.\",\n    \"answer\": {\n        \"x_B\": -0.742,\n        \"y_B\": 4.68,\n        \"z_B\": 0\n    }\n}",
+        "duration_seconds": 324.286
+    },
+    {
+        "question": {
+            "type": "3D Circular Motion",
+            "question": "\n                    Object  (Circular Motion)  \n                       - Radius: 3.3 meters  \n                       - Angular velocity: 1.84 rad/s  \n                       - Time: 1.9 s  \n                       - Rotating in the xy-plane  \n                       - Compute its position (x_B, y_B, z_B), assuming it starts at (r, 0, 0).\n                    ",
+            "parameters": {
+                "r": 3.3,
+                "v": 6.07,
+                "omega": 1.84,
+                "t": 1.9,
+                "rotation_plane": "xy-plane"
+            },
+            "answer_json": {
+                "x_B": "",
+                "y_B": "",
+                "z_B": ""
+            }
+        },
+        "gpt4_response": "{\n  \"reasoning\": \"The object is in uniform circular motion in the xy-plane with radius r = 3.3 m and angular velocity \u03c9 = 1.84 rad/s. Starting from (r, 0, 0) at t = 0, the angular position at time t = 1.9 s is \u03b8 = \u03c9t = 1.84 \u00d7 1.9 = 3.496 rad. The x-coordinate is given by x = r cos(\u03b8) and the y-coordinate by y = r sin(\u03b8). Using cos(3.496) \u2248 -0.937822 and sin(3.496) \u2248 -0.347038, x_B = 3.3 \u00d7 (-0.937822) = -3.0948126, which rounds to -3.09. y_B = 3.3 \u00d7 (-0.347038) = -1.1452254, which rounds to -1.15. Since the motion is in the xy-plane, z_B = 0.\",\n  \"answer\": {\n    \"x_B\": -3.09,\n    \"y_B\": -1.15,\n    \"z_B\": 0\n  }\n}",
+        "duration_seconds": 100.828
+    },
+    {
+        "question": {
+            "type": "3D Projectile Motion",
+            "question": "\n            A projectile is launched from (0,0,0) with an initial velocity of [28.47, 8.36, 7.89] m/s from x-y plane.\n            Calculate its flight time, maximum height (h), and range (dx, dy, dz).\n            ",
+            "parameters": {
+                "v0": [
+                    28.47,
+                    8.36,
+                    7.89
+                ]
+            },
+            "answer_json": {
+                "flight_time": "",
+                "maximum_height": "",
+                "range_x": "",
+                "range_y": "",
+                "range_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The projectile motion has constant acceleration due to gravity in the vertical (z) direction, with g = 9.8 m/s\u00b2. Horizontal components (x and y) have no acceleration. Flight time is found by solving z(t) = 0, giving T = 2 * vz_initial / g. Maximum height occurs when vertical velocity is zero, leading to h = (vz_initial)^2 / (2g). Range components are the displacements at flight time: dx = vx_initial * T, dy = vy_initial * T, dz = 0 (since launch and landing at z=0). Using initial velocities vx_initial = 28.47 m/s, vy_initial = 8.36 m/s, vz_initial = 7.89 m/s, and g = 9.8 m/s\u00b2, the values are calculated as follows.\",\n    \"answer\": {\n        \"flight_time\": \"1.610\",\n        \"maximum_height\": \"3.176\",\n        \"range_x\": \"45.843\",\n        \"range_y\": \"13.461\",\n        \"range_z\": \"0.000\"\n    }\n}",
+        "duration_seconds": 375.6
+    },
+    {
+        "question": {
+            "type": "3D Projectile Motion",
+            "question": "\n            A projectile is launched from (0,0,0) with an initial velocity of [15.59, 11.92, 5.09] m/s from x-y plane.\n            Calculate its flight time, maximum height (h), and range (dx, dy, dz).\n            ",
+            "parameters": {
+                "v0": [
+                    15.59,
+                    11.92,
+                    5.09
+                ]
+            },
+            "answer_json": {
+                "flight_time": "",
+                "maximum_height": "",
+                "range_x": "",
+                "range_y": "",
+                "range_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The projectile is launched from (0,0,0) with initial velocity components vx0 = 15.59 m/s, vy0 = 11.92 m/s, vz0 = 5.09 m/s. Gravity acts downward with g = 9.8 m/s\u00b2, so acceleration is (0, 0, -g). Flight time is the time when z=0, given by t = 2 * vz0 / g = 2 * 5.09 / 9.8 = 1.03877551 s \u2248 1.039 s. Maximum height occurs when vertical velocity is zero, calculated as h = (vz0)^2 / (2g) = (5.09)^2 / (2*9.8) = 25.9081 / 19.6 = 1.32184184 m \u2248 1.322 m. Range components are found using constant horizontal velocities: dx = vx0 * t = 15.59 * 1.03877551 = 16.1945102 m \u2248 16.195 m, dy = vy0 * t = 11.92 * 1.03877551 = 12.38220408 m \u2248 12.382 m, dz = 0 m since the projectile lands at z=0.\",\n    \"answer\": {\n        \"flight_time\": 1.039,\n        \"maximum_height\": 1.322,\n        \"range_x\": 16.195,\n        \"range_y\": 12.382,\n        \"range_z\": 0\n    }\n}",
+        "duration_seconds": 163.779
+    },
+    {
+        "question": {
+            "type": "3D Projectile Motion",
+            "question": "\n            A projectile is launched from (0,0,0) with an initial velocity of [19.56, 8.7, 8.19] m/s from x-y plane.\n            Calculate its flight time, maximum height (h), and range (dx, dy, dz).\n            ",
+            "parameters": {
+                "v0": [
+                    19.56,
+                    8.7,
+                    8.19
+                ]
+            },
+            "answer_json": {
+                "flight_time": "",
+                "maximum_height": "",
+                "range_x": "",
+                "range_y": "",
+                "range_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The projectile motion is analyzed with gravity acting in the negative z-direction (g = 9.8 m/s\u00b2). Flight time (T) is the time when the projectile returns to z=0, solved from z(t) = vz0 * t - 0.5 * g * t\u00b2 = 0, giving T = 2 * vz0 / g = 2 * 8.19 / 9.8 \u2248 1.67 s. Maximum height (h) occurs when vertical velocity is zero (vz = 0), solved from vz = vz0 - g * t = 0, then h = vz0 * (vz0 / g) - 0.5 * g * (vz0 / g)\u00b2 = vz0\u00b2 / (2g) = (8.19)\u00b2 / (2 * 9.8) \u2248 3.42 m. Range components are the displacements at t=T: dx = vx0 * T \u2248 19.56 * 1.67 \u2248 32.7 m, dy = vy0 * T \u2248 8.7 * 1.67 \u2248 14.5 m, dz = 0 m (since launch and landing at z=0). Values are rounded to three significant figures where appropriate.\",\n    \"answer\": {\n        \"flight_time\": 1.67,\n        \"maximum_height\": 3.42,\n        \"range_x\": 32.7,\n        \"range_y\": 14.5,\n        \"range_z\": 0\n    }\n}",
+        "duration_seconds": 479.472
+    },
+    {
+        "question": {
+            "type": "3D Projectile Motion",
+            "question": "\n            A projectile is launched from (0,0,0) with an initial velocity of [8.86, 28.25, 26.62] m/s from x-y plane.\n            Calculate its flight time, maximum height (h), and range (dx, dy, dz).\n            ",
+            "parameters": {
+                "v0": [
+                    8.86,
+                    28.25,
+                    26.62
+                ]
+            },
+            "answer_json": {
+                "flight_time": "",
+                "maximum_height": "",
+                "range_x": "",
+                "range_y": "",
+                "range_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The projectile is launched from (0,0,0) with initial velocity [8.86, 28.25, 26.62] m/s. Gravity acts downward with g = 9.8 m/s\u00b2, affecting only the z-component. Flight time is the time to return to z=0, given by T = 2 * vz0 / g. Maximum height occurs when vertical velocity is zero, so h = (vz0)^2 / (2g). Range components are the displacements at time T: range_x = vx0 * T, range_y = vy0 * T, range_z = 0 (since it lands at z=0). Calculations used vz0 = 26.62 m/s, vx0 = 8.86 m/s, vy0 = 28.25 m/s, g = 9.8 m/s\u00b2, with results rounded to three decimal places.\",\n    \"answer\": {\n        \"flight_time\": 5.433,\n        \"maximum_height\": 36.154,\n        \"range_x\": 48.133,\n        \"range_y\": 153.472,\n        \"range_z\": 0\n    }\n}",
+        "duration_seconds": 675.12
+    },
+    {
+        "question": {
+            "type": "3D Projectile Motion",
+            "question": "\n            A projectile is launched from (0,0,0) with an initial velocity of [7.7, 26.8, 26.46] m/s from x-y plane.\n            Calculate its flight time, maximum height (h), and range (dx, dy, dz).\n            ",
+            "parameters": {
+                "v0": [
+                    7.7,
+                    26.8,
+                    26.46
+                ]
+            },
+            "answer_json": {
+                "flight_time": "",
+                "maximum_height": "",
+                "range_x": "",
+                "range_y": "",
+                "range_z": ""
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"The projectile is launched from (0,0,0) with initial velocity [7.7, 26.8, 26.46] m/s. Gravity acts downward with g = 9.8 m/s\u00b2 in the negative z-direction. Flight time is found by solving for when z=0 using z(t) = vz0 * t - (1/2) * g * t\u00b2 = 0, yielding t = 2 * vz0 / g = 2 * 26.46 / 9.8 = 5.4 s. Maximum height occurs when vertical velocity is zero: vz(t) = vz0 - g * t = 0, so t = vz0 / g = 2.7 s; height h = vz0 * t - (1/2) * g * t\u00b2 = (vz0\u00b2) / (2g) = (26.46)^2 / (2 * 9.8) = 35.721 m. Range components are calculated using constant horizontal velocity: at t = 5.4 s, range_x = vx * t = 7.7 * 5.4 = 41.58 m, range_y = vy * t = 26.8 * 5.4 = 144.72 m, range_z = 0 m.\",\n    \"answer\": {\n        \"flight_time\": 5.4,\n        \"maximum_height\": 35.721,\n        \"range_x\": 41.58,\n        \"range_y\": 144.72,\n        \"range_z\": 0\n    }\n}",
+        "duration_seconds": 52.713
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [13.19, 8.59, 19.64] m/s  \n               - Acceleration: [0.36, 4.39, -3.85] m/s\u00b2  \n               - Time: 9.73 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 1.3 meters  \n               - Angular velocity: 7.43 rad/s  \n               - Time: 3.39 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [19.91, 13.64, 24.66] m/s  \n               - Time: 4.93 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        13.19,
+                        8.59,
+                        19.64
+                    ],
+                    "a": [
+                        0.36,
+                        4.39,
+                        -3.85
+                    ],
+                    "t": 9.73
+                },
+                "object_B": {
+                    "r": 1.3,
+                    "v": 9.66,
+                    "omega": 7.43,
+                    "t": 3.39,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        19.91,
+                        13.64,
+                        24.66
+                    ],
+                    "t": 4.93
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A, linear motion with constant acceleration: position calculated using s = ut + 0.5at^2 from (0,0,0). For Object B, circular motion in xy-plane: position from x = r cos(\u03c9t), y = r sin(\u03c9t), z = 0, with angle \u03b8 = \u03c9t reduced modulo 2\u03c0. For Object C, projectile motion: assumed gravity g = 9.8 m/s\u00b2, so x = u_x t, y = u_y t, z = u_z t - 0.5gt^2 from (0,0,0).\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"145.38\",\n            \"y_A\": \"291.39\",\n            \"z_A\": \"8.85\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"1.30\",\n            \"y_B\": \"0.07\",\n            \"z_B\": \"0.00\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"98.16\",\n            \"y_C\": \"67.25\",\n            \"z_C\": \"2.48\"\n        }\n    }\n}",
+        "duration_seconds": 124.883
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [10.39, 5.64, 13.47] m/s  \n               - Acceleration: [-4.94, 2.51, 2.7] m/s\u00b2  \n               - Time: 1.96 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 2.41 meters  \n               - Angular velocity: 1.07 rad/s  \n               - Time: 9.62 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [6.26, 11.23, 26.21] m/s  \n               - Time: 5.11 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        10.39,
+                        5.64,
+                        13.47
+                    ],
+                    "a": [
+                        -4.94,
+                        2.51,
+                        2.7
+                    ],
+                    "t": 1.96
+                },
+                "object_B": {
+                    "r": 2.41,
+                    "v": 2.58,
+                    "omega": 1.07,
+                    "t": 9.62,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        6.26,
+                        11.23,
+                        26.21
+                    ],
+                    "t": 5.11
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (Linear Motion), the final position is calculated using the equation s = ut + (1/2)at\u00b2, with initial velocity [10.39, 5.64, 13.47] m/s, acceleration [-4.94, 2.51, 2.7] m/s\u00b2, time 1.96 s, and starting from (0,0,0). The components are: x_A = 10.39*1.96 + 0.5*(-4.94)*(1.96)\u00b2 = 10.876, y_A = 5.64*1.96 + 0.5*2.51*(1.96)\u00b2 = 15.876, z_A = 13.47*1.96 + 0.5*2.7*(1.96)\u00b2 = 31.587. For Object B (Circular Motion), rotating in the xz-plane with radius 2.41 m, angular velocity 1.07 rad/s, time 9.62 s, and starting at (2.41, 0, 0). The angle \u03b8 = \u03c9t = 1.07*9.62 = 10.2934 rad, reduced modulo 2\u03c0 to 4.0102 rad (equivalent to 229.768\u00b0), giving x_B = 2.41*cos(4.0102) \u2248 -1.557, y_B = 0, z_B = 2.41*sin(4.0102) \u2248 -1.837. For Object C (Projectile Motion), with initial velocity [6.26, 11.23, 26.21] m/s, time 5.11 s, starting from (0,0,0), and gravity g = 9.8 m/s\u00b2 acting downward (z-direction). Horizontal motion: x_C = 6.26*5.11 = 31.989, y_C = 11.23*5.11 = 57.385. Vertical motion: z_C = 26.21*5.11 - 0.5*9.8*(5.11)\u00b2 = 5.984.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"10.876\",\n            \"y_A\": \"15.876\",\n            \"z_A\": \"31.587\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"-1.557\",\n            \"y_B\": \"0.000\",\n            \"z_B\": \"-1.837\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"31.989\",\n            \"y_C\": \"57.385\",\n            \"z_C\": \"5.984\"\n        }\n    }\n}",
+        "duration_seconds": 193.256
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [11.15, 18.23, 12.25] m/s  \n               - Acceleration: [1.63, -4.16, -0.71] m/s\u00b2  \n               - Time: 8.8 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 1.32 meters  \n               - Angular velocity: 2.53 rad/s  \n               - Time: 3.95 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [13.17, 24.03, 14.48] m/s  \n               - Time: 7.77 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        11.15,
+                        18.23,
+                        12.25
+                    ],
+                    "a": [
+                        1.63,
+                        -4.16,
+                        -0.71
+                    ],
+                    "t": 8.8
+                },
+                "object_B": {
+                    "r": 1.32,
+                    "v": 3.34,
+                    "omega": 2.53,
+                    "t": 3.95,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        13.17,
+                        24.03,
+                        14.48
+                    ],
+                    "t": 7.77
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the final position is calculated using the equation s = v0 * t + 0.5 * a * t^2 with initial velocity v0, acceleration a, and time t. Starting from (0,0,0), the components are computed separately. For Object B (circular motion in the xz-plane), the position is given by x = r * cos(\u03c9t), z = r * sin(\u03c9t), y = 0, with the angle \u03c9t reduced modulo 2\u03c0 to handle the periodic nature of trig functions. For Object C (projectile motion), gravity acts in the -z direction with g = 9.8 m/s\u00b2, so the position is x = v0x * t, y = v0y * t, z = v0z * t - 0.5 * g * t^2, starting from (0,0,0).\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"161.23\",\n            \"y_A\": \"-0.65\",\n            \"z_A\": \"80.31\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"-1.11\",\n            \"y_B\": \"0.00\",\n            \"z_B\": \"-0.71\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"102.33\",\n            \"y_C\": \"186.71\",\n            \"z_C\": \"-183.32\"\n        }\n    }\n}",
+        "duration_seconds": 195.751
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [16.36, 11.23, 10.19] m/s  \n               - Acceleration: [-0.64, 2.31, -2.32] m/s\u00b2  \n               - Time: 8.67 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 4.24 meters  \n               - Angular velocity: 0.42 rad/s  \n               - Time: 8.93 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [23.76, 19.25, 21.7] m/s  \n               - Time: 4.03 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        16.36,
+                        11.23,
+                        10.19
+                    ],
+                    "a": [
+                        -0.64,
+                        2.31,
+                        -2.32
+                    ],
+                    "t": 8.67
+                },
+                "object_B": {
+                    "r": 4.24,
+                    "v": 1.78,
+                    "omega": 0.42,
+                    "t": 8.93,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        23.76,
+                        19.25,
+                        21.7
+                    ],
+                    "t": 4.03
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (Linear Motion), position is calculated using the equation s = u * t + 0.5 * a * t^2 for each component, starting from (0,0,0). Initial velocity [16.36, 11.23, 10.19] m/s, acceleration [-0.64, 2.31, -2.32] m/s\u00b2, time 8.67 s. For Object B (Circular Motion), position in xy-plane is given by x = r * cos(\u03c9t), y = r * sin(\u03c9t), z=0, with radius 4.24 m, angular velocity 0.42 rad/s, time 8.93 s, starting at (4.24, 0, 0). Theta = \u03c9t = 0.42 * 8.93 = 3.7506 rad. For Object C (Projectile Motion), position uses x = u_x * t, y = u_y * t, z = u_z * t - 0.5 * g * t^2 with g=9.8 m/s\u00b2, initial speed [23.76, 19.25, 21.7] m/s, time 4.03 s, starting from (0,0,0).\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": 117.79,\n            \"y_A\": 184.18,\n            \"z_A\": 1.15\n        },\n        \"pos_B\": {\n            \"x_B\": -3.48,\n            \"y_B\": -2.43,\n            \"z_B\": 0.0\n        },\n        \"pos_C\": {\n            \"x_C\": 95.75,\n            \"y_C\": 77.58,\n            \"z_C\": 7.87\n        }\n    }\n}",
+        "duration_seconds": 144.137
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [1.98, 18.88, 10.08] m/s  \n               - Acceleration: [3.22, -0.99, -4.26] m/s\u00b2  \n               - Time: 6.67 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 0.74 meters  \n               - Angular velocity: 3.16 rad/s  \n               - Time: 6.07 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [7.13, 11.2, 18.95] m/s  \n               - Time: 4.75 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        1.98,
+                        18.88,
+                        10.08
+                    ],
+                    "a": [
+                        3.22,
+                        -0.99,
+                        -4.26
+                    ],
+                    "t": 6.67
+                },
+                "object_B": {
+                    "r": 0.74,
+                    "v": 2.34,
+                    "omega": 3.16,
+                    "t": 6.07,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        7.13,
+                        11.2,
+                        18.95
+                    ],
+                    "t": 4.75
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is calculated using the equation s = ut + (1/2)at\u00b2 for each component, with initial velocity [1.98, 18.88, 10.08] m/s, acceleration [3.22, -0.99, -4.26] m/s\u00b2, and time 6.67 s. Calculations yield x_A \u2248 84.83 m, y_A \u2248 103.91 m, z_A \u2248 -27.53 m. For Object B (circular motion), position is determined from x = r cos(\u03b8), z = r sin(\u03b8), y = 0, with radius 0.74 m, angular velocity 3.16 rad/s, time 6.07 s, and \u03b8 = \u03c9t reduced modulo 2\u03c0 to \u22480.3316 rad. Using cos(0.3316) \u2248 0.9455 and sin(0.3316) \u2248 0.3256, results are x_B \u2248 0.70 m, y_B = 0.00 m, z_B \u2248 0.24 m. For Object C (projectile motion), gravity g = 9.8 m/s\u00b2 is assumed, so x and y components use uniform motion (x = u_x t, y = u_y t), and z component uses z = u_z t - (1/2)gt\u00b2, with initial velocity [7.13, 11.2, 18.95] m/s and time 4.75 s. This gives x_C \u2248 33.87 m, y_C \u2248 53.20 m, z_C \u2248 -20.54 m.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": 84.83,\n            \"y_A\": 103.91,\n            \"z_A\": -27.53\n        },\n        \"pos_B\": {\n            \"x_B\": 0.70,\n            \"y_B\": 0.00,\n            \"z_B\": 0.24\n        },\n        \"pos_C\": {\n            \"x_C\": 33.87,\n            \"y_C\": 53.20,\n            \"z_C\": -20.54\n        }\n    }\n}",
+        "duration_seconds": 319.824
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [15.37, 9.94, 13.38] m/s  \n               - Acceleration: [4.16, -3.19, 0.85] m/s\u00b2  \n               - Time: 6.71 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 2.71 meters  \n               - Angular velocity: 0.67 rad/s  \n               - Time: 4.13 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [13.03, 7.61, 9.02] m/s  \n               - Time: 4.7 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        15.37,
+                        9.94,
+                        13.38
+                    ],
+                    "a": [
+                        4.16,
+                        -3.19,
+                        0.85
+                    ],
+                    "t": 6.71
+                },
+                "object_B": {
+                    "r": 2.71,
+                    "v": 1.82,
+                    "omega": 0.67,
+                    "t": 4.13,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        13.03,
+                        7.61,
+                        9.02
+                    ],
+                    "t": 4.7
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "",
+        "duration_seconds": 900.514
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [17.44, 9.48, 10.2] m/s  \n               - Acceleration: [-1.68, 2.63, -1.23] m/s\u00b2  \n               - Time: 9.4 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 4.41 meters  \n               - Angular velocity: 2.23 rad/s  \n               - Time: 3.15 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [10.84, 24.39, 6.09] m/s  \n               - Time: 7.7 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        17.44,
+                        9.48,
+                        10.2
+                    ],
+                    "a": [
+                        -1.68,
+                        2.63,
+                        -1.23
+                    ],
+                    "t": 9.4
+                },
+                "object_B": {
+                    "r": 4.41,
+                    "v": 9.83,
+                    "omega": 2.23,
+                    "t": 3.15,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        10.84,
+                        24.39,
+                        6.09
+                    ],
+                    "t": 7.7
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the final position is calculated using the equation \\( \\vec{s} = \\vec{v_0} t + \\frac{1}{2} \\vec{a} t^2 \\), starting from (0,0,0). For Object B (circular motion in the xz-plane), the position is determined from the angular displacement \\( \\theta = \\omega t \\), with \\( x = r \\cos(\\theta) \\), \\( z = r \\sin(\\theta) \\), and \\( y = 0 \\), starting from (r_B, 0, 0). For Object C (projectile motion), gravity is assumed to act downward with \\( g = 9.8 \\, \\text{m/s}^2 \\), so position components are \\( x = v_{0x} t \\), \\( y = v_{0y} t \\), and \\( z = v_{0z} t - \\frac{1}{2} g t^2 \\), starting from (0,0,0).\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"89.71\",\n            \"y_A\": \"205.31\",\n            \"z_A\": \"41.54\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"3.25\",\n            \"y_B\": \"0.00\",\n            \"z_B\": \"2.98\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"83.47\",\n            \"y_C\": \"187.80\",\n            \"z_C\": \"-243.63\"\n        }\n    }\n}",
+        "duration_seconds": 221.298
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [9.73, 13.67, 18.08] m/s  \n               - Acceleration: [-0.35, -2.12, 0.47] m/s\u00b2  \n               - Time: 1.66 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 4.75 meters  \n               - Angular velocity: 2.08 rad/s  \n               - Time: 3.69 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [22.26, 16.42, 12.55] m/s  \n               - Time: 9.99 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        9.73,
+                        13.67,
+                        18.08
+                    ],
+                    "a": [
+                        -0.35,
+                        -2.12,
+                        0.47
+                    ],
+                    "t": 1.66
+                },
+                "object_B": {
+                    "r": 4.75,
+                    "v": 9.89,
+                    "omega": 2.08,
+                    "t": 3.69,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        22.26,
+                        16.42,
+                        12.55
+                    ],
+                    "t": 9.99
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (Linear Motion), the final position is calculated using the equation for displacement with constant acceleration: s = u t + (1/2) a t^2, starting from (0,0,0). For Object B (Circular Motion), the position is determined from circular motion in the xz-plane: x = r cos(\u03b8), z = r sin(\u03b8), y = 0, with \u03b8 = \u03c9 t. For Object C (Projectile Motion), gravity acts in the negative z-direction (assumed g = 9.8 m/s\u00b2), so x and y positions are from initial velocity times time, and z position includes the gravity term: z = u_z t - (1/2) g t^2.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"15.67\",\n            \"y_A\": \"19.77\",\n            \"z_A\": \"30.66\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"0.85\",\n            \"y_B\": \"0.00\",\n            \"z_B\": \"4.67\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"222.38\",\n            \"y_C\": \"164.04\",\n            \"z_C\": \"-363.65\"\n        }\n    }\n}",
+        "duration_seconds": 360.363
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [8.0, 15.23, 5.98] m/s  \n               - Acceleration: [-1.19, 1.39, -1.29] m/s\u00b2  \n               - Time: 7.07 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 2.62 meters  \n               - Angular velocity: 2.51 rad/s  \n               - Time: 9.49 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [27.88, 10.53, 6.58] m/s  \n               - Time: 8.41 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        8.0,
+                        15.23,
+                        5.98
+                    ],
+                    "a": [
+                        -1.19,
+                        1.39,
+                        -1.29
+                    ],
+                    "t": 7.07
+                },
+                "object_B": {
+                    "r": 2.62,
+                    "v": 6.58,
+                    "omega": 2.51,
+                    "t": 9.49,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        27.88,
+                        10.53,
+                        6.58
+                    ],
+                    "t": 8.41
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is computed using the equation s = ut + 0.5at^2, with initial velocity [8.0, 15.23, 5.98] m/s, acceleration [-1.19, 1.39, -1.29] m/s\u00b2, and time 7.07 s, starting from (0,0,0). Calculations: x_A = 8.0*7.07 + 0.5*(-1.19)*(7.07)^2 = 56.56 - 29.741 \u2248 26.819, y_A = 15.23*7.07 + 0.5*1.39*(7.07)^2 = 107.676 + 34.740 \u2248 142.416, z_A = 5.98*7.07 + 0.5*(-1.29)*(7.07)^2 = 42.279 - 32.240 \u2248 10.039 (rounded to 10.038 based on full precision). For Object B (circular motion in xz-plane), position is (r cos(\u03c9t), 0, r sin(\u03c9t)) with r=2.62 m, \u03c9=2.51 rad/s, t=9.49 s, starting at (r,0,0). Angle \u03b8 = \u03c9t = 2.51*9.49 = 23.8199 rad, reduced modulo 2\u03c0 to 4.970344 rad. Then cos(\u03b8) \u2248 0.255, sin(\u03b8) \u2248 -0.967, so x_B = 2.62*0.255 \u2248 0.668, y_B = 0, z_B = 2.62*(-0.967) \u2248 -2.533. For Object C (projectile motion), position is computed with initial velocity [27.88, 10.53, 6.58] m/s, time 8.41 s, starting from (0,0,0), and acceleration due to gravity assumed as [0,0,-9.8] m/s\u00b2. Thus, x_C = 27.88*8.41 \u2248 234.471, y_C = 10.53*8.41 \u2248 88.557, z_C = 6.58*8.41 + 0.5*(-9.8)*(8.41)^2 \u2248 55.338 - 346.568 \u2248 -291.230.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"26.819\",\n            \"y_A\": \"142.416\",\n            \"z_A\": \"10.038\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"0.668\",\n            \"y_B\": \"0.000\",\n            \"z_B\": \"-2.533\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"234.471\",\n            \"y_C\": \"88.557\",\n            \"z_C\": \"-291.230\"\n        }\n    }\n}",
+        "duration_seconds": 205.179
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [17.46, 3.5, 7.81] m/s  \n               - Acceleration: [2.88, 0.89, -4.84] m/s\u00b2  \n               - Time: 3.39 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 1.07 meters  \n               - Angular velocity: 4.48 rad/s  \n               - Time: 2.02 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [16.91, 24.45, 17.83] m/s  \n               - Time: 1.98 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        17.46,
+                        3.5,
+                        7.81
+                    ],
+                    "a": [
+                        2.88,
+                        0.89,
+                        -4.84
+                    ],
+                    "t": 3.39
+                },
+                "object_B": {
+                    "r": 1.07,
+                    "v": 4.79,
+                    "omega": 4.48,
+                    "t": 2.02,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        16.91,
+                        24.45,
+                        17.83
+                    ],
+                    "t": 1.98
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is calculated using the equation s = ut + 0.5at\u00b2 for each component, with initial position at (0,0,0). For Object B (circular motion in xy-plane), the position is given by (r cos(\u03b8), r sin(\u03b8), 0) where \u03b8 = \u03c9t, reduced modulo 2\u03c0 to 2.7664 rad. For Object C (projectile motion), gravity is assumed as g = -9.8 m/s\u00b2 in z-direction; x and y components have no acceleration, so position uses s = ut, and z uses s = ut + 0.5gt\u00b2.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"75.74\",\n            \"y_A\": \"16.98\",\n            \"z_A\": \"-1.33\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"-1.00\",\n            \"y_B\": \"0.39\",\n            \"z_B\": \"0.00\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"33.48\",\n            \"y_C\": \"48.41\",\n            \"z_C\": \"16.09\"\n        }\n    }\n}",
+        "duration_seconds": 197.859
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [1.98, 6.46, 6.94] m/s  \n               - Acceleration: [-3.96, 0.07, -3.45] m/s\u00b2  \n               - Time: 5.34 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 4.31 meters  \n               - Angular velocity: 0.96 rad/s  \n               - Time: 6.01 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [24.07, 19.35, 25.18] m/s  \n               - Time: 8.61 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        1.98,
+                        6.46,
+                        6.94
+                    ],
+                    "a": [
+                        -3.96,
+                        0.07,
+                        -3.45
+                    ],
+                    "t": 5.34
+                },
+                "object_B": {
+                    "r": 4.31,
+                    "v": 4.15,
+                    "omega": 0.96,
+                    "t": 6.01,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        24.07,
+                        19.35,
+                        25.18
+                    ],
+                    "t": 8.61
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": {
+            "error": "Expecting value: line 1917 column 1 (char 10538)"
+        },
+        "duration_seconds": 402.838
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [10.5, 16.83, 16.32] m/s  \n               - Acceleration: [-4.28, 3.62, -4.58] m/s\u00b2  \n               - Time: 1.17 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 4.65 meters  \n               - Angular velocity: 1.88 rad/s  \n               - Time: 6.18 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [22.74, 15.44, 7.88] m/s  \n               - Time: 1.19 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        10.5,
+                        16.83,
+                        16.32
+                    ],
+                    "a": [
+                        -4.28,
+                        3.62,
+                        -4.58
+                    ],
+                    "t": 1.17
+                },
+                "object_B": {
+                    "r": 4.65,
+                    "v": 8.76,
+                    "omega": 1.88,
+                    "t": 6.18,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        22.74,
+                        15.44,
+                        7.88
+                    ],
+                    "t": 1.19
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A, linear motion: used the equation s = ut + (1/2)at^2 for each component to find position, starting from (0,0,0). For Object B, circular motion in xz-plane: computed angular position \u03b8 = \u03c9t, reduced modulo 2\u03c0 to equivalent angle, then found position using x = r cos(\u03b8), z = r sin(\u03b8), y = 0. For Object C, projectile motion: assumed gravity g = 9.8 m/s\u00b2 downward (z-direction), so horizontal components (x and y) have uniform motion, vertical component (z) uses z = v_z t - (1/2)gt^2.\",\n    \"answer\": {\n        \"pos_A\": {\"x_A\": 9.356, \"y_A\": 22.169, \"z_A\": 15.960},\n        \"pos_B\": {\"x_B\": 2.713, \"y_B\": 0.000, \"z_B\": -3.776},\n        \"pos_C\": {\"x_C\": 27.061, \"y_C\": 18.374, \"z_C\": 2.438}\n    }\n}",
+        "duration_seconds": 781.231
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [9.54, 16.39, 13.38] m/s  \n               - Acceleration: [-1.78, -0.24, -3.49] m/s\u00b2  \n               - Time: 1.56 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 0.97 meters  \n               - Angular velocity: 9.37 rad/s  \n               - Time: 4.09 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [17.61, 9.31, 11.19] m/s  \n               - Time: 4.94 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        9.54,
+                        16.39,
+                        13.38
+                    ],
+                    "a": [
+                        -1.78,
+                        -0.24,
+                        -3.49
+                    ],
+                    "t": 1.56
+                },
+                "object_B": {
+                    "r": 0.97,
+                    "v": 9.09,
+                    "omega": 9.37,
+                    "t": 4.09,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        17.61,
+                        9.31,
+                        11.19
+                    ],
+                    "t": 4.94
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is calculated using the equation s = ut + 0.5at^2 for each component, with initial velocity [9.54, 16.39, 13.38] m/s, acceleration [-1.78, -0.24, -3.49] m/s\u00b2, and time 1.56 s, starting from (0,0,0). For Object B (circular motion), the position is given by x = r cos(\u03c9t), y = r sin(\u03c9t), z = 0, with radius 0.97 m, angular velocity 9.37 rad/s, time 4.09 s, starting at (0.97, 0, 0). The angle \u03c9t = 38.3233 rad is reduced modulo 2\u03c0 to 0.624188 rad for trigonometric calculations. For Object C (projectile motion), gravity is assumed with g = 9.8 m/s\u00b2 in the negative z-direction. Thus, positions are s_x = u_x t, s_y = u_y t, s_z = u_z t - 0.5gt^2, with initial velocity [17.61, 9.31, 11.19] m/s and time 4.94 s, starting from (0,0,0). All positions are rounded to two decimal places based on input precision.\",\n    \"answer\": {\n        \"pos_A\": {\"x_A\": 12.72, \"y_A\": 25.28, \"z_A\": 16.63},\n        \"pos_B\": {\"x_B\": 0.79, \"y_B\": 0.57, \"z_B\": 0.00},\n        \"pos_C\": {\"x_C\": 86.99, \"y_C\": 45.99, \"z_C\": -64.30}\n    }\n}",
+        "duration_seconds": 124.518
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [12.87, 18.15, 14.7] m/s  \n               - Acceleration: [-4.56, -1.36, 2.2] m/s\u00b2  \n               - Time: 9.73 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 3.25 meters  \n               - Angular velocity: 2.39 rad/s  \n               - Time: 8.05 s  \n               - Rotating in the xy-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [18.35, 12.74, 25.22] m/s  \n               - Time: 5.22 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        12.87,
+                        18.15,
+                        14.7
+                    ],
+                    "a": [
+                        -4.56,
+                        -1.36,
+                        2.2
+                    ],
+                    "t": 9.73
+                },
+                "object_B": {
+                    "r": 3.25,
+                    "v": 7.77,
+                    "omega": 2.39,
+                    "t": 8.05,
+                    "rotation_plane": "xy-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        18.35,
+                        12.74,
+                        25.22
+                    ],
+                    "t": 5.22
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is calculated using the equation s = ut + 0.5at^2 for each component, with initial velocity [12.87, 18.15, 14.7] m/s, acceleration [-4.56, -1.36, 2.2] m/s\u00b2, and time 9.73 s. For Object B (circular motion), position is given by x = r cos(\u03c9t), y = r sin(\u03c9t), z = 0, with radius 3.25 m, angular velocity 2.39 rad/s, time 8.05 s, and \u03b8 = \u03c9t reduced modulo 2\u03c0. For Object C (projectile motion), x and y positions are from constant velocity (no acceleration), and z position accounts for gravity (g = 9.8 m/s\u00b2) using z = uz t - 0.5gt^2, with initial velocity [18.35, 12.74, 25.22] m/s and time 5.22 s.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": \"-90.63\",\n            \"y_A\": \"112.22\",\n            \"z_A\": \"247.17\"\n        },\n        \"pos_B\": {\n            \"x_B\": \"3.01\",\n            \"y_B\": \"1.24\",\n            \"z_B\": \"0.00\"\n        },\n        \"pos_C\": {\n            \"x_C\": \"95.79\",\n            \"y_C\": \"66.50\",\n            \"z_C\": \"-1.87\"\n        }\n    }\n}",
+        "duration_seconds": 359.416
+    },
+    {
+        "question": {
+            "type": "3D Multi-Object Motion",
+            "question": "\n            Three objects move in different types of motion in 3D space:\n            1. Object A (Linear Motion)  \n               - Initial velocity: [12.83, 2.19, 16.9] m/s  \n               - Acceleration: [-0.0, 0.36, 1.32] m/s\u00b2  \n               - Time: 6.18 s  \n               - Compute its final position (x_A, y_A, z_A). Assume it starts at (0, 0, 0).\n\n            2. Object B (Circular Motion)  \n               - Radius: 3.73 meters  \n               - Angular velocity: 0.97 rad/s  \n               - Time: 1.01 s  \n               - Rotating in the xz-plane  \n               - Compute its position (x_B, y_B, z_B), assuming it starts at (r_B, 0, 0).\n\n            3. Object C (Projectile Motion)  \n               - Initial speed: [11.01, 15.41, 21.61] m/s  \n               - Time: 1.77 s  \n               - Compute its position (x_C, y_C, z_C), assuming it starts from (0,0,0) from x-y plane.\n            ",
+            "parameters": {
+                "object_A": {
+                    "v0": [
+                        12.83,
+                        2.19,
+                        16.9
+                    ],
+                    "a": [
+                        -0.0,
+                        0.36,
+                        1.32
+                    ],
+                    "t": 6.18
+                },
+                "object_B": {
+                    "r": 3.73,
+                    "v": 3.62,
+                    "omega": 0.97,
+                    "t": 1.01,
+                    "rotation_plane": "xz-plane"
+                },
+                "object_C": {
+                    "v0": [
+                        11.01,
+                        15.41,
+                        21.61
+                    ],
+                    "t": 1.77
+                }
+            },
+            "answer_json": {
+                "pos_A": {
+                    "x_A": "",
+                    "y_A": "",
+                    "z_A": ""
+                },
+                "pos_B": {
+                    "x_B": "",
+                    "y_B": "",
+                    "z_B": ""
+                },
+                "pos_C": {
+                    "x_C": "",
+                    "y_C": "",
+                    "z_C": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"For Object A (linear motion), the position is calculated using the equation s = ut + 0.5at^2 for each component. Initial velocity u = [12.83, 2.19, 16.9] m/s, acceleration a = [-0.0, 0.36, 1.32] m/s\u00b2, time t = 6.18 s, starting from (0,0,0). Thus, x_A = 12.83 * 6.18 + 0.5 * (-0.0) * (6.18)^2 = 79.29, y_A = 2.19 * 6.18 + 0.5 * 0.36 * (6.18)^2 = 20.41, z_A = 16.9 * 6.18 + 0.5 * 1.32 * (6.18)^2 = 129.65. For Object B (circular motion), it rotates in the xz-plane with radius r = 3.73 m, angular velocity \u03c9 = 0.97 rad/s, time t = 1.01 s, starting at (3.73, 0, 0). The angle \u03b8 = \u03c9t = 0.97 * 1.01 = 0.9797 rad. Position: x_B = r * cos(\u03b8) = 3.73 * cos(0.9797) \u2248 2.08, y_B = 0 (since motion in xz-plane), z_B = r * sin(\u03b8) = 3.73 * sin(0.9797) \u2248 3.10. For Object C (projectile motion), initial velocity u = [11.01, 15.41, 21.61] m/s, time t = 1.77 s, starting from (0,0,0). Projectile motion implies constant acceleration due to gravity, so a = [0, 0, -9.8] m/s\u00b2. Position: x_C = 11.01 * 1.77 + 0.5 * 0 * (1.77)^2 = 19.49, y_C = 15.41 * 1.77 + 0.5 * 0 * (1.77)^2 = 27.28, z_C = 21.61 * 1.77 + 0.5 * (-9.8) * (1.77)^2 = 22.90.\",\n    \"answer\": {\n        \"pos_A\": {\n            \"x_A\": 79.29,\n            \"y_A\": 20.41,\n            \"z_A\": 129.65\n        },\n        \"pos_B\": {\n            \"x_B\": 2.08,\n            \"y_B\": 0.00,\n            \"z_B\": 3.10\n        },\n        \"pos_C\": {\n            \"x_C\": 19.49,\n            \"y_C\": 27.28,\n            \"z_C\": 22.90\n        }\n    }\n}",
+        "duration_seconds": 132.994
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 8.4 kg and 5.91 kg are located at positions [-2.881690576497969, -0.42591016882973753, -2.041340181971105] and [-0.4777581349020692, 1.7132639404948307, 0.49330703069712456], the radius of both spheres is 0.5. They are moving with velocities [1.9989536980325082, 1.7787979073700424, 2.107647590798081] m/s and [-1.2731450866327967, -1.1329265996055307, -1.3423728509665511] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 8.4,
+                "m2": 5.91,
+                "p1": [
+                    -2.881690576497969,
+                    -0.42591016882973753,
+                    -2.041340181971105
+                ],
+                "p2": [
+                    -0.4777581349020692,
+                    1.7132639404948307,
+                    0.49330703069712456
+                ],
+                "v1": [
+                    1.9989536980325082,
+                    1.7787979073700424,
+                    2.107647590798081
+                ],
+                "v2": [
+                    -1.2731450866327967,
+                    -1.1329265996055307,
+                    -1.3423728509665511
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "",
+        "duration_seconds": 30.92
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 1.58 kg and 5.88 kg are located at positions [-0.7431897462343704, -1.4409544799639367, -0.363377716384111] and [3.188500112820081, 3.9684819192250136, 2.543778725871504], the radius of both spheres is 0.5. They are moving with velocities [2.716049346631046, 3.0640687469569503, 2.7926069505734628] m/s and [1.2917206324377095, 1.4572345029596785, 1.3281305145722435] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 1.58,
+                "m2": 5.88,
+                "p1": [
+                    -0.7431897462343704,
+                    -1.4409544799639367,
+                    -0.363377716384111
+                ],
+                "p2": [
+                    3.188500112820081,
+                    3.9684819192250136,
+                    2.543778725871504
+                ],
+                "v1": [
+                    2.716049346631046,
+                    3.0640687469569503,
+                    2.7926069505734628
+                ],
+                "v2": [
+                    1.2917206324377095,
+                    1.4572345029596785,
+                    1.3281305145722435
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To determine if the spheres collide, I computed the relative position vector and relative velocity vector. The initial distance between centers is approximately 7.292 m. The minimum distance during motion is found to be approximately 1.500 m, which is greater than the sum of radii (1.0 m). Since the discriminant of the time equation for collision is negative, there is no real time when the distance equals the sum of radii. Therefore, no collision occurs, and the velocities remain unchanged.\",\n    \"answer\": {\n        \"will_collide\": \"false\",\n        \"velocity_1\": {\n            \"vel_1_x\": \"2.716049346631046\",\n            \"vel_1_y\": \"3.0640687469569503\",\n            \"vel_1_z\": \"2.7926069505734628\"\n        },\n        \"velocity_2\": {\n            \"vel_2_x\": \"1.2917206324377095\",\n            \"vel_2_y\": \"1.4572345029596785\",\n            \"vel_2_z\": \"1.3281305145722435\"\n        }\n    }\n}",
+        "duration_seconds": 190.634
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 6.77 kg and 6.19 kg are located at positions [-1.1652049954184447, -2.9170660816837692, -1.8050440389556477] and [2.49019030068058, 3.1358200514904215, 1.448358284008029], the radius of both spheres is 0.5. They are moving with velocities [5.906676415643489, 3.985814229903575, 5.290474617194276] m/s and [4.213071638013802, 2.842972884365996, 3.7735516545821968] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 6.77,
+                "m2": 6.19,
+                "p1": [
+                    -1.1652049954184447,
+                    -2.9170660816837692,
+                    -1.8050440389556477
+                ],
+                "p2": [
+                    2.49019030068058,
+                    3.1358200514904215,
+                    1.448358284008029
+                ],
+                "v1": [
+                    5.906676415643489,
+                    3.985814229903575,
+                    5.290474617194276
+                ],
+                "v2": [
+                    4.213071638013802,
+                    2.842972884365996,
+                    3.7735516545821968
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To determine if the spheres collide, we check if there exists a time t >= 0 when the distance between their centers equals the sum of their radii (1.0 m). The position vectors are functions of time: r1(t) = r1_initial + v1_initial * t and r2(t) = r2_initial + v2_initial * t. The relative position vector is \u0394r(t) = r2(t) - r1(t), and we solve ||\u0394r(t)|| = 1.0. This leads to a quadratic equation: a t^2 + b t + c = 0, where a = ||\u0394v||^2, b = 2 * (\u0394r_initial \u00b7 \u0394v), c = ||\u0394r_initial||^2 - 1.0, with \u0394r_initial = r2_initial - r1_initial and \u0394v = v2_initial - v1_initial. Calculating the vectors: \u0394r_initial = [3.6553952960990247, 6.052886133174191, 3.2534023229636767] m, \u0394v = [-1.693604777629687, -1.142841345537579, -1.5169229626120792] m/s. Then a = \u0394v \u00b7 \u0394v \u2248 6.475445, b = 2 * (\u0394r_initial \u00b7 \u0394v) \u2248 -36.086552, c = \u0394r_initial \u00b7 \u0394r_initial - 1.0 \u2248 59.583954. The discriminant D = b^2 - 4ac \u2248 (-36.086552)^2 - 4*6.475445*59.583954 \u2248 1302.239872 - 1543.32902 \u2248 -241.089148, which is negative. Thus, there are no real roots, meaning no collision occurs. The minimum distance is approximately 3.21 m at t_min \u2248 2.786 s, confirming it exceeds 1.0 m. Since no collision, the final velocities remain the initial velocities.\",\n    \"answer\": {\n        \"will_collide\": \"false\",\n        \"velocity_1\": {\n            \"vel_1_x\": \"5.906676415643489\",\n            \"vel_1_y\": \"3.985814229903575\",\n            \"vel_1_z\": \"5.290474617194276\"\n        },\n        \"velocity_2\": {\n            \"vel_2_x\": \"4.213071638013802\",\n            \"vel_2_y\": \"2.842972884365996\",\n            \"vel_2_z\": \"3.7735516545821968\"\n        }\n    }\n}",
+        "duration_seconds": 723.43
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 8.94 kg and 7.55 kg are located at positions [-3.170313237412185, -2.997091894926217, -2.1485917805948533] and [0.9732765094385953, 2.7661146331057584, 0.3676587487142091], the radius of both spheres is 0.5. They are moving with velocities [4.988410472954524, 6.280639284465003, 3.8730847692066708] m/s and [4.058393347288235, 5.109704750036973, 3.1510040214317057] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 8.94,
+                "m2": 7.55,
+                "p1": [
+                    -3.170313237412185,
+                    -2.997091894926217,
+                    -2.1485917805948533
+                ],
+                "p2": [
+                    0.9732765094385953,
+                    2.7661146331057584,
+                    0.3676587487142091
+                ],
+                "v1": [
+                    4.988410472954524,
+                    6.280639284465003,
+                    3.8730847692066708
+                ],
+                "v2": [
+                    4.058393347288235,
+                    5.109704750036973,
+                    3.1510040214317057
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "",
+        "duration_seconds": 529.49
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 1.28 kg and 9.53 kg are located at positions [-3.192125725662444, -1.803013123208608, -2.7255041938779367] and [-0.6563753342846557, 0.3125529907754496, -0.0630457411673], the radius of both spheres is 0.5. They are moving with velocities [3.3966143053557705, 2.83378133396632, 3.5663385870478685] m/s and [-3.282550862114869, -2.738618672773283, -3.4465755458452954] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 1.28,
+                "m2": 9.53,
+                "p1": [
+                    -3.192125725662444,
+                    -1.803013123208608,
+                    -2.7255041938779367
+                ],
+                "p2": [
+                    -0.6563753342846557,
+                    0.3125529907754496,
+                    -0.0630457411673
+                ],
+                "v1": [
+                    3.3966143053557705,
+                    2.83378133396632,
+                    3.5663385870478685
+                ],
+                "v2": [
+                    -3.282550862114869,
+                    -2.738618672773283,
+                    -3.4465755458452954
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": {
+            "error": "Expecting value: line 1761 column 1 (char 9680)"
+        },
+        "duration_seconds": 370.379
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 9.4 kg and 7.27 kg are located at positions [-0.7896673360118589, -0.8009591230163386, -2.258626276415331] and [1.7150836113277972, 1.4956031115828599, 0.19829058369762542], the radius of both spheres is 0.5. They are moving with velocities [1.320036255914657, 1.2103181024265852, 1.294827071155233] m/s and [-2.182100129460352, -2.00072935584885, -2.1404278154760568] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 9.4,
+                "m2": 7.27,
+                "p1": [
+                    -0.7896673360118589,
+                    -0.8009591230163386,
+                    -2.258626276415331
+                ],
+                "p2": [
+                    1.7150836113277972,
+                    1.4956031115828599,
+                    0.19829058369762542
+                ],
+                "v1": [
+                    1.320036255914657,
+                    1.2103181024265852,
+                    1.294827071155233
+                ],
+                "v2": [
+                    -2.182100129460352,
+                    -2.00072935584885,
+                    -2.1404278154760568
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": {
+            "error": "Expecting value: line 1133 column 1 (char 6226)"
+        },
+        "duration_seconds": 238.283
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 2.58 kg and 8.71 kg are located at positions [-0.8650508736184523, -2.4235967052010206, -4.566311150758221] and [3.3462792670497707, 0.9239060052366999, 0.7030593781714922], the radius of both spheres is 0.5. They are moving with velocities [2.2291304316137888, 2.0246371262337495, 2.059113858833134] m/s and [3.50958905190501, 3.187630562813782, 3.241911443627319] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 2.58,
+                "m2": 8.71,
+                "p1": [
+                    -0.8650508736184523,
+                    -2.4235967052010206,
+                    -4.566311150758221
+                ],
+                "p2": [
+                    3.3462792670497707,
+                    0.9239060052366999,
+                    0.7030593781714922
+                ],
+                "v1": [
+                    2.2291304316137888,
+                    2.0246371262337495,
+                    2.059113858833134
+                ],
+                "v2": [
+                    3.50958905190501,
+                    3.187630562813782,
+                    3.241911443627319
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To determine if the spheres collide, I calculated the relative position vector and relative velocity vector. The initial relative position is [4.211330140668223, 3.3475027104377205, 5.269370528929713] m, and the relative velocity is [1.2804586202912212, 1.1629934365800325, 1.182797584794185] m/s. The minimum distance squared is given by |d|^2 - (d \u00b7 v_rel)^2 / |v_rel|^2, which is approximately 56.707321 - (15.518192)^2 / 4.390728 \u2248 1.871321 m\u00b2. The square root is about 1.368 m, which is greater than the sum of radii (1.0 m). Since the minimum distance exceeds the collision threshold and the relative velocity indicates the spheres are moving apart (as the time of minimum distance is negative), no collision occurs. Thus, the final velocities are the same as the initial velocities.\",\n    \"answer\": {\n        \"will_collide\": \"false\",\n        \"velocity_1\": {\n            \"vel_1_x\": \"2.2291304316137888\",\n            \"vel_1_y\": \"2.0246371262337495\",\n            \"vel_1_z\": \"2.059113858833134\"\n        },\n        \"velocity_2\": {\n            \"vel_2_x\": \"3.50958905190501\",\n            \"vel_2_y\": \"3.187630562813782\",\n            \"vel_2_z\": \"3.241911443627319\"\n        }\n    }\n}",
+        "duration_seconds": 799.868
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 5.08 kg and 5.62 kg are located at positions [-3.0615129361386524, -1.1974483095092483, -0.13467850923227775] and [-0.47659281640114926, 0.8964747554206378, 2.590001329667418], the radius of both spheres is 0.5. They are moving with velocities [2.995615934520509, 2.426608563672353, 3.1575808782453034] m/s and [-2.59286786369663, -2.1003611611260125, -2.7330572961235453] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 5.08,
+                "m2": 5.62,
+                "p1": [
+                    -3.0615129361386524,
+                    -1.1974483095092483,
+                    -0.13467850923227775
+                ],
+                "p2": [
+                    -0.47659281640114926,
+                    0.8964747554206378,
+                    2.590001329667418
+                ],
+                "v1": [
+                    2.995615934520509,
+                    2.426608563672353,
+                    3.1575808782453034
+                ],
+                "v2": [
+                    -2.59286786369663,
+                    -2.1003611611260125,
+                    -2.7330572961235453
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": {
+            "error": "Expecting value: line 1387 column 1 (char 7623)"
+        },
+        "duration_seconds": 291.959
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 2.85 kg and 1.91 kg are located at positions [-0.9142662219336857, -0.23855394564846488, -2.731049173890675] and [1.696545395786107, 1.8648440805678943, -0.8795402561593324], the radius of both spheres is 0.5. They are moving with velocities [1.9557881785490259, 1.5756789829402489, 1.386986034993852] m/s and [-3.7185026897831817, -2.995808339860702, -2.6370500437540434] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 2.85,
+                "m2": 1.91,
+                "p1": [
+                    -0.9142662219336857,
+                    -0.23855394564846488,
+                    -2.731049173890675
+                ],
+                "p2": [
+                    1.696545395786107,
+                    1.8648440805678943,
+                    -0.8795402561593324
+                ],
+                "v1": [
+                    1.9557881785490259,
+                    1.5756789829402489,
+                    1.386986034993852
+                ],
+                "v2": [
+                    -3.7185026897831817,
+                    -2.995808339860702,
+                    -2.6370500437540434
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": {
+            "error": "Expecting value: line 1511 column 1 (char 8305)"
+        },
+        "duration_seconds": 317.773
+    },
+    {
+        "question": {
+            "type": "3D Collision",
+            "question": "Two objects with masses 6.43 kg and 8.86 kg are located at positions [-0.0627599847043463, -0.5048844292348069, -0.7643213280240069] and [2.156331325002026, 2.299326348052, 1.235125138204225], the radius of both spheres is 0.5. They are moving with velocities [3.1566775681371166, 3.9890153317579777, 2.844230780872569] m/s and [-1.1164861277985845, -1.410875892564456, -1.0059767405943763] m/s. Assuming an elastic collision, will they collide? If they collide, what are their final velocities?",
+            "parameters": {
+                "m1": 6.43,
+                "m2": 8.86,
+                "p1": [
+                    -0.0627599847043463,
+                    -0.5048844292348069,
+                    -0.7643213280240069
+                ],
+                "p2": [
+                    2.156331325002026,
+                    2.299326348052,
+                    1.235125138204225
+                ],
+                "v1": [
+                    3.1566775681371166,
+                    3.9890153317579777,
+                    2.844230780872569
+                ],
+                "v2": [
+                    -1.1164861277985845,
+                    -1.410875892564456,
+                    -1.0059767405943763
+                ],
+                "r": 0.5
+            },
+            "answer_json": {
+                "will_collide": "true or false",
+                "velocity_1": {
+                    "vel_1_x": "",
+                    "vel_1_y": "",
+                    "vel_1_z": ""
+                },
+                "velocity_2": {
+                    "vel_2_x": "",
+                    "vel_2_y": "",
+                    "vel_2_z": ""
+                }
+            }
+        },
+        "gpt4_response": "{\n    \"reasoning\": \"To determine if the spheres collide, I calculated the minimum distance between their centers over time. The relative position vector is [-0.0627599847043463, -0.5048844292348069, -0.7643213280240069] to [2.156331325002026, 2.299326348052, 1.235125138204225], giving dr = [2.2190913097063723, 2.8042107772868069, 1.9994464662282319] m. The relative velocity is [-1.1164861277985845, -1.410875892564456, -1.0059767405943763] - [3.1566775681371166, 3.9890153317579777, 2.844230780872569] = [-4.273163695935701, -5.399891224322434, -3.8502075214669453] m/s. The time of minimum distance is t_min = -(dr \u00b7 dv) / |dv|^2 \u2248 0.5193 s, with minimum distance \u2248 0.00007 m < 1.0 m (sum of radii), so they collide. For elastic collision, the final velocities are found using the relative velocity and unit normal vector at collision. The center of mass velocity is [0.6806, 0.8603, 0.6133] m/s, and after applying the elastic collision formulas, the final velocities are calculated.\",\n    \"answer\": {\n        \"will_collide\": \"true\",\n        \"velocity_1\": {\n            \"vel_1_x\": \"-1.797\",\n            \"vel_1_y\": \"-2.270\",\n            \"vel_1_z\": \"-1.619\"\n        },\n        \"velocity_2\": {\n            \"vel_2_x\": \"2.479\",\n            \"vel_2_y\": \"3.131\",\n            \"vel_2_z\": \"2.233\"\n        }\n    }\n}",
+        "duration_seconds": 145.572
+    }
+]

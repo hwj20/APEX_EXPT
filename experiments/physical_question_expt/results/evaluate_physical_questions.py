@@ -12,7 +12,7 @@ This script is in a mess, horrible, evil, but correct.
 with open("../dataset/physics_ground_truth.json", "r") as f1:
     ground_truth_data = json.load(f1)
 
-with open("gpt-4o_physics_results_final.json", "r") as f2:
+with open("deepseek_deepseek-r1-0528_physics_results_final.json", "r") as f2:
     prediction_data = json.load(f2)
 
 # Tolerance threshold
@@ -21,15 +21,23 @@ tolerance = 0.05
 # parse json
 for item in prediction_data:
     if "gpt4_response" in item:
+        raw = item["gpt4_response"]
+        # print(raw)
         try:
-            parsed = eval(item["gpt4_response"])
+            if raw.strip().startswith("```") and raw.strip().endswith("```"):
+                raw = raw.strip().strip("`").strip()  # kill ```
+        
+            parsed = eval(raw)
             if isinstance(parsed, dict) and "answer" in parsed:
-                if isinstance(parsed['answer'], str):
+                if isinstance(parsed["answer"], str):
                     item["answer_json"] = eval(parsed["answer"])
                 else:
                     item["answer_json"] = parsed["answer"]
         except Exception as e:
             item["answer_json"] = {}
+            print('error parsing'+str(item))
+            print('-'*20)
+
 
 # Build mappings
 gt_index = {item["question"]: item["answer_json"] for item in ground_truth_data}

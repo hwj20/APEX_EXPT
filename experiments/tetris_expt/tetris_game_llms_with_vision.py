@@ -1,51 +1,29 @@
-from experiments.tetris_expt.utils.tetris_game_agent import *
+from experiments.tetris_expt.utils.tetris_game_agent_other_llms import *
 from experiments.tetris_expt.utils.Tetris import *
 
 results = {
-    "gpt-4o-mini": {
+    "gpt-4.1": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "APEX": {
+    "claude-sonnet-4-20250514": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "VLM_APEX": {
+    "gemini-2.5-flash": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
         "height_delta_per_move": []
     },
-    "VLM": {
-        "final_score": [],
-        "max_stack_height": [],
-        "holes": [],
-        "bumps": [],
-        "height_delta_per_move": []
-    },
-    # "CLIP": {
-    #     "final_score": [],
-    #     "max_stack_height": [],
-    #     "holes": [],
-    #     "bumps": [],
-    #     "height_delta_per_move": []
-    # },
-    "gpt-4o": {
-        "final_score": [],
-        "max_stack_height": [],
-        "holes": [],
-        "bumps": [],
-        "height_delta_per_move": []
-    },
-
-    "o3-mini": {
+    "meta-llama/llama-4-scout": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
@@ -66,7 +44,6 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
 
     # initialize agents
     ag = LLM_Agent(model="gpt-4o")
-    vlm_ag = VLMAgent()
 
     # game history
     game_history = []
@@ -90,18 +67,9 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
             if method == 'APEX':
                 APEX_results = tetris.apex_evaluate()
                 action_json = ag.decide_move_APEX(state, APEX_results)
-            elif method in ["gpt-4o", "gpt-4o-mini", "o3-mini"]:
-                action_json = ag.decide_move(state, method)
-            elif method == 'VLM':
+            else:
                 image_path = tetris.capture_game_screen(screen)
                 action_json = ag.vlm_decide_move(image_path)
-            elif method == 'CLIP':
-                image_path = tetris.capture_game_screen(screen)
-                action_json = vlm_ag.clip_decide_move(image_path)
-            elif method == 'VLM_APEX':
-                APEX_results = tetris.apex_evaluate()
-                image_path = tetris.capture_game_screen(screen)
-                action_json = ag.vlm_decide_move_APEX(image_path, APEX_results)
 
             if action_json is None:
                 action_json = '{"move":"down","times":1}'
@@ -161,16 +129,9 @@ def if_you_want_to_play_game():
 
 if __name__ == "__main__":
 
-    # run_tetris("APEX", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("gpt-4o", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("VLM_APEX", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("CLIP", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("VLM", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("gpt-4o-mini", rng=random.Random(42),auto_gen_path=True)
-    # run_tetris("o3-mini", rng=random.Random(42),auto_gen_path=True)
     for model in results.keys():
         for i in range(5):  # 5 trails
-            save_path = f"results/tetris_results/{model}_{i}_tetris_game_history.json"
+            save_path = f"experiments/tetris_expt/results/tetris_results/{model.replace('/','')}_vision_{i}_tetris_game_history.json"
             res = run_tetris(model, save_path, rng=random.Random(42 + i))
     
             results[model]["final_score"].append(res["final_score"])
@@ -178,5 +139,5 @@ if __name__ == "__main__":
             results[model]["holes"].append(res["holes"])
             results[model]["bumps"].append(res["bumps"])
             results[model]["height_delta_per_move"].append(res["height_delta_per_move"])
-            with open("experiments/tetris_expt/results/tetris_results/tetris_eval_results.json", "w") as f:
+            with open("experiments/tetris_expt/results/tetris_results/tetris_eval_results_vlm.json", "w") as f:
                 json.dump(results, f, indent=2)
