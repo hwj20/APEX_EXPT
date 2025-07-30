@@ -86,9 +86,9 @@ def run_model_on_questions(model, questions, result_path, with_perception=False,
 if __name__ == "__main__":
     models = [
         # "gpt-4.1",
-        "tngtech/deepseek-r1t2-chimera:free",
+        # "tngtech/deepseek-r1t2-chimera:free",
         # "claude-sonnet-4-20250514",
-        # "gemini-2.5-flash",
+        "gemini-2.5-flash",
         # "meta-llama/llama-4-scout",
     ]
 
