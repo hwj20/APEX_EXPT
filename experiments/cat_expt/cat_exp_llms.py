@@ -268,17 +268,17 @@ if __name__ == "__main__":
                      ]
     methods = {
 "VLM": [
-    # "claude-sonnet-4-20250514",  # Claude 4
-    # "gemini-2.5-flash",              # Gemini 2.5（Google）
-    # "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
-    #  "gpt-4.1",      # OpenAI 4.1
+    "claude-sonnet-4-20250514",  # Claude 4
+    "gemini-2.5-flash",              # Gemini 2.5（Google）
+    "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
+     "gpt-4.1",      # OpenAI 4.1
     ],
         "LLM": [
-    # "deepseek/deepseek-r1-0528",           # DeepSeek r1
-    # "claude-sonnet-4-20250514",  # Claude 4
+    "deepseek/deepseek-r1-0528",           # DeepSeek r1
+    "claude-sonnet-4-20250514",  # Claude 4
     "gemini-2.5-flash",              # Gemini 2.5（Google）
-    # "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
-    # "gpt-4.1",      # OpenAI 4.1
+    "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
+    "gpt-4.1",      # OpenAI 4.1
 ]}
 
     results = {
