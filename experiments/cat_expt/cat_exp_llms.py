@@ -267,7 +267,7 @@ if __name__ == "__main__":
                      "Hard"
                      ]
     methods = {
-"VLM": [
+    "VLM": [
     "claude-sonnet-4-20250514",  # Claude 4
     "gemini-2.5-flash",              # Gemini 2.5（Google）
     "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
