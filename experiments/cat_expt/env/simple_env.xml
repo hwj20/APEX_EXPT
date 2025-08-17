@@ -1,0 +1,22 @@
+<mujoco>
+    <option gravity="0 0 -100" integrator="RK4" timestep="0.01"/>
+    <visual><map znear="0.01"/></visual>
+    <asset>
+        <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.8 0.8 0.8" rgb2="1 1 1"/>
+        <material name="grid_mat" texture="grid" texrepeat="10 10" reflectance="0.2"/>
+    </asset>
+
+    <worldbody>
+        <camera name="top" pos="0 0 10" xyaxes="1 0 0 0 1 0"/>
+        <geom name="floor" type="plane" size="5 5 0.1" material="grid_mat" rgba="1 1 1 1"/>
+        <!-- wall -->
+        <geom name="wall_left"  type="box" pos="-4 0 0.1" size="0.1 5 0.5" rgba="0.6 0.6 0.6 1"/>
+        <geom name="wall_right" type="box" pos="4 0 0.1"  size="0.1 5 0.5" rgba="0.6 0.6 0.6 1"/>
+        <geom name="wall_top"   type="box" pos="0 4 0.1"  size="5 0.1 0.5" rgba="0.6 0.6 0.6 1"/>
+        <geom name="wall_bot"   type="box" pos="0 -4 0.1" size="5 0.1 0.5" rgba="0.6 0.6 0.6 1"/>
+
+        <body name="robot" pos="0 0 0.1"><freejoint/><geom type="sphere" size="0.1" rgba="0 1 0 1"/></body>
+        <body name="cat1" pos="1 1 0.1"><freejoint/><geom type="sphere" size="0.1" rgba="1 0 0 1"/></body>
+        <body name="cat2" pos="-1 -1 0.1"><freejoint/><geom type="sphere" size="0.1" rgba="1 0 0 1"/></body>
+    </worldbody>
+</mujoco>
