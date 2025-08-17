@@ -263,8 +263,8 @@ if __name__ == "__main__":
     NUM_TRIALS = 5
     difficulties = [
                     "Simple",
-                    #  "Medium", 
-                    #  "Hard"
+                     "Medium", 
+                     "Hard"
                      ]
     methods = {
 "VLM": [
