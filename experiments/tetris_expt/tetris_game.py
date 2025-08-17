@@ -65,7 +65,7 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
     tetris = Tetris(rng=rng)
 
     # initialize agents
-    ag = LLM_Agent(model="gpt-4o")
+    ag = LLM_Agent(model=method)
     vlm_ag = VLMAgent()
 
     # game history

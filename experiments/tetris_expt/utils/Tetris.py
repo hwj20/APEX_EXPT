@@ -150,9 +150,13 @@ class Tetris:
     # control policy
     def step(self, action_json):
         success = True
-        print(action_json)
-        action_json = strip_markdown(action_json)
-        action_data_all = json.loads(action_json)  
+        try:
+            action_json = strip_markdown(action_json)
+            action_data_all = json.loads(action_json)  
+        except :
+            action_data_all = [{'move':'down','down':1}]
+            print("error parsing" + action_json)
+            
         if not isinstance(action_data_all, list):
             action_data_all = [action_data_all]
         for action_data in action_data_all:

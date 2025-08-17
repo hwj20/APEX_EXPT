@@ -5,9 +5,7 @@ import re
 
 import requests
 from openai import OpenAI
-
-api_key = os.getenv("OPENAI_API_KEY")
-
+from experiments.physical_question_expt.utils.llm_router import *
 
 def strip_markdown(text: str) -> str:
     text = re.sub(r"```", "", text)
@@ -46,13 +44,13 @@ def decode(decision: str):
 
         return {"velocity": vel, "duration": duration}
     except Exception as e:
-        raise ValueError("error parsing move")
+        raise ValueError("error parsing move" + decision)
 
 
 class LLM_Agent:
     def __init__(self, model="gpt-4o"):
         self.model = model
-        self.client = OpenAI(api_key=api_key)
+        # self.client = OpenAI(api_key=api_key)
 
     def decide_move_apex(self, state, summary, available_move, apex_results):
         prompt = f"""
@@ -82,15 +80,11 @@ class LLM_Agent:
 
         system_prompt = "You are an AI robot that avoids dynamic obstacles."
         try:
-            completion = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
+            messages = [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
-                ]
-            )
-
-            generated_answer = str(completion.choices[0].message.content)
+            ]
+            generated_answer = call_llm(self.model,messages)
             print(generated_answer)
             return decode(strip_markdown(generated_answer)), True
         except ValueError as e:
@@ -121,15 +115,11 @@ class LLM_Agent:
 
         system_prompt = "You are an AI robot that avoids dynamic obstacles."
         try:
-            completion = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
+            messages = [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt}
-                ]
-            )
-
-            generated_answer = str(completion.choices[0].message.content)
+            ]
+            generated_answer = call_llm(self.model,messages)
             print(generated_answer)
             return decode(strip_markdown(generated_answer)), True
         except ValueError as e:
@@ -161,47 +151,23 @@ class LLM_Agent:
 
         system_prompt = "You are an AI robot that avoids dynamic obstacles."
 
-        def encode_image(image_path):
-            with open(image_path, "rb") as image_file:
-                return base64.b64encode(image_file.read()).decode("utf-8")
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    }
+                ]
+            }
+        ]
 
-        base64_image = encode_image(image_path)
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
-        }
-
-        payload = {
-            "model": "gpt-4o",
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": 1000
-        }
+        
         try:
-            response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-            response_data = response.json()
-
-            generated_answer = response_data["choices"][0]["message"]["content"]
-            print(generated_answer)
-            return decode(strip_markdown(generated_answer)), True
-        except ValueError as e:
-            return "json error", False
+            response = call_llm(self.model,messages,image_path)
+            print(response)
+            return decode(strip_markdown(response )), True
         except Exception as e:
             return f"API error: {e}", False

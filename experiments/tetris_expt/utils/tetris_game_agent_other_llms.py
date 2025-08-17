@@ -157,18 +157,12 @@ class LLM_Agent:
                     {
                         "type": "text",
                         "text": prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{base64_image}"
-                        }
                     }
                 ]
             }
         ]
         try:
-            response = call_llm(self.model,messages)
+            response = call_llm(self.model,messages,image_path)
             return response
         except Exception as e:
             return f"API error: {e}"
@@ -194,7 +188,7 @@ class LLM_Agent:
         ]
 
         Allowed moves are: "left", "right", "rotate", and "down".
-        Only return the JSON array without any explanation or markdown. No Markdown
+        **In the Conversation, Only return the JSON array without any explanation or markdown. No Markdown**
 
         Here is the current board state:
         """
@@ -215,12 +209,6 @@ class LLM_Agent:
                     {
                         "type": "text",
                         "text": prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{base64_image}"
-                        }
                     }
                 ]
             }
@@ -228,7 +216,7 @@ class LLM_Agent:
 
         
         try:
-            response = call_llm(self.model,messages)
+            response = call_llm(self.model,messages,image_path)
             return response
         except Exception as e:
             return f"API error: {e}"

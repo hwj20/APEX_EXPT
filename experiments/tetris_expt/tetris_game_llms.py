@@ -1,3 +1,4 @@
+import time
 from experiments.tetris_expt.utils.tetris_game_agent_other_llms import *
 from experiments.tetris_expt.utils.Tetris import *
 
@@ -7,35 +8,32 @@ results = {
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
-        "height_delta_per_move": []
-    },
-    "deepseek/deepseek-r1-0528": { # no vision input
-        "final_score": [],
-        "max_stack_height": [],
-        "holes": [],
-        "bumps": [],
-        "height_delta_per_move": []
+        "height_delta_per_move": [],
+        "resp_time": []
     },
     "claude-sonnet-4-20250514": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
-        "height_delta_per_move": []
+        "height_delta_per_move": [],
+        "resp_time": []
     },
     "gemini-2.5-flash": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
-        "height_delta_per_move": []
+        "height_delta_per_move": [],
+        "resp_time": []
     },
     "meta-llama/llama-4-scout": {
         "final_score": [],
         "max_stack_height": [],
         "holes": [],
         "bumps": [],
-        "height_delta_per_move": []
+        "height_delta_per_move": [],
+        "resp_time": []
     }
 }
 
@@ -50,10 +48,11 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
     tetris = Tetris(rng=rng)
 
     # initialize agents
-    ag = LLM_Agent(model="gpt-4o")
+    ag = LLM_Agent(model=method)
 
     # game history
     game_history = []
+    resp_times = []
     cnt = 0
 
     while tetris.running:
@@ -71,17 +70,21 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
         if state != tetris.previous_state and tetris.piece_y > 1:
             tetris.render(screen)
             action_json = ''
+            # measure response time for each decision
+            start_time = time.time()
             if method == 'APEX':
                 APEX_results = tetris.apex_evaluate()
                 action_json = ag.decide_move_APEX(state, APEX_results)
-            elif method == 'VLM':
-                image_path = tetris.capture_game_screen(screen)
-                action_json = ag.vlm_decide_move(image_path)
             else:
                 action_json = ag.decide_move(state, method)
 
             if action_json is None:
                 action_json = '{"move":"down","times":1}'
+            
+            end_time = time.time()
+
+            resp_time = end_time - start_time
+            resp_times.append(resp_time)
 
             game_history.append({
                 "board": state["board"],
@@ -89,7 +92,8 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
                 "piece_x": state["piece_x"],
                 "piece_y": state["piece_y"],
                 "action": action_json,
-                "score": state["score"]
+                "score": state["score"],
+                "resp_time": resp_time
             })
 
             tetris.previous_state = state
@@ -105,7 +109,11 @@ def run_tetris(method, save_path="demo_", save_type=".json", rng=random.Random(4
         json.dump(game_history, f, indent=4)
     print(f"game history is saved: {save_path}")
 
-    return tetris.final_evaluation()
+    # aggregate evaluation metrics and average response time
+    evals = tetris.final_evaluation()
+    avg_resp_time = sum(resp_times) / len(resp_times) if resp_times else 0
+    evals["avg_resp_time"] = avg_resp_time
+    return evals
 
 
 def if_you_want_to_play_game():
@@ -155,5 +163,6 @@ if __name__ == "__main__":
             results[model]["holes"].append(res["holes"])
             results[model]["bumps"].append(res["bumps"])
             results[model]["height_delta_per_move"].append(res["height_delta_per_move"])
+            results[model]["resp_time"].append(res["avg_resp_time"])
             with open("experiments/tetris_expt/results/tetris_results/tetris_eval_results.json", "w") as f:
                 json.dump(results, f, indent=2)

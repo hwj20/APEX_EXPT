@@ -5,21 +5,21 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 import cv2
-from experiments.cat_expt.utils.cat_game_agent import LLM_Agent
+from experiments.cat_expt.utils.cat_game_agent_other_llms import LLM_Agent
 from experiments.cat_expt.utils.APEX import APEX
 from experiments.cat_expt.model.graphormer import DiffGraphormer
 from experiments.cat_expt.utils.mujoco_simulator import get_body_state, get_all_body_states
 import torch
 
-with open('env/square_demo.xml', 'r') as f:
+with open('experiments/cat_expt/env/square_demo.xml', 'r') as f:
     square_xml = f.read()
-with open('env/simple_env.xml', 'r') as f:
+with open('experiments/cat_expt/env/simple_env.xml', 'r') as f:
     simple_xml = f.read()
-with open('env/medium_env.xml', 'r') as f:
+with open('experiments/cat_expt/env/medium_env.xml', 'r') as f:
     medium_xml = f.read()
-with open('env/hard_env.xml', 'r') as f:
+with open('experiments/cat_expt/env/hard_env.xml', 'r') as f:
     hard_xml = f.read()
-with open("env/available_move.json", 'r') as f:
+with open("experiments/cat_expt/env/available_move.json", 'r') as f:
     available_move = json.load(f)
 
 
@@ -35,9 +35,10 @@ def move_cat_towards_robot(cat_pos, robot_pos, speed=0.03):
 
 def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     # I know how ugly the code is :)
-    if method == 'VLM':
-        model = 'gpt-4o'
+    # if method == 'VLM':
+    #     model = 'gpt-4o'
 
+    model_name = model.replace('/','_')
     physical_model = None
     agent = LLM_Agent(model=model)
     collision = False
@@ -72,7 +73,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
     fps = 100
     width, height = 640, 480
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"turing_cat_llm_{difficulty}_{method}_{model}_{timestamp}.mp4"
+    file_name = f"turing_cat_llm_{difficulty}_{method}_{model_name}_{timestamp}.mp4"
     video_writer = cv2.VideoWriter(file_name, cv2.VideoWriter_fourcc(*"mp4v"),
                                    fps,
                                    (width, height))
@@ -107,7 +108,6 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                     available_move=available_move)
 
     snapshot_t, snapshot_t_dt = None, None
-
     # Simulation: 10s
     for step in range(10 * fps):
         # Current State
@@ -136,8 +136,8 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
             cat_distance = np.linalg.norm(
                 np.array(robot_state["position"][:3]) - np.array(cat_state["position"][:3]))
             if step > init_frames and cat_distance < collision_threshold:
-                print(step)
-                print("Collision!")
+                # print(step)
+                # print("Collision!")
                 collision = True
 
         snapshot_t_dt = {"objects": get_all_body_states(physical_model, data)}
@@ -161,11 +161,12 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                     add_action(move)
                     new_action = move
                 except:
+                    print(move)
                     print("error setting move")
 
             if method == 'VLM' and step % fps == 0:
                 start = time.perf_counter()
-                image_path = f"tmp/frame_{difficulty}_{method}_{model}_step{step}.png"
+                image_path = f"experiments/cat_expt/tmp/frame_{difficulty}_{method}_{model_name}_step{step}.png"
                 renderer.update_scene(data, camera="top")
                 pixels = renderer.render()
                 frame_rgb = np.flipud(pixels)
@@ -178,6 +179,7 @@ def run_exp(difficulty, method='APEX', model='gpt-4o-mini', run_callback=None):
                     add_action(move)
                     new_action = move
                 except:
+                    print(move)
                     print("error setting move")
 
             if method == 'TEST' and step % fps == 0:
@@ -253,14 +255,32 @@ def run_trial(difficulty, method, model, trial_id):
 
 
 if __name__ == "__main__":
-    # run_exp(difficulty='Simple', method='APEX', model='gpt-4o')
+    # run_exp(difficulty='Simple', method='LLM', model='gemini2.5-flash')
     # run_exp(difficulty='Medium', method='VLM', model='gpt-4o-mini')
     # run_exp(difficulty='Hard', method='VLM', model='gpt-4o-mini')
 
     EXPT_TIME = 10  # seconds
     NUM_TRIALS = 5
-    difficulties = ["Simple", "Medium", "Hard"]
-    methods = {"LLM": ['gpt-4o', 'gpt-4o-mini'], "APEX": ['gpt-4o', 'gpt-4o-mini'], "VLM": ['gpt-4o']}
+    difficulties = [
+                    "Simple",
+                    #  "Medium", 
+                    #  "Hard"
+                     ]
+    methods = {
+"VLM": [
+    # "claude-sonnet-4-20250514",  # Claude 4
+    # "gemini-2.5-flash",              # Gemini 2.5（Google）
+    # "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
+    #  "gpt-4.1",      # OpenAI 4.1
+    ],
+        "LLM": [
+    # "deepseek/deepseek-r1-0528",           # DeepSeek r1
+    # "claude-sonnet-4-20250514",  # Claude 4
+    "gemini-2.5-flash",              # Gemini 2.5（Google）
+    # "meta-llama/llama-4-scout",  # HuggingFace LLaMA 4
+    # "gpt-4.1",      # OpenAI 4.1
+]}
+
     results = {
         d: {
             m: {
@@ -273,7 +293,7 @@ if __name__ == "__main__":
             } for m in methods
         } for d in difficulties
     }
-    save_path = "results/results.json"
+    save_path = "experiments/cat_expt/results/results_other_llm.json"
 
     for difficulty in difficulties:
         for method in methods:
