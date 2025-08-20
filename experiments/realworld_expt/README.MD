@@ -48,11 +48,12 @@
 
 * We make this public despite expecting **very few attempts at reproduction**, as the hardware is limited and somewhat fragile. Still, we believe the structure and logic may offer value to the community.
 
+* During the experiment, we recorded all runs, including failed or incomplete ones (e.g., forgot to run the script 🙃).
+However, we forgot to label them properly, so all videos are mixed together.
+If you're really curious about a specific behavior or outcome, just let us know — we're happy to re-run and record it again.
+
 ---
 
 ### 📹 Demo Videos
 
 All videos available at: **\[https://drive.google.com/drive/folders/1YMmYrXk8mii0v0LOx-QwHxOpq-Jq9rOO?usp=drive_link]**
-
-
-
