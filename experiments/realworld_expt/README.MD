@@ -1,5 +1,5 @@
 
-# 🤖 APEX: Real-World Reactive Planning on a Low-Cost Robot Arm
+# 🤖 APEX: Real-World Reactive Planning 
 
 ### 🧪 Experimental Setup
 
