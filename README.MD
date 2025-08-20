@@ -63,6 +63,9 @@ APEX is a hybrid framework designed for reasoning and decision-making under unce
   - **IAR**: Invalid Action Rate
   - **AST**: Average Survival Time
 
+### More LLM Baselines and Real World Test
+- See as the corresponding folders.
+
 ---
 
 ## 🛠 Setup
