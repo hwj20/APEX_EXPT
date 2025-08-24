@@ -12,7 +12,7 @@
 ### 🎯 Task Description
 
 * **Objective:** Reactive collision avoidance
-* **Scenario:** A human moves a red block toward a static blue block.
+* **Scenario:** A human moves a green block toward a static red block.
 * **Goal:** The agent must detect the potential collision and move to prevent contact.
 * **Prompt Format:** See `ApexAgent.py`
 * **Baseline:** GPT-4o, queried every 1 second with no trigger or simulation.
