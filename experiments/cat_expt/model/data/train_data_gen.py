@@ -87,7 +87,7 @@ def create_reverse_sample(collision=True,t=3.0, dt=0.01, num_nodes=6, threshold=
         pos_tgt_dt = pos_t_dt_list[tgt_idx]
         vel_tgt = pos_tgt_dt - pos_tgt
         score = compute_risk_score(pos_m_future, pos_tgt_dt, vel_tgt)
-        label = 1 if score > threshold else 0  # danger threshold 可调
+        label = 1 if score > threshold else 0  # danger threshold 
         edge_label.append(label)
         # global cnt, tt
         # if label == 1:
@@ -121,7 +121,7 @@ def generate_dataset(n_samples=500, seed=42, save_path="reverse_graphormer_data.
     dataset = []
 
     for i in range(n_samples):
-        sample = create_reverse_sample(collision=(i % 2 == 0))  # 一半 collision，一半 safe
+        sample = create_reverse_sample(collision=(i % 2 == 0))  # half collision，half safe
         dataset.append(sample)
 
     with open(save_path, 'w') as f:
