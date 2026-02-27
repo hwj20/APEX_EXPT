@@ -14,6 +14,12 @@
         <geom name="wall_right" type="box" pos="4 0 0.1"  size="0.1 5 0.5" rgba="0.6 0.6 0.6 1"/>
         <geom name="wall_top"   type="box" pos="0 4 0.1"  size="5 0.1 0.5" rgba="0.6 0.6 0.6 1"/>
         <geom name="wall_bot"   type="box" pos="0 -4 0.1" size="5 0.1 0.5" rgba="0.6 0.6 0.6 1"/>
+        
+        <!-- Inner square walls at ±5m -->
+        <geom name="inner_wall_left"  type="box" pos="-5 0 0.1" size="0.1 5 0.5" rgba="0.8 0.4 0.4 1"/>
+        <geom name="inner_wall_right" type="box" pos="5 0 0.1"  size="0.1 5 0.5" rgba="0.8 0.4 0.4 1"/>
+        <geom name="inner_wall_top"   type="box" pos="0 5 0.1"  size="5 0.1 0.5" rgba="0.8 0.4 0.4 1"/>
+        <geom name="inner_wall_bot"   type="box" pos="0 -5 0.1" size="5 0.1 0.5" rgba="0.8 0.4 0.4 1"/>
 
         <!-- obstacles -->
         <geom name="obstacle1" type="box" pos="0.5 1.5 0.1" size="0.3 0.6 0.2" rgba="0.7 0.3 0.3 1"/>

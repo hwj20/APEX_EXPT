@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 import time
 import json
 from datetime import datetime
@@ -226,7 +231,16 @@ def run_exp(difficulty, method='MPC', prediction_horizon=10, run_callback=None):
                                    (width, height))
 
     data = mujoco.MjData(physical_model)
-    renderer = mujoco.Renderer(physical_model, height=height, width=width)
+    renderer = None
+    rendering_available = False
+    
+    # Try to initialize renderer for video rendering
+    try:
+        renderer = mujoco.Renderer(physical_model, height=height, width=width)
+        rendering_available = True
+    except Exception as e:
+        print(f"Warning: Rendering not available ({e}). Video will contain blank frames.")
+        print("To enable rendering, use: xvfb-run -a -s '-screen 0 1920x1080x24' python script.py")
 
     # Initialize agent
     if method == 'MPC':
@@ -312,10 +326,19 @@ def run_exp(difficulty, method='MPC', prediction_horizon=10, run_callback=None):
         mujoco.mj_step(physical_model, data)
 
         # render
-        renderer.update_scene(data, camera="top")
-        pixels = renderer.render()
-        frame = cv2.cvtColor(np.flipud(pixels), cv2.COLOR_RGB2BGR)
-        frame_resized = cv2.resize(frame, (width, height))
+        if rendering_available and renderer:
+            try:
+                renderer.update_scene(data, camera="top")
+                pixels = renderer.render()
+                frame = cv2.cvtColor(np.flipud(pixels), cv2.COLOR_RGB2BGR)
+                frame_resized = cv2.resize(frame, (width, height))
+            except Exception as e:
+                # Fallback: create a blank frame if rendering fails
+                frame_resized = np.zeros((height, width, 3), dtype=np.uint8)
+        else:
+            # Create a blank frame
+            frame_resized = np.zeros((height, width, 3), dtype=np.uint8)
+        
         video_writer.write(frame_resized)
 
     video_writer.release()
